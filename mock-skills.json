@@ -1,0 +1,249 @@
+{
+  "skills": [
+    {
+      "id": "design-implement-design",
+      "name": "implement-design",
+      "category": "Design",
+      "description": "Translates Figma layouts into production-ready frontend implementation guidance.",
+      "triggers": [
+        "implement design",
+        "translate figma",
+        "build ui from figma"
+      ],
+      "path": "C:/Projects/vally/.claude/skills/implement-design/SKILL.md",
+      "source": "figma/mcp-server-guide",
+      "sourceUrl": "https://github.com/figma/mcp-server-guide",
+      "conflictsWith": []
+    },
+    {
+      "id": "design-ui-polish",
+      "name": "ui-polish",
+      "category": "Design",
+      "description": "Improves spacing, hierarchy, and visual refinement for interface work.",
+      "triggers": [
+        "polish ui",
+        "improve hierarchy",
+        "refine spacing"
+      ],
+      "path": "C:/Projects/vally/.claude/skills/ui-polish/SKILL.md",
+      "source": "community/ui-polish-pack",
+      "sourceUrl": "https://github.com/community/ui-polish-pack",
+      "conflictsWith": []
+    },
+    {
+      "id": "design-design-system",
+      "name": "design-system-ops",
+      "category": "Design",
+      "description": "Helps structure reusable component systems, tokens, and naming conventions.",
+      "triggers": [
+        "design system",
+        "tokens",
+        "component system"
+      ],
+      "path": "C:/Projects/vally/.claude/skills/design-system-ops/SKILL.md",
+      "source": "local/manual-install",
+      "sourceUrl": null,
+      "conflictsWith": [
+        "dev-react-ui-builder"
+      ]
+    },
+    {
+      "id": "finance-expense-analyst",
+      "name": "expense-analyst",
+      "category": "Finance",
+      "description": "Summarizes spending patterns and highlights unusual expenses.",
+      "triggers": [
+        "analyze expenses",
+        "budget review",
+        "spending summary"
+      ],
+      "path": "C:/Users/USER/.claude/skills/expense-analyst/SKILL.md",
+      "source": "finance/tools-pack",
+      "sourceUrl": "https://github.com/finance/tools-pack",
+      "conflictsWith": []
+    },
+    {
+      "id": "finance-pricing-model",
+      "name": "pricing-model",
+      "category": "Finance",
+      "description": "Builds simple pricing logic and tradeoff breakdowns for product or service offers.",
+      "triggers": [
+        "pricing model",
+        "price this",
+        "cost breakdown"
+      ],
+      "path": "C:/Users/USER/.claude/skills/pricing-model/SKILL.md",
+      "source": "market/pricing-lab",
+      "sourceUrl": "https://github.com/market/pricing-lab",
+      "conflictsWith": []
+    },
+    {
+      "id": "finance-forecast-helper",
+      "name": "forecast-helper",
+      "category": "Finance",
+      "description": "Creates lightweight revenue and cost forecasts from rough assumptions.",
+      "triggers": [
+        "forecast revenue",
+        "run projection",
+        "estimate costs"
+      ],
+      "path": "C:/Users/USER/.claude/skills/forecast-helper/SKILL.md",
+      "source": "local/manual-install",
+      "sourceUrl": null,
+      "conflictsWith": []
+    },
+    {
+      "id": "dev-react-ui-builder",
+      "name": "react-ui-builder",
+      "category": "Development",
+      "description": "Generates React UI structures and component breakdowns for frontend features.",
+      "triggers": [
+        "build react ui",
+        "create component",
+        "frontend feature"
+      ],
+      "path": "C:/Users/USER/.claude/plugins/marketplaces/react-ui-builder/SKILL.md",
+      "source": "vercel/react-ui-builder",
+      "sourceUrl": "https://github.com/vercel/react-ui-builder",
+      "conflictsWith": [
+        "design-design-system"
+      ]
+    },
+    {
+      "id": "dev-api-logs",
+      "name": "api-logs",
+      "category": "Development",
+      "description": "Reads, summarizes, and diagnoses API logs and error traces.",
+      "triggers": [
+        "inspect logs",
+        "api logs",
+        "trace error"
+      ],
+      "path": "C:/Users/USER/.claude/plugins/marketplaces/api-logs/SKILL.md",
+      "source": "backend/api-logs",
+      "sourceUrl": "https://github.com/backend/api-logs",
+      "conflictsWith": [
+        "dev-debug-assistant"
+      ]
+    },
+    {
+      "id": "dev-debug-assistant",
+      "name": "debug-assistant",
+      "category": "Development",
+      "description": "Helps isolate bugs across frontend and backend flows.",
+      "triggers": [
+        "debug issue",
+        "trace bug",
+        "fix error"
+      ],
+      "path": "C:/Users/USER/.claude/skills/debug-assistant/SKILL.md",
+      "source": "community/debug-assistant",
+      "sourceUrl": "https://github.com/community/debug-assistant",
+      "conflictsWith": [
+        "dev-api-logs"
+      ]
+    },
+    {
+      "id": "dev-supabase-helper",
+      "name": "supabase-helper",
+      "category": "Development",
+      "description": "Assists with Supabase schema, auth, and data access patterns.",
+      "triggers": [
+        "supabase",
+        "schema",
+        "database auth"
+      ],
+      "path": "C:/Users/USER/.claude/skills/supabase-helper/SKILL.md",
+      "source": "supabase/helper-pack",
+      "sourceUrl": "https://github.com/supabase/helper-pack",
+      "conflictsWith": []
+    },
+    {
+      "id": "dev-ci-setup",
+      "name": "ci-setup",
+      "category": "Development",
+      "description": "Sets up lightweight CI workflows for testing and deployment checks.",
+      "triggers": [
+        "ci setup",
+        "github actions",
+        "pipeline"
+      ],
+      "path": "C:/Users/USER/.claude/skills/ci-setup/SKILL.md",
+      "source": "devops/ci-setup",
+      "sourceUrl": "https://github.com/devops/ci-setup",
+      "conflictsWith": []
+    },
+    {
+      "id": "dev-postgres-checker",
+      "name": "postgres-checker",
+      "category": "Development",
+      "description": "Reviews Postgres queries, schema issues, and database performance concerns.",
+      "triggers": [
+        "postgres",
+        "query review",
+        "database issue"
+      ],
+      "path": "C:/Users/USER/.claude/skills/postgres-checker/SKILL.md",
+      "source": "db/postgres-checker",
+      "sourceUrl": "https://github.com/db/postgres-checker",
+      "conflictsWith": []
+    },
+    {
+      "id": "marketing-content-engine",
+      "name": "content-engine",
+      "category": "Marketing",
+      "description": "Creates campaign content angles and messaging options.",
+      "triggers": [
+        "campaign ideas",
+        "content angle",
+        "marketing copy"
+      ],
+      "path": "C:/Users/USER/.claude/skills/content-engine/SKILL.md",
+      "source": "growth/content-engine",
+      "sourceUrl": "https://github.com/growth/content-engine",
+      "conflictsWith": []
+    },
+    {
+      "id": "marketing-brand-voice",
+      "name": "brand-voice",
+      "category": "Marketing",
+      "description": "Shapes tone, messaging consistency, and audience-facing brand language.",
+      "triggers": [
+        "brand voice",
+        "tone of voice",
+        "messaging consistency"
+      ],
+      "path": "C:/Users/USER/.claude/skills/brand-voice/SKILL.md",
+      "source": "growth/brand-voice",
+      "sourceUrl": "https://github.com/growth/brand-voice",
+      "conflictsWith": []
+    }
+  ],
+  "conflicts": [
+    {
+      "a": "design-design-system",
+      "b": "dev-react-ui-builder",
+      "aName": "design-system-ops",
+      "bName": "react-ui-builder",
+      "summary": "Both skills try to guide component structure and UI system decisions, so they may overlap during frontend build tasks."
+    },
+    {
+      "a": "dev-api-logs",
+      "b": "dev-debug-assistant",
+      "aName": "api-logs",
+      "bName": "debug-assistant",
+      "summary": "Both skills can activate during debugging workflows and may compete on error investigation tasks."
+    }
+  ],
+  "meta": {
+    "source": "mock",
+    "isMockData": true,
+    "scannedAt": "2026-03-16T00:00:00.000Z",
+    "counts": {
+      "categories": 4,
+      "skills": 14,
+      "conflicting": 4,
+      "similar": 6
+    }
+  }
+}
