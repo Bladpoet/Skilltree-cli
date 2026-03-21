@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import React from "react";
 
 interface CategoryRailProps {
   children?: ReactNode;

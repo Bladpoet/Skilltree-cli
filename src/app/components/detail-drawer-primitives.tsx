@@ -1,7 +1,7 @@
 import categoryTextureBase from "../../assets/Trigger pill 2.png";
 import categoryTextureStripes from "../../assets/Trigger piill.png";
 import categoryTextureOverlay from "../../assets/134baca7923b388c22b2e710106f8aebf7eef9ac.png";
-import drawerEdge from "../../assets/pencil-exported/OW24P.png";
+import drawerEdge from "../../assets/pencil-exported/Frame 1841.svg";
 import triggerTileReference from "../../assets/pencil-exported/GZlq3.png";
 import closeGlyph from "../../assets/pencil-exported/92UtD.png";
 import sourceGlyph from "../../assets/pencil-exported/9L2EO.png";
@@ -15,15 +15,19 @@ export function DetailDrawerDecorativeEdge() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-y-0 left-[-48px] w-[118px] overflow-hidden"
-    >
-      <img
-        src={drawerEdge}
-        alt=""
-        className="h-full w-full object-fill object-left"
-        draggable={false}
-      />
-    </div>
+      className="pointer-events-none absolute inset-y-0 left-[-48px] z-0 w-[118px]"
+      style={{
+        background: "#191A1C",
+        WebkitMaskImage: `url(${drawerEdge})`,
+        maskImage: `url(${drawerEdge})`,
+        WebkitMaskRepeat: "stretch",
+        maskRepeat: "stretch",
+        WebkitMaskSize: "100% 100%",
+        maskSize: "100% 100%",
+        WebkitMaskPosition: "left top",
+        maskPosition: "left top",
+      }}
+    />
   );
 }
 

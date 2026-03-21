@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import svgPaths from "./svg-x0e8ml4dfy";
+import React from "react";
 
 function Group() {
   return (

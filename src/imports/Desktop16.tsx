@@ -9,6 +9,7 @@ import { FigmaCategoryTab } from "../app/components/figma-category-tab";
 import { FigmaHexNode } from "../app/components/figma-hex-frame";
 import { FigmaArrow } from "../app/components/figma-arrow";
 import { FigmaTreeConnector } from "../app/components/figma-connector";
+import React from "react";
 
 /* ──────────────────────────── Top Bar ──────────────────────────── */
 
