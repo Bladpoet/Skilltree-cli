@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import svgPaths from "./svg-x0e8ml4dfy";
 
 function Group() {
@@ -23,7 +24,7 @@ function Palette() {
 function Frame() {
   return (
     <div className="relative shrink-0 size-[129px]">
-      <div className="absolute flex items-center justify-center left-0 size-[129px] top-0" style={{ "--transform-inner-width": "1200", "--transform-inner-height": "21" } as React.CSSProperties}>
+      <div className="absolute flex items-center justify-center left-0 size-[129px] top-0" style={{ "--transform-inner-width": "1200", "--transform-inner-height": "21" } as CSSProperties}>
         <div className="flex-none rotate-90">
           <div className="relative size-[129px]">
             <div className="absolute inset-[0.13%_5.68%_-0.71%_5.72%]">
@@ -34,7 +35,7 @@ function Frame() {
           </div>
         </div>
       </div>
-      <div className="absolute flex items-center justify-center left-[-23.61px] size-[176.217px] top-[-23.61px]" style={{ "--transform-inner-width": "1200", "--transform-inner-height": "21" } as React.CSSProperties}>
+      <div className="absolute flex items-center justify-center left-[-23.61px] size-[176.217px] top-[-23.61px]" style={{ "--transform-inner-width": "1200", "--transform-inner-height": "21" } as CSSProperties}>
         <div className="flex-none rotate-150">
           <div className="relative size-[129px]">
             <div className="absolute inset-[0.13%_5.68%_-0.71%_5.72%]">
@@ -45,7 +46,7 @@ function Frame() {
           </div>
         </div>
       </div>
-      <div className="absolute flex items-center justify-center left-[7.41px] size-[114.172px] top-[7.41px]" style={{ "--transform-inner-width": "1200", "--transform-inner-height": "21" } as React.CSSProperties}>
+      <div className="absolute flex items-center justify-center left-[7.41px] size-[114.172px] top-[7.41px]" style={{ "--transform-inner-width": "1200", "--transform-inner-height": "21" } as CSSProperties}>
         <div className="flex-none rotate-90">
           <div className="relative size-[114.172px]">
             <div className="absolute inset-[0.18%_6.61%]">

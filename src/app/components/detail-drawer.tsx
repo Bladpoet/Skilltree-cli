@@ -1,5 +1,9 @@
 import { ReactNode, useEffect, useRef } from "react";
-import { X } from "lucide-react";
+import {
+  DetailDrawerCategoryPill,
+  DetailDrawerCloseIcon,
+  DetailDrawerDecorativeEdge,
+} from "./detail-drawer-primitives";
 
 interface DetailDrawerProps {
   children?: ReactNode;
@@ -9,7 +13,7 @@ interface DetailDrawerProps {
 }
 
 export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: DetailDrawerProps) {
-  const scrollRef = useRef<HTMLElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -20,33 +24,31 @@ export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: Det
   return (
     <div className="absolute inset-0 z-20">
       <div className="absolute inset-0 bg-[#191a1c]/40" />
-      <aside
-        ref={scrollRef}
-        className="absolute right-0 top-0 h-full w-[443px] overflow-y-auto"
-        style={{ backgroundColor: "#191A1C" }}
-      >
-        <div className="relative h-full px-8 pt-6 pb-10">
-          <div className="absolute left-0 top-0 h-full w-px bg-[#191A1C]" />
-          <div className="flex items-center justify-between pb-3">
-            <div className="flex h-[24px] min-w-[69px] items-center justify-center rounded-sm border border-[#5f946a] bg-[linear-gradient(180deg,#1d3823_0%,#5f9469_100%)] px-4 opacity-90">
-              <span
-                className="text-[12px] text-white"
-                style={{ fontFamily: "'Marcellus', serif", lineHeight: "8px" }}
+      <div className="absolute inset-y-0 right-0 flex justify-end overflow-hidden pl-12">
+        <aside
+          ref={scrollRef}
+          className="relative h-full overflow-x-visible overflow-y-auto rounded-l-[8px]"
+          style={{
+            width: "min(100vw, 374px)",
+            backgroundColor: "#191A1C",
+          }}
+        >
+          <DetailDrawerDecorativeEdge />
+          <div className="relative z-[1] flex min-h-full flex-col px-8 pb-7 pt-6">
+            <div className="flex items-start justify-between gap-6">
+              <DetailDrawerCategoryPill label={categoryLabel ?? "Skill"} />
+              <button
+                onClick={onClose}
+                className="flex h-6 w-6 shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
+                aria-label="Close drawer"
               >
-                {categoryLabel ?? "Skill"}
-              </span>
+                <DetailDrawerCloseIcon />
+              </button>
             </div>
-            <button
-              onClick={onClose}
-              className="flex h-6 w-6 items-center justify-center text-[#c7c7c7] transition-colors hover:text-white"
-              aria-label="Close drawer"
-            >
-              <X size={14} />
-            </button>
+            <div className="mt-6">{children}</div>
           </div>
-          <div className="mt-3 border-t border-[#837e76] pt-10">{children}</div>
-        </div>
-      </aside>
+        </aside>
+      </div>
     </div>
   );
 }

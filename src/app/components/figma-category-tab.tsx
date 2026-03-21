@@ -1,5 +1,5 @@
 import svgPaths from "../../imports/svg-tfxbcoju7v";
-import imgTab from "../../assets/662ddf28ad8ff478932c11a0018d9a8fba6d077d.png";
+import imgTab from "../../assets/Category tab.png";
 
 interface FigmaCategoryTabProps {
   name: string;

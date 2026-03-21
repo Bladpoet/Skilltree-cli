@@ -1,7 +1,11 @@
-import { type ReactNode } from "react";
-import { AlertTriangle, ExternalLink, Folder, Sparkles } from "lucide-react";
 import { SkillNode } from "./skill-node";
 import type { RelatedConflict, SkillRecord } from "../types/skills";
+import {
+  DetailDrawerConflictPill,
+  DetailDrawerSectionHeading,
+  DetailDrawerSourceIcon,
+  DetailDrawerTriggerTag,
+} from "./detail-drawer-primitives";
 
 interface SkillDetailPanelProps {
   skill: SkillRecord;
@@ -9,60 +13,110 @@ interface SkillDetailPanelProps {
   onSelectConflict: (skillId: string) => void;
 }
 
-function SectionLabel({ children }: { children: ReactNode }) {
+function humanizeSegment(value: string) {
+  return value
+    .replace(/[-_]+/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function joinHumanList(values: string[]) {
+  if (values.length <= 1) {
+    return values[0] ?? "";
+  }
+
+  if (values.length === 2) {
+    return `${values[0]} and ${values[1]}`;
+  }
+
+  return `${values.slice(0, -1).join(", ")}, and ${values.at(-1)}`;
+}
+
+function buildBreadcrumbs(skill: SkillRecord) {
+  const sourceSegments = skill.source.split("/").filter(Boolean).map(humanizeSegment);
+
+  if (sourceSegments.length >= 2) {
+    return [sourceSegments[0], sourceSegments[1], "..."];
+  }
+
+  const pathSegments = skill.path
+    .split(/[\\/]+/)
+    .filter(Boolean)
+    .slice(-4, -1)
+    .map(humanizeSegment);
+
+  if (pathSegments.length >= 2) {
+    return [pathSegments[0], pathSegments[1], "..."];
+  }
+
+  return [humanizeSegment(skill.category), humanizeSegment(skill.name), "..."];
+}
+
+function buildConflictCopy(relatedConflicts: RelatedConflict[]) {
+  if (relatedConflicts.length === 0) {
+    return "";
+  }
+
+  if (relatedConflicts.length === 1) {
+    return relatedConflicts[0].conflict.summary;
+  }
+
+  const names = relatedConflicts
+    .slice(0, 3)
+    .map((entry) => humanizeSegment(entry.relatedSkill.name));
+  const extraCount = relatedConflicts.length - names.length;
+  const suffix = extraCount > 0 ? `, and ${extraCount} more` : "";
+
+  return `This skill conflicts with ${joinHumanList(names)}${suffix}. Select a node to inspect the conflicting skill.`;
+}
+
+function Breadcrumbs({ skill }: { skill: SkillRecord }) {
+  const breadcrumbs = buildBreadcrumbs(skill);
+
   return (
-    <p
-      className="text-[11px] uppercase tracking-[0.24em] text-[#8c8478]"
-      style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700 }}
+    <div
+      className="flex flex-wrap items-center gap-x-1 gap-y-1 text-[#9aa2b1]"
+      style={{
+        fontFamily: "'Marcellus', serif",
+        fontSize: "12px",
+        lineHeight: "1.33",
+      }}
     >
-      {children}
-    </p>
+      {breadcrumbs.map((crumb, index) => (
+        <span key={`${crumb}-${index}`} className="contents">
+          {index > 0 && <span>/</span>}
+          <span>{crumb}</span>
+        </span>
+      ))}
+    </div>
   );
 }
 
-function ConflictItem({
-  relatedConflict,
+function ConflictNodes({
+  entries,
   onSelect,
 }: {
-  relatedConflict: RelatedConflict;
+  entries: RelatedConflict[];
   onSelect: (skillId: string) => void;
 }) {
-  const { relatedSkill, conflict } = relatedConflict;
-
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(relatedSkill.id)}
-      className="flex w-full items-start gap-4 border border-[#31353d] bg-[#14171d] px-4 py-4 text-left transition-colors hover:border-[#6b654f] hover:bg-[#181c24]"
-    >
-      <div className="shrink-0 pt-1">
-        <SkillNode
-          id={`drawer-${relatedSkill.id}`}
-          label={relatedSkill.name}
-          iconKey={relatedSkill.name}
-          state={relatedSkill.conflictsWith.length > 0 ? "conflict" : "default"}
-          interactive={false}
-        />
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <span
-            className="border border-[#6b654f] px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[#dcb773]"
-            style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700 }}
-          >
-            {relatedSkill.category}
-          </span>
-          <span className="text-xs text-[#9aa2b1]">Click to inspect</span>
-        </div>
-        <p
-          className="break-words text-[18px] text-white"
-          style={{ fontFamily: "'Marcellus SC', serif", lineHeight: "1.2" }}
+    <div className="flex flex-wrap gap-[14px]">
+      {entries.map((entry) => (
+        <button
+          key={entry.relatedSkill.id}
+          type="button"
+          onClick={() => onSelect(entry.relatedSkill.id)}
+          className="rounded-sm outline-none transition-transform duration-150 hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-[#b79962] focus-visible:outline-offset-2"
+          title={humanizeSegment(entry.relatedSkill.name)}
         >
-          {relatedSkill.name}
-        </p>
-        <p className="text-[13px] leading-6 text-[#b8bec9]">{conflict.summary}</p>
-      </div>
-    </button>
+          <SkillNode
+            id={`drawer-${entry.relatedSkill.id}`}
+            label={humanizeSegment(entry.relatedSkill.name)}
+            iconKey={entry.relatedSkill.name}
+            interactive={false}
+          />
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -72,118 +126,94 @@ export function SkillDetailPanel({
   onSelectConflict,
 }: SkillDetailPanelProps) {
   return (
-    <div className="flex flex-col gap-8 text-[#d4d8df]">
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <span
-            className="w-fit border border-[#6b654f] px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-[#dcb773]"
-            style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700 }}
+    <div className="flex flex-col gap-10 text-white">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <h2
+              className="break-words text-white"
+              style={{
+                fontFamily: "'Marcellus SC', serif",
+                fontSize: "32px",
+                lineHeight: "1.1",
+              }}
+            >
+              {humanizeSegment(skill.name)}
+            </h2>
+            <Breadcrumbs skill={skill} />
+          </div>
+          <p
+            className="text-white"
+            style={{
+              fontFamily: "'Marcellus', serif",
+              fontSize: "16px",
+              lineHeight: "1.6",
+            }}
           >
-            {skill.category}
-          </span>
-          {relatedConflicts.length > 0 && (
-            <div className="flex items-center gap-2 bg-[linear-gradient(90deg,rgba(129,24,0,0.21)_26.033%,rgba(129,24,0,0)_99.961%)] pr-6">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#ffcdcd] text-[#811800]">
-                <AlertTriangle size={13} strokeWidth={2.4} />
-              </div>
-              <span
-                className="text-[10px] text-white"
-                style={{ fontFamily: "'Marcellus', serif", lineHeight: "14px" }}
-              >
-                Conflict
-              </span>
+            {skill.description}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <DetailDrawerSectionHeading label="Triggers list" />
+          <div className="flex flex-wrap items-center gap-4 overflow-hidden">
+            {skill.triggers.map((trigger) => (
+              <DetailDrawerTriggerTag key={trigger} label={trigger} />
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <DetailDrawerSectionHeading label="Source" />
+          {skill.sourceUrl ? (
+            <a
+              href={skill.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex w-fit items-center gap-1 text-[#2563eb] transition-opacity hover:opacity-90"
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "12px",
+                lineHeight: "1.33",
+                fontWeight: 500,
+              }}
+            >
+              <DetailDrawerSourceIcon />
+              <span>{skill.source}</span>
+            </a>
+          ) : (
+            <div
+              className="flex w-fit items-center gap-1 text-[#2563eb]"
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "12px",
+                lineHeight: "1.33",
+                fontWeight: 500,
+              }}
+            >
+              <DetailDrawerSourceIcon />
+              <span>{skill.source}</span>
             </div>
           )}
         </div>
-
-        <div className="flex flex-col items-start gap-3">
-          <div className="self-center">
-            <SkillNode
-              id={`detail-${skill.id}`}
-              label={skill.name}
-              iconKey={skill.name}
-              state="selected"
-              interactive={false}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <h2
-              className="break-words text-white"
-              style={{ fontFamily: "'Marcellus SC', serif", fontSize: "32px", lineHeight: "1.15" }}
-            >
-              {skill.name}
-            </h2>
-            <div
-              className="flex flex-wrap items-center gap-2 text-[#9aa2b1]"
-              style={{ fontFamily: "'Marcellus', serif", fontSize: "12px", lineHeight: "16px" }}
-            >
-              <span>{skill.source}</span>
-            </div>
-          </div>
-          <p className="text-[14px] leading-7 text-[#b8bec9]">{skill.description}</p>
-        </div>
       </div>
 
-      <div className="flex flex-col gap-3">
-        <SectionLabel>Path</SectionLabel>
-        <div className="flex items-start gap-3 border border-[#2f3238] bg-[#111318] px-4 py-3">
-          <Folder size={16} className="mt-1 shrink-0 text-[#8c8478]" strokeWidth={1.8} />
-          <p className="break-all text-xs leading-6 text-[#d4d8df]" title={skill.path}>
-            {skill.path}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <SectionLabel>Triggers List</SectionLabel>
-        <div className="flex flex-wrap gap-3">
-          {skill.triggers.map((trigger) => (
-            <span
-              key={trigger}
-              className="max-w-full break-words border border-[#31353d] bg-[#14171d] px-3 py-1.5 text-xs text-[#d8dde5]"
-              title={trigger}
-            >
-              {trigger}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <SectionLabel>Source</SectionLabel>
-        {skill.sourceUrl ? (
-          <a
-            href={skill.sourceUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="flex w-fit items-center gap-2 text-sm text-[#2563eb] underline underline-offset-2"
-          >
-            <Sparkles size={14} strokeWidth={1.8} />
-            <span>{skill.source}</span>
-            <ExternalLink size={14} strokeWidth={1.8} />
-          </a>
-        ) : (
-          <p className="text-sm text-[#9aa2b1]">{skill.source}</p>
-        )}
-      </div>
+      <div className="h-px w-full bg-[#837f76]" />
 
       {relatedConflicts.length > 0 && (
-        <div className="flex flex-col gap-4 border border-[#2f3238] bg-[#111318] px-4 py-4">
-          <div className="flex flex-col gap-2">
-            <SectionLabel>Conflict</SectionLabel>
-            <p className="text-[14px] leading-7 text-[#b8bec9]">
-              This skill overlaps with the following skills. Select one to jump directly to its detail view.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3">
-            {relatedConflicts.map((entry) => (
-              <ConflictItem
-                key={entry.relatedSkill.id}
-                relatedConflict={entry}
-                onSelect={onSelectConflict}
-              />
-            ))}
-          </div>
+        <div className="flex flex-col gap-4">
+          <DetailDrawerConflictPill />
+          <p
+            className="text-white"
+            style={{
+              fontFamily: "'Marcellus', serif",
+              fontSize: "14px",
+              lineHeight: "1.55",
+            }}
+          >
+            {buildConflictCopy(relatedConflicts)}
+          </p>
+          <ConflictNodes entries={relatedConflicts} onSelect={onSelectConflict} />
         </div>
       )}
     </div>
