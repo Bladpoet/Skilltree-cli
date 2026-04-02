@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef } from "react";
 import {
   DetailDrawerCategoryPill,
-  DetailDrawerCloseIcon,
+  DetailDrawerCloseButton,
   DetailDrawerDecorativeEdge,
 } from "./detail-drawer-primitives";
 
@@ -27,27 +27,25 @@ export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: Det
       <div className="absolute inset-y-0 right-0 flex justify-end overflow-visible">
         <div
           className="relative h-full overflow-visible"
-          style={{
-            width: "min(100vw, 374px)",
-          }}
+          style={{ width: "min(100vw, 403px)" }}
         >
           <DetailDrawerDecorativeEdge />
           <aside
             ref={scrollRef}
             className="relative z-[1] h-full overflow-x-visible overflow-y-auto rounded-l-[8px]"
-            style={{
-              backgroundColor: "#191A1C",
-            }}
+            style={{ backgroundColor: "rgb(255,247,227)" }}
           >
-            <div className="relative z-[1] flex min-h-full flex-col px-8 pb-7 pt-6">
-              <div className="flex items-start justify-between gap-6">
+            <div className="relative z-[1] flex min-h-full flex-col p-6">
+              {/* Header row: tab pill LEFT, close button RIGHT */}
+              <div className="flex items-center justify-between gap-4">
                 <DetailDrawerCategoryPill label={categoryLabel ?? "Skill"} />
                 <button
                   onClick={onClose}
-                  className="flex h-6 w-6 shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
+                  className="flex shrink-0 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
                   aria-label="Close drawer"
+                  style={{ width: 24, height: 24 }}
                 >
-                  <DetailDrawerCloseIcon />
+                  <DetailDrawerCloseButton />
                 </button>
               </div>
               <div className="mt-6">{children}</div>

@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import imgClaudeSkillTreeBg from "../../assets/claude-skill-tree-bg.png";
 
 interface AppShellProps {
   topBar: ReactNode;
@@ -8,13 +9,11 @@ interface AppShellProps {
 
 export function AppShell({ topBar, categoryRail, detailDrawer }: AppShellProps) {
   return (
-    <div
-      className="relative h-screen w-screen overflow-hidden"
-      style={{
-        background: "linear-gradient(180deg, #151821 0%, #050814 100%)",
-      }}
-    >
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,rgba(196,182,138,0.08),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(72,87,122,0.10),transparent_30%)]" />
+    <div className="relative h-screen w-screen overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0500] to-[#0e0900]" />
+        <img src={imgClaudeSkillTreeBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      </div>
       <div className="relative flex h-full min-w-0 flex-col">
         {topBar}
         {categoryRail}

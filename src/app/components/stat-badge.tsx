@@ -7,12 +7,12 @@ interface StatBadgeProps {
 
 export function StatBadge({ value, label }: StatBadgeProps) {
   return (
-    <div className="flex shrink-0 flex-col items-center" style={{ width: "63.663px" }}>
+    <div className="flex shrink-0 flex-col items-center" style={{ width: "77.72px" }}>
       <div className="mb-[-7px]">
-        <OrnateFrame size={64}>
+        <OrnateFrame size={77.72}>
           <span
             className="text-center text-white"
-            style={{ fontFamily: "'Cinzel', serif", fontSize: "31px", lineHeight: 1 }}
+            style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "39.166px", fontWeight: 600, lineHeight: 1 }}
           >
             {value}
           </span>
@@ -22,16 +22,17 @@ export function StatBadge({ value, label }: StatBadgeProps) {
         className="flex h-4 w-full items-center justify-center px-1"
         style={{
           background:
-            "linear-gradient(90deg, rgba(53,54,56,0) 0%, rgba(94,95,98,1) 50.5%, rgba(53,54,56,0) 100%)",
+            "linear-gradient(90deg, rgba(53,54,56,0) 0%, rgba(20,12,5,1) 50.5%, rgba(53,54,56,0) 100%)",
         }}
       >
         <p
-          className="whitespace-nowrap text-center text-white"
+          className="whitespace-nowrap text-center"
           style={{
             fontFamily: "'Rajdhani', sans-serif",
-            fontSize: "11px",
+            fontSize: "12.953px",
             fontWeight: 600,
-            lineHeight: "16px",
+            lineHeight: "1.5",
+            color: "#ffefbe",
           }}
         >
           {label}

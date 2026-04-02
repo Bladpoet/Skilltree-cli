@@ -13,7 +13,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { data: skillData, schemaDifferences } = useSkillData();
 
-  const { categories, conflicting, similar } = skillData.meta.counts;
+  const { skills: skillsCount, categories, conflicting: overlapping } = skillData.meta.counts;
   const groupedCategories = useMemo(() => groupSkillsByCategory(skillData), [skillData]);
   const selectedSkill = getSelectedSkill(skillData, selectedId);
   const relatedConflicts = getRelatedConflicts(skillData, selectedId);
@@ -33,14 +33,13 @@ export default function App() {
 
   return (
     <AppShell
-      topBar={<TopBar stats={{ categories, conflicting, similar }} />}
+      topBar={<TopBar stats={{ skills: skillsCount, categories, overlapping }} />}
       categoryRail={
         <CategoryRail>
           {groupedCategories.map((group) => (
             <CategoryCluster
               key={group.category}
               categoryName={group.category}
-              orientation={1}
               skills={group.skills}
               selectedId={selectedId}
               onSelectSkill={(skillId) => {

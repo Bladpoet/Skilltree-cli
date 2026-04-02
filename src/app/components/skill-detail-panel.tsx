@@ -1,11 +1,10 @@
 import { SkillNode } from "./skill-node";
 import type { RelatedConflict, SkillRecord } from "../types/skills";
 import {
-  DetailDrawerConflictPill,
   DetailDrawerSectionHeading,
-  DetailDrawerSourceIcon,
   DetailDrawerTriggerTag,
 } from "./detail-drawer-primitives";
+import { Globe } from "lucide-react";
 
 interface SkillDetailPanelProps {
   skill: SkillRecord;
@@ -13,30 +12,17 @@ interface SkillDetailPanelProps {
   onSelectConflict: (skillId: string) => void;
 }
 
+const DARK = "rgb(25,26,28)";
+
 function humanizeSegment(value: string) {
   return value
     .replace(/[-_]+/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function joinHumanList(values: string[]) {
-  if (values.length <= 1) {
-    return values[0] ?? "";
-  }
-
-  if (values.length === 2) {
-    return `${values[0]} and ${values[1]}`;
-  }
-
-  return `${values.slice(0, -1).join(", ")}, and ${values.at(-1)}`;
-}
-
 function buildBreadcrumbs(skill: SkillRecord) {
   const sourceSegments = skill.source.split("/").filter(Boolean).map(humanizeSegment);
-
-  if (sourceSegments.length >= 2) {
-    return [sourceSegments[0], sourceSegments[1], "..."];
-  }
+  if (sourceSegments.length >= 2) return [sourceSegments[0], sourceSegments[1], "..."];
 
   const pathSegments = skill.path
     .split(/[\\/]+/)
@@ -44,42 +30,16 @@ function buildBreadcrumbs(skill: SkillRecord) {
     .slice(-4, -1)
     .map(humanizeSegment);
 
-  if (pathSegments.length >= 2) {
-    return [pathSegments[0], pathSegments[1], "..."];
-  }
-
+  if (pathSegments.length >= 2) return [pathSegments[0], pathSegments[1], "..."];
   return [humanizeSegment(skill.category), humanizeSegment(skill.name), "..."];
-}
-
-function buildConflictCopy(relatedConflicts: RelatedConflict[]) {
-  if (relatedConflicts.length === 0) {
-    return "";
-  }
-
-  if (relatedConflicts.length === 1) {
-    return relatedConflicts[0].conflict.summary;
-  }
-
-  const names = relatedConflicts
-    .slice(0, 3)
-    .map((entry) => humanizeSegment(entry.relatedSkill.name));
-  const extraCount = relatedConflicts.length - names.length;
-  const suffix = extraCount > 0 ? `, and ${extraCount} more` : "";
-
-  return `This skill conflicts with ${joinHumanList(names)}${suffix}. Select a node to inspect the conflicting skill.`;
 }
 
 function Breadcrumbs({ skill }: { skill: SkillRecord }) {
   const breadcrumbs = buildBreadcrumbs(skill);
-
   return (
     <div
-      className="flex flex-wrap items-center gap-x-1 gap-y-1 text-[#9aa2b1]"
-      style={{
-        fontFamily: "'Marcellus', serif",
-        fontSize: "12px",
-        lineHeight: "1.33",
-      }}
+      className="flex flex-wrap items-center gap-x-1 gap-y-1"
+      style={{ fontFamily: "'Marcellus', serif", fontSize: "12px", lineHeight: "1.33", color: "rgb(109,115,126)" }}
     >
       {breadcrumbs.map((crumb, index) => (
         <span key={`${crumb}-${index}`} className="contents">
@@ -91,7 +51,7 @@ function Breadcrumbs({ skill }: { skill: SkillRecord }) {
   );
 }
 
-function ConflictNodes({
+function OverlapNodes({
   entries,
   onSelect,
 }: {
@@ -120,100 +80,90 @@ function ConflictNodes({
   );
 }
 
-export function SkillDetailPanel({
-  skill,
-  relatedConflicts,
-  onSelectConflict,
-}: SkillDetailPanelProps) {
+export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: SkillDetailPanelProps) {
+  const dependents = skill.dependents ?? [];
+
   return (
-    <div className="flex flex-col gap-10 text-white">
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <h2
-              className="break-words text-white"
-              style={{
-                fontFamily: "'Marcellus SC', serif",
-                fontSize: "32px",
-                lineHeight: "1.1",
-              }}
-            >
-              {humanizeSegment(skill.name)}
-            </h2>
-            <Breadcrumbs skill={skill} />
-          </div>
-          <p
-            className="text-white"
-            style={{
-              fontFamily: "'Marcellus', serif",
-              fontSize: "16px",
-              lineHeight: "1.6",
-            }}
-          >
-            {skill.description}
-          </p>
-        </div>
+    <div className="flex flex-col gap-6" style={{ color: DARK }}>
+      {/* Skill name + breadcrumbs */}
+      <div className="flex flex-col gap-1">
+        <h2
+          className="break-words"
+          style={{ fontFamily: "'Marcellus SC', serif", fontSize: "28px", lineHeight: "1.1", color: DARK }}
+        >
+          {humanizeSegment(skill.name)}
+        </h2>
+        <Breadcrumbs skill={skill} />
+      </div>
 
-        <div className="flex flex-col gap-2">
-          <DetailDrawerSectionHeading label="Triggers list" />
-          <div className="flex flex-wrap items-center gap-4 overflow-hidden">
-            {skill.triggers.map((trigger) => (
-              <DetailDrawerTriggerTag key={trigger} label={trigger} />
-            ))}
-          </div>
-        </div>
+      {/* Description */}
+      <p style={{ fontFamily: "'Marcellus', serif", fontSize: "16px", lineHeight: "1.6", color: DARK }}>
+        {skill.description}
+      </p>
 
-        <div className="flex flex-col gap-2">
-          <DetailDrawerSectionHeading label="Source" />
-          {skill.sourceUrl ? (
-            <a
-              href={skill.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="flex w-fit items-center gap-1 text-[#2563eb] transition-opacity hover:opacity-90"
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "12px",
-                lineHeight: "1.33",
-                fontWeight: 500,
-              }}
-            >
-              <DetailDrawerSourceIcon />
-              <span>{skill.source}</span>
-            </a>
-          ) : (
-            <div
-              className="flex w-fit items-center gap-1 text-[#2563eb]"
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "12px",
-                lineHeight: "1.33",
-                fontWeight: 500,
-              }}
-            >
-              <DetailDrawerSourceIcon />
-              <span>{skill.source}</span>
-            </div>
+      {/* Triggers */}
+      <div className="flex flex-col gap-3">
+        <DetailDrawerSectionHeading label="Triggers" />
+        <div className="flex flex-col gap-3">
+          {skill.triggers.map((trigger) => (
+            <DetailDrawerTriggerTag key={trigger} label={trigger} />
+          ))}
+          {skill.triggers.length === 0 && (
+            <span style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", color: "rgb(109,115,126)" }}>
+              None defined
+            </span>
           )}
         </div>
       </div>
 
-      <div className="h-px w-full bg-[#837f76]" />
+      {/* Dependents */}
+      {dependents.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <DetailDrawerSectionHeading label="Dependents" />
+          <div className="flex flex-col gap-1">
+            {dependents.map((dep) => (
+              <div
+                key={dep}
+                style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.5", color: DARK }}
+              >
+                <span style={{ color: "rgb(109,115,126)", marginRight: 6 }}>↳</span>
+                {humanizeSegment(dep)}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {relatedConflicts.length > 0 && (
-        <div className="flex flex-col gap-4">
-          <DetailDrawerConflictPill />
-          <p
-            className="text-white"
-            style={{
-              fontFamily: "'Marcellus', serif",
-              fontSize: "14px",
-              lineHeight: "1.55",
-            }}
+      {/* Source */}
+      <div className="flex flex-col gap-3">
+        <DetailDrawerSectionHeading label="Source" />
+        {skill.sourceUrl ? (
+          <a
+            href={skill.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="flex w-fit items-center gap-2 transition-opacity hover:opacity-80"
+            style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.4", color: DARK }}
           >
-            {buildConflictCopy(relatedConflicts)}
-          </p>
-          <ConflictNodes entries={relatedConflicts} onSelect={onSelectConflict} />
+            <Globe size={16} className="shrink-0" style={{ color: "rgb(109,115,126)" }} />
+            <span className="underline underline-offset-2">{skill.source}</span>
+          </a>
+        ) : (
+          <div
+            className="flex w-fit items-center gap-2"
+            style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.4", color: DARK }}
+          >
+            <Globe size={16} className="shrink-0" style={{ color: "rgb(109,115,126)" }} />
+            <span>{skill.source}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Overlaps */}
+      {relatedConflicts.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <DetailDrawerSectionHeading label="Overlaps" />
+          <OverlapNodes entries={relatedConflicts} onSelect={onSelectConflict} />
         </div>
       )}
     </div>

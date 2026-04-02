@@ -1,8 +1,8 @@
-import { useState, useCallback, type ReactNode } from "react";
-import svgPaths from "../../imports/svg-x0e8ml4dfy";
-import * as LucideIcons from "lucide-react";
-import { skillIconMap, FALLBACK_ICON } from "./skill-node-icon-map";
-import { AlertTriangle } from "lucide-react";
+import { useState, useCallback } from "react";
+import imgEffect from "../../assets/node-effect.png";
+import imgIconDefault from "../../assets/node-icon.svg";
+import imgIconHover from "../../assets/node-icon-hover.svg";
+import imgIconPressed from "../../assets/node-icon-pressed.svg";
 
 export type SkillNodeState = "default" | "hover" | "selected" | "conflict";
 
@@ -10,213 +10,293 @@ export interface SkillNodeProps {
   id: string;
   label: string;
   iconKey?: string;
-  iconOverride?: ReactNode;
   state?: SkillNodeState;
   onClick?: () => void;
   interactive?: boolean;
 }
 
+// Exact dimensions from Figma
+const W = 88.934;
+const H = 86.958;
+const OVERLAP_W = 95.07;
+// Inner centered frame: left 2.44, top 0.88, size 83.739
+const FRAME_SIZE = 83.739;
+const FRAME_L = 2.44;
+const FRAME_T = 0.88;
+// Base diamond size inside the frame (rotated 45deg)
+const BASE_SIZE = 59.212;
+// Inner outline (rotated 45deg) — wrapper 72.574 at left 8.02 top 6.47
+const OUTLINE_WRAPPER = 72.574;
+const OUTLINE_SIZE = 51.317;
+// Figma gives these in outer node coordinates; convert to inner-frame coordinates.
+const OUTLINE_L = 8.02 - FRAME_L;
+const OUTLINE_T = 6.47 - FRAME_T;
+const DECORATION_SIZE = 59.29;
+const DECORATION_L = 12.28;
+const DECORATION_T = 12.28;
+
+type StateKey = "default" | "hover" | "pressed" | "overlap";
+
 interface StateColors {
-  outerFill: string;
-  outerOpacity: number;
-  secondaryFill: string;
-  secondaryOpacity: number;
-  innerFill: string;
-  innerOpacity: number;
-  innerStroke: string;
-  innerStrokeWidth: number;
-  iconColor: string;
-  labelColor: string;
-  glowColor: string;
-  glowOpacity: number;
-  glowBlur: number;
+  baseStroke: string;
+  outlineStroke: string;
+  boxShadow?: string;
+  insetShadow?: string;
 }
 
-const STATE_COLORS: Record<SkillNodeState, StateColors> = {
+const COLORS: Record<StateKey, StateColors> = {
   default: {
-    outerFill: "#F0F1F3",
-    outerOpacity: 1,
-    secondaryFill: "#F0F1F3",
-    secondaryOpacity: 0.46,
-    innerFill: "#515E59",
-    innerOpacity: 0.48,
-    innerStroke: "#F0F1F3",
-    innerStrokeWidth: 0.16,
-    iconColor: "rgba(255,255,255,0.85)",
-    labelColor: "#ffffff",
-    glowColor: "transparent",
-    glowOpacity: 0,
-    glowBlur: 0,
+    baseStroke: "#d2d2d2",
+    outlineStroke: "#ae9a73",
   },
   hover: {
-    outerFill: "#DCB773",
-    outerOpacity: 1,
-    secondaryFill: "#DCB773",
-    secondaryOpacity: 0.38,
-    innerFill: "#515E59",
-    innerOpacity: 0.56,
-    innerStroke: "#DCB773",
-    innerStrokeWidth: 0.24,
-    iconColor: "rgba(255,255,255,0.92)",
-    labelColor: "#ffffff",
-    glowColor: "#DCB773",
-    glowOpacity: 0.12,
-    glowBlur: 12,
+    baseStroke: "#ffe38f",
+    outlineStroke: "#ffdd79",
+    boxShadow: "0px 2px 4px 0px rgba(249,201,61,0.26)",
+    insetShadow: "inset 0px 0px 2.961px 0px #c0a46c",
   },
-  selected: {
-    outerFill: "#DCB773",
-    outerOpacity: 1,
-    secondaryFill: "#DCB773",
-    secondaryOpacity: 0.46,
-    innerFill: "#5A5A47",
-    innerOpacity: 0.6,
-    innerStroke: "#DCB773",
-    innerStrokeWidth: 0.28,
-    iconColor: "#ffffff",
-    labelColor: "#ffffff",
-    glowColor: "#DCB773",
-    glowOpacity: 0.18,
-    glowBlur: 18,
+  pressed: {
+    baseStroke: "#ffe38f",
+    outlineStroke: "#ffdd79",
+    boxShadow: "0px 2px 4px 0px rgba(249,201,61,0.26)",
+    insetShadow: "inset 0px 0px 2.961px 0px #c0a46c",
   },
-  conflict: {
-    outerFill: "#6B3A3A",
-    outerOpacity: 1,
-    secondaryFill: "#6B3A3A",
-    secondaryOpacity: 0.4,
-    innerFill: "#765555",
-    innerOpacity: 0.48,
-    innerStroke: "#6B3A3A",
-    innerStrokeWidth: 0.22,
-    iconColor: "rgba(255,255,255,0.82)",
-    labelColor: "#ffffff",
-    glowColor: "transparent",
-    glowOpacity: 0,
-    glowBlur: 0,
+  overlap: {
+    baseStroke: "#d2d2d2",
+    outlineStroke: "#ae9a73",
   },
 };
 
-function resolveIcon(iconKey?: string): ReactNode {
-  const name = iconKey ? skillIconMap[iconKey] ?? FALLBACK_ICON : FALLBACK_ICON;
-  const IconComponent = (LucideIcons as Record<string, React.ComponentType<LucideIcons.LucideProps>>)[name];
-  if (!IconComponent) {
-    const Fallback = (LucideIcons as Record<string, React.ComponentType<LucideIcons.LucideProps>>)[FALLBACK_ICON];
-    return Fallback ? <Fallback size={36} strokeWidth={1.5} /> : null;
-  }
-  return <IconComponent size={36} strokeWidth={1.5} />;
+function toStateKey(state: SkillNodeState): StateKey {
+  if (state === "selected") return "pressed";
+  if (state === "conflict") return "overlap";
+  return state as StateKey;
 }
 
-const HEX_SIZE = 94;
+const FIGMA_DECORATION_SRC: Record<StateKey, string> = {
+  default: "https://www.figma.com/api/mcp/asset/80bcbfbf-037d-4ade-8279-25a98dd63207",
+  hover: "https://www.figma.com/api/mcp/asset/02821831-739a-4659-b732-835405d52699",
+  pressed: "https://www.figma.com/api/mcp/asset/8f1d14bb-0bde-402b-9935-15f78458328b",
+  overlap: "https://www.figma.com/api/mcp/asset/78881cf2-f6ed-4b74-adcf-9d596561ad36",
+};
 
-function HexFrame({ colors, children }: { colors: StateColors; children?: ReactNode }) {
+const OVERLAP_VECTOR = "https://www.figma.com/api/mcp/asset/a805a779-6ed0-468f-a900-388fb62586c2";
+const OVERLAP_VECTOR_STROKE_A = "https://www.figma.com/api/mcp/asset/8dd16920-2c4c-4415-9e58-33cd3c79c952";
+const OVERLAP_VECTOR_STROKE_B = "https://www.figma.com/api/mcp/asset/cfe3bdb8-0e9b-4502-bee5-0f108b1d0c63";
+const OVERLAP_VECTOR_STROKE_C = "https://www.figma.com/api/mcp/asset/91d9d264-b46c-4476-9a60-21178d3881c9";
+const OVERLAP_ELLIPSE_STROKE = "https://www.figma.com/api/mcp/asset/14abefaf-aaf3-40cd-b11a-bc78f73a2f97";
+
+function DiamondNode({ stateKey }: { stateKey: StateKey }) {
+  const colors = COLORS[stateKey];
+  const isActiveState = stateKey === "hover" || stateKey === "pressed";
+  const decorationSrc = FIGMA_DECORATION_SRC[stateKey];
+  const iconSrc =
+    stateKey === "hover" ? imgIconHover : stateKey === "pressed" ? imgIconPressed : imgIconDefault;
+
+  // Sun icon position: centered at (50%-0.1px, 50%+0.01px) size 26.259
+  const sunSize = 26.259;
+  const sunL = FRAME_SIZE / 2 - sunSize / 2 - 0.1;
+  const sunT = FRAME_SIZE / 2 - sunSize / 2 + 0.01;
+
   return (
-    <div className="relative shrink-0" style={{ width: HEX_SIZE, height: HEX_SIZE }}>
-      {colors.glowOpacity > 0 && (
+    <div
+      className="relative shrink-0"
+      style={{ width: W, height: H }}
+    >
+      {/* Overlap badge — centered at top, sticking out above diamond */}
+      {stateKey === "overlap" && (
         <div
-          className="absolute inset-[-10px] rounded-full pointer-events-none"
+          className="absolute z-10"
           style={{
-            background: colors.glowColor,
-            opacity: colors.glowOpacity,
-            filter: `blur(${colors.glowBlur}px)`,
+            width: 17.478,
+            left: "calc(50% + 0.28px)",
+            transform: "translateX(-50%)",
+            top: "-5.75%",
+            bottom: "85.65%",
+            overflow: "clip",
           }}
-        />
+        >
+          <div className="absolute" style={{ inset: "11.12% 8.34% 16.68% 8.34%" }}>
+            <img alt="" src={OVERLAP_VECTOR} className="absolute block max-w-none size-full" draggable={false} />
+          </div>
+          <div className="absolute" style={{ inset: "8.15% 4.2% 12.58% 4.48%" }}>
+            <img alt="" src={OVERLAP_VECTOR_STROKE_A} className="absolute block max-w-none size-full" draggable={false} />
+          </div>
+          <div className="absolute flex items-center justify-center" style={{ inset: "8.15% 4.49% 12.58% 4.2%" }}>
+            <div style={{ width: 15.96, height: 13.855, transform: "rotate(180deg) scaleY(-1)", flex: "none" }}>
+              <div className="relative size-full">
+                <img alt="" src={OVERLAP_VECTOR_STROKE_B} className="absolute block max-w-none size-full" draggable={false} />
+              </div>
+            </div>
+          </div>
+          <div className="absolute" style={{ inset: "37.5% 45.83% 45.83% 45.83%" }}>
+            <img alt="" src={OVERLAP_VECTOR_STROKE_C} className="absolute block max-w-none size-full" draggable={false} />
+          </div>
+          <div className="absolute" style={{ inset: "59% 43.23% 29.71% 45.2%" }}>
+            <img alt="" src={OVERLAP_ELLIPSE_STROKE} className="absolute block max-w-none size-full" draggable={false} />
+          </div>
+        </div>
       )}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex-none rotate-90" style={{ width: HEX_SIZE, height: HEX_SIZE }}>
-          <div className="relative size-full">
-            <div className="absolute inset-[0.13%_5.68%_-0.71%_5.72%]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 114.296 129.751">
-                <path d={svgPaths.p340c7e00} fill={colors.outerFill} opacity={colors.outerOpacity} />
-              </svg>
+
+      {/* Inner frame — hosts all diamond layers */}
+      <div
+        className="absolute"
+        style={{ left: FRAME_L, top: FRAME_T, width: FRAME_SIZE, height: FRAME_SIZE, isolation: "isolate" }}
+      >
+        {/* Base diamond */}
+        <div className="absolute flex items-center justify-center" style={{ inset: 0 }}>
+          <div style={{ transform: "rotate(45deg)", flex: "none" }}>
+            <div
+              style={{
+                width: BASE_SIZE,
+                height: BASE_SIZE,
+                border: `0.493px solid ${colors.baseStroke}`,
+                opacity: 0.8,
+                boxSizing: "border-box",
+                boxShadow: isActiveState ? colors.boxShadow : undefined,
+                position: "relative",
+                backgroundColor: "#2f281d",
+              }}
+            >
+              {isActiveState && (
+                <>
+                  <div aria-hidden="true" className="absolute inset-0 bg-[#2f281d]" />
+                  <div className="absolute inset-0 rounded-[inherit]" style={{ boxShadow: colors.insetShadow }} />
+                </>
+              )}
             </div>
           </div>
         </div>
-      </div>
-      <div className="absolute flex items-center justify-center" style={{ left: -17.19, top: -17.19, width: 128.329, height: 128.329 }}>
-        <div className="flex-none rotate-150" style={{ width: HEX_SIZE, height: HEX_SIZE }}>
-          <div className="relative size-full">
-            <div className="absolute inset-[0.13%_5.68%_-0.71%_5.72%]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 114.296 129.751">
-                <path d={svgPaths.p340c7e00} fill={colors.secondaryFill} opacity={colors.secondaryOpacity} />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="absolute flex items-center justify-center" style={{ left: 5.4, top: 5.4, width: 83.145, height: 83.145 }}>
-        <div className="flex-none rotate-90" style={{ width: 83.145, height: 83.145 }}>
-          <div className="relative size-full">
-            <div className="absolute inset-[0.18%_6.61%]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 99.0762 113.754">
-                <path
-                  d={svgPaths.p3c008800}
-                  fill={colors.innerFill}
-                  opacity={colors.innerOpacity}
-                  stroke={colors.innerStroke}
-                  strokeWidth={colors.innerStrokeWidth}
+
+        {/* Effect texture overlay */}
+        <div className="absolute flex items-center justify-center" style={{ inset: 0 }}>
+          <div style={{ transform: "rotate(45deg)", flex: "none" }}>
+            <div
+              style={{
+                width: BASE_SIZE,
+                height: BASE_SIZE,
+                opacity: 0.8,
+                position: "relative",
+              }}
+            >
+              <img
+                src={imgEffect}
+                alt=""
+                className="absolute inset-0 max-w-none object-cover size-full"
+                style={{ mixBlendMode: "luminosity", opacity: 0.4 }}
+                draggable={false}
+              />
+              {isActiveState && (
+                <div
+                  className="absolute inset-0 rounded-[inherit]"
+                  style={{ boxShadow: colors.insetShadow }}
                 />
-              </svg>
+              )}
             </div>
           </div>
         </div>
-      </div>
-      {children && <div className="absolute inset-0 z-[1] flex items-center justify-center">{children}</div>}
-    </div>
-  );
-}
 
-function ConflictBadge() {
-  return (
-    <div className="absolute -right-[2px] -top-[2px] z-[2]">
-      <div className="flex size-[22px] items-center justify-center rounded-full border border-[#6B3A3A] bg-[#2A1A1A]">
-        <AlertTriangle size={12} className="text-[#FF8A80]" strokeWidth={2.5} />
-      </div>
-    </div>
-  );
-}
-
-function SkillNodeContents({
-  effectiveState,
-  colors,
-  icon,
-  label,
-}: {
-  effectiveState: SkillNodeState;
-  colors: StateColors;
-  icon: ReactNode;
-  label: string;
-}) {
-  return (
-    <>
-      <div className="relative">
-        <HexFrame colors={colors}>
-          <div style={{ color: colors.iconColor }} className="transition-colors duration-200">
-            <div className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">{icon}</div>
+        {/* Inner outline diamond */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{ left: OUTLINE_L, top: OUTLINE_T, width: OUTLINE_WRAPPER, height: OUTLINE_WRAPPER }}
+        >
+          <div style={{ transform: "rotate(45deg)", flex: "none" }}>
+            <div
+              style={{
+                width: OUTLINE_SIZE,
+                height: OUTLINE_SIZE,
+                border: `0.493px solid ${colors.outlineStroke}`,
+                opacity: 0.8,
+                boxSizing: "border-box",
+              }}
+            />
           </div>
-        </HexFrame>
-        {effectiveState === "conflict" && <ConflictBadge />}
+        </div>
+
+        {/* Decoration image — rotated 90deg, inset ~15-17% */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={
+            stateKey === "pressed"
+              ? {
+                  left: "50%",
+                  top: "50%",
+                  width: 59.29,
+                  height: 59.29,
+                  transform: "translate(calc(-50% - 0.1px), calc(-50% - 0.83px))",
+                }
+              : { left: DECORATION_L, top: DECORATION_T, width: DECORATION_SIZE, height: DECORATION_SIZE }
+          }
+        >
+          <div style={{ transform: "rotate(90deg)", flex: "none", width: "100%", height: "100%" }}>
+            <div className="relative size-full">
+              <img src={decorationSrc} alt="" className="absolute block max-w-none size-full" draggable={false} />
+            </div>
+          </div>
+        </div>
+
+        {/* Sun icon */}
+        <div
+          className="absolute"
+          style={{ left: sunL, top: sunT, width: sunSize, height: sunSize }}
+        >
+          {stateKey === "hover" ? (
+            // Hover: icon wrapped in slightly larger container, rotated -15deg
+            <div
+              className="flex items-center justify-center"
+              style={{ width: 32.16, height: 32.16, marginLeft: (sunSize - 32.16) / 2, marginTop: (sunSize - 32.16) / 2 }}
+            >
+              <div style={{ transform: "rotate(-15deg)", flex: "none" }}>
+                <div className="relative" style={{ width: sunSize, height: sunSize }}>
+                  <img src={iconSrc} alt="" className="absolute block max-w-none size-full" draggable={false} />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <img src={iconSrc} alt="" className="absolute block max-w-none size-full" draggable={false} />
+          )}
+        </div>
       </div>
+    </div>
+  );
+}
+
+function NodeLabel({ label }: { label: string }) {
+  return (
+    <div
+      className="flex items-center justify-center overflow-hidden shrink-0"
+      style={{
+        width: "100%",
+        height: 20,
+        marginTop: -20,
+        background:
+          "linear-gradient(90deg, rgba(53,54,56,0) 0%, #5e5f62 50.5%, rgba(53,54,56,0) 100%)",
+        paddingLeft: 4.626,
+        paddingRight: 4.626,
+        boxSizing: "border-box",
+      }}
+    >
       <span
-        className="block min-w-full overflow-hidden text-ellipsis whitespace-nowrap text-center"
+        className="block truncate text-center text-white whitespace-nowrap"
         style={{
-          fontFamily: "'Marcellus SC', serif",
-          fontSize: "10.2px",
-          color: colors.labelColor,
-          maxWidth: HEX_SIZE,
-          textShadow: "0 1px 1px rgba(0,0,0,0.35)",
+          fontFamily: "'Rajdhani', sans-serif",
+          fontSize: "13px",
+          fontWeight: 600,
+          lineHeight: "20px",
+          maxWidth: 88,
         }}
         title={label}
       >
         {label}
       </span>
-    </>
+    </div>
   );
 }
 
 export function SkillNode({
   id,
   label,
-  iconKey,
-  iconOverride,
   state: controlledState = "default",
   onClick,
   interactive = true,
@@ -226,26 +306,25 @@ export function SkillNode({
   const effectiveState: SkillNodeState =
     controlledState === "default" && isHovered ? "hover" : controlledState;
 
-  const colors = STATE_COLORS[effectiveState];
-  const handleClick = useCallback(() => {
-    onClick?.();
-  }, [onClick]);
-  const icon = iconOverride ?? resolveIcon(iconKey);
+  const stateKey = toStateKey(effectiveState);
+  const handleClick = useCallback(() => { onClick?.(); }, [onClick]);
 
   const commonProps = {
     "data-skill-id": id,
     "data-state": effectiveState,
-    className:
-      "relative flex flex-col items-center gap-[3px] rounded border-none bg-transparent p-0 outline-none",
-    style: { width: HEX_SIZE },
+    className: "relative flex flex-col items-center border-none bg-transparent p-0 outline-none",
+    style: { width: stateKey === "overlap" ? OVERLAP_W : W, paddingBottom: 20 },
   };
 
+  const content = (
+    <>
+      <DiamondNode stateKey={stateKey} />
+      <NodeLabel label={label} />
+    </>
+  );
+
   if (!interactive) {
-    return (
-      <div {...commonProps}>
-        <SkillNodeContents effectiveState={effectiveState} colors={colors} icon={icon} label={label} />
-      </div>
-    );
+    return <div {...commonProps}>{content}</div>;
   }
 
   return (
@@ -257,7 +336,7 @@ export function SkillNode({
       className={`${commonProps.className} cursor-pointer transition-transform duration-150 hover:scale-[1.03] active:scale-100 focus-visible:outline-2 focus-visible:outline-[#DCB773] focus-visible:outline-offset-4`}
       title={label}
     >
-      <SkillNodeContents effectiveState={effectiveState} colors={colors} icon={icon} label={label} />
+      {content}
     </button>
   );
 }

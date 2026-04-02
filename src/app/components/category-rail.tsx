@@ -1,6 +1,5 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import React from "react";
 
 interface CategoryRailProps {
   children?: ReactNode;
@@ -51,17 +50,17 @@ export function CategoryRail({ children }: CategoryRailProps) {
       <div className="absolute top-0 left-12 right-12 h-px bg-gradient-to-r from-transparent via-[#837e76] to-transparent" />
 
       <div
-        className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#0c1018] to-transparent transition-opacity duration-200 ${canScrollLeft ? "opacity-100" : "opacity-0"}`}
+        className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#0d0800] to-transparent transition-opacity duration-200 ${canScrollLeft ? "opacity-100" : "opacity-0"}`}
       />
       <div
-        className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#0c1018] to-transparent transition-opacity duration-200 ${canScrollRight ? "opacity-100" : "opacity-0"}`}
+        className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#0d0800] to-transparent transition-opacity duration-200 ${canScrollRight ? "opacity-100" : "opacity-0"}`}
       />
 
       <button
         type="button"
         onClick={() => scrollByAmount("left")}
         disabled={!canScrollLeft}
-        className={`absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#3a404b] bg-[#11151d]/90 text-[#d4d8df] backdrop-blur transition-all duration-200 ${canScrollLeft ? "opacity-100 hover:border-[#6b654f] hover:text-white" : "pointer-events-none opacity-0"}`}
+        className={`absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#4c3b20] bg-[#120b04]/88 text-[#efe0bc] backdrop-blur transition-all duration-200 ${canScrollLeft ? "opacity-100 hover:border-[#d4a24f] hover:text-white" : "pointer-events-none opacity-0"}`}
         aria-label="Scroll categories left"
       >
         <ChevronLeft size={18} strokeWidth={2.2} />
@@ -71,7 +70,7 @@ export function CategoryRail({ children }: CategoryRailProps) {
         type="button"
         onClick={() => scrollByAmount("right")}
         disabled={!canScrollRight}
-        className={`absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#3a404b] bg-[#11151d]/90 text-[#d4d8df] backdrop-blur transition-all duration-200 ${canScrollRight ? "opacity-100 hover:border-[#6b654f] hover:text-white" : "pointer-events-none opacity-0"}`}
+        className={`absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#4c3b20] bg-[#120b04]/88 text-[#efe0bc] backdrop-blur transition-all duration-200 ${canScrollRight ? "opacity-100 hover:border-[#d4a24f] hover:text-white" : "pointer-events-none opacity-0"}`}
         aria-label="Scroll categories right"
       >
         <ChevronRight size={18} strokeWidth={2.2} />

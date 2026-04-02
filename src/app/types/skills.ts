@@ -12,6 +12,7 @@ export interface SkillRecord {
   category: string;
   description: string;
   triggers: string[];
+  dependents?: string[];
   path: string;
   source: string;
   sourceUrl: string | null;
