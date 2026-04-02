@@ -246,7 +246,7 @@ function DiamondNode({ stateKey, showOverlapBadge }: { stateKey: StateKey; showO
 function NodeLabel({ label }: { label: string }) {
   return (
     <div
-      className="flex items-center justify-center overflow-hidden shrink-0"
+      className="relative z-10 flex items-center justify-center overflow-hidden shrink-0"
       style={{
         width: "100%",
         height: 20,
