@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { CategoryHeader } from "./category-header";
-import type { CategoryHeaderVariant } from "./category-header";
 import { SkillNode, type SkillNodeState } from "./skill-node";
 import { getCategoryTemplate } from "../lib/category-cluster-templates";
 import type { SkillRecord } from "../types/skills";
@@ -47,7 +46,6 @@ export function CategoryCluster({
   onSelectSkill,
 }: CategoryClusterProps) {
   const template = useMemo(() => getCategoryTemplate(skills.length), [skills.length]);
-  const headerVariant: CategoryHeaderVariant = template.id === "2" ? "full" : "indented";
 
   const slotAssignments = useMemo(
     () =>
@@ -74,7 +72,7 @@ export function CategoryCluster({
       data-category={categoryName}
       style={{ width: template.width, gap: 34 }}
     >
-      <CategoryHeader name={categoryName} variant={headerVariant} />
+      <CategoryHeader name={categoryName} />
       <div className="relative overflow-visible" style={{ width: template.width, height: template.height }}>
         {/* Connector lines behind nodes */}
         <svg

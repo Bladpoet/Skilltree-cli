@@ -1,7 +1,7 @@
-import drawerEdge from "../../assets/pencil-exported/Frame 1841.svg";
+import drawerEdge from "../../assets/drawer-edge-brush.svg";
+import sectionSeparator from "../../assets/drawer-section-separator.svg";
 import sourceGlyph from "../../assets/pencil-exported/9L2EO.png";
-import sectionSeparator from "../../assets/drawer-section-separator.png";
-import triggerBrush from "../../assets/drawer-trigger-brush.png";
+import triggerBrush from "../../assets/drawer-trigger-brush.svg";
 
 interface TextProps {
   label: string;
@@ -47,17 +47,14 @@ export function DetailDrawerCategoryPill({ label }: TextProps) {
       className="relative isolate inline-flex items-center justify-center overflow-hidden px-3"
       style={{ width: 92, height: 28 }}
     >
-      {/* Gold gradient background */}
       <div
         className="absolute inset-0"
         style={{
           background: "linear-gradient(90deg, rgba(130,110,34,0) 0%, rgba(102,76,1,0.2) 50%, rgba(102,76,1,0.6) 100%)",
         }}
       />
-      {/* Gold border top and bottom */}
       <div className="absolute inset-x-0 top-0 h-px" style={{ background: "rgb(229,169,71)", opacity: 0.7 }} />
       <div className="absolute inset-x-0 bottom-0 h-px" style={{ background: "rgb(229,169,71)", opacity: 0.7 }} />
-      {/* Gold left decorator dot */}
       <div
         className="absolute left-1.5 top-1/2 -translate-y-1/2"
         style={{ width: 4, height: 4, borderRadius: "50%", background: "rgb(229,169,71)" }}

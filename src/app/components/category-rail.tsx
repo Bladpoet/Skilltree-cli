@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import railDividerBrush from "../../assets/category-rail-divider-brush.svg";
 
 interface CategoryRailProps {
   children?: ReactNode;
@@ -47,7 +48,9 @@ export function CategoryRail({ children }: CategoryRailProps) {
 
   return (
     <div className="relative flex-1">
-      <div className="absolute top-0 left-12 right-12 h-px bg-gradient-to-r from-transparent via-[#837e76] to-transparent" />
+      <div className="pointer-events-none absolute top-0 left-12 right-12 h-[6px] overflow-hidden">
+        <img src={railDividerBrush} alt="" className="block h-full w-full object-fill" draggable={false} />
+      </div>
 
       <div
         className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#0d0800] to-transparent transition-opacity duration-200 ${canScrollLeft ? "opacity-100" : "opacity-0"}`}
