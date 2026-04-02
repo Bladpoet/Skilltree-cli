@@ -86,7 +86,7 @@ const OVERLAP_VECTOR_STROKE_B = "https://www.figma.com/api/mcp/asset/cfe3bdb8-0e
 const OVERLAP_VECTOR_STROKE_C = "https://www.figma.com/api/mcp/asset/91d9d264-b46c-4476-9a60-21178d3881c9";
 const OVERLAP_ELLIPSE_STROKE = "https://www.figma.com/api/mcp/asset/14abefaf-aaf3-40cd-b11a-bc78f73a2f97";
 
-function DiamondNode({ stateKey }: { stateKey: StateKey }) {
+function DiamondNode({ stateKey, showOverlapBadge }: { stateKey: StateKey; showOverlapBadge?: boolean }) {
   const colors = COLORS[stateKey];
   const isActiveState = stateKey === "hover" || stateKey === "pressed";
   const decorationSrc = FIGMA_DECORATION_SRC[stateKey];
@@ -104,7 +104,7 @@ function DiamondNode({ stateKey }: { stateKey: StateKey }) {
       style={{ width: W, height: H }}
     >
       {/* Overlap badge — centered at top, sticking out above diamond */}
-      {stateKey === "overlap" && (
+      {showOverlapBadge && (
         <div
           className="absolute z-10"
           style={{
@@ -141,11 +141,11 @@ function DiamondNode({ stateKey }: { stateKey: StateKey }) {
       {/* Inner frame — hosts all diamond layers */}
       <div
         className="absolute"
-        style={{ left: FRAME_L, top: FRAME_T, width: FRAME_SIZE, height: FRAME_SIZE, isolation: "isolate" }}
+        style={{ left: FRAME_L, top: FRAME_T, width: FRAME_SIZE, height: FRAME_SIZE }}
       >
-        {/* Base diamond */}
+        {/* Base diamond with texture - combined to allow proper blending */}
         <div className="absolute flex items-center justify-center" style={{ inset: 0 }}>
-          <div style={{ transform: "rotate(45deg)", flex: "none" }}>
+          <div style={{ transform: "rotate(45deg)", flex: "none", isolation: "isolate" }}>
             <div
               style={{
                 width: BASE_SIZE,
@@ -158,39 +158,20 @@ function DiamondNode({ stateKey }: { stateKey: StateKey }) {
                 backgroundColor: "#2f281d",
               }}
             >
-              {isActiveState && (
-                <>
-                  <div aria-hidden="true" className="absolute inset-0 bg-[#2f281d]" />
-                  <div className="absolute inset-0 rounded-[inherit]" style={{ boxShadow: colors.insetShadow }} />
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Effect texture overlay */}
-        <div className="absolute flex items-center justify-center" style={{ inset: 0 }}>
-          <div style={{ transform: "rotate(45deg)", flex: "none" }}>
-            <div
-              style={{
-                width: BASE_SIZE,
-                height: BASE_SIZE,
-                opacity: 0.8,
-                position: "relative",
-              }}
-            >
+              {/* Effect texture overlay - must be INSIDE the base diamond for blend mode to work */}
               <img
                 src={imgEffect}
                 alt=""
                 className="absolute inset-0 max-w-none object-cover size-full"
-                style={{ mixBlendMode: "luminosity", opacity: 0.4 }}
+                style={{ 
+                  mixBlendMode: "luminosity", 
+                  opacity: 0.4,
+                  filter: "grayscale(0.5) sepia(0.2)" 
+                }}
                 draggable={false}
               />
               {isActiveState && (
-                <div
-                  className="absolute inset-0 rounded-[inherit]"
-                  style={{ boxShadow: colors.insetShadow }}
-                />
+                <div className="absolute inset-0 rounded-[inherit] pointer-events-none" style={{ boxShadow: colors.insetShadow }} />
               )}
             </div>
           </div>
@@ -303,8 +284,16 @@ export function SkillNode({
 }: SkillNodeProps) {
   const [isHovered, setIsHovered] = useState(false);
 
-  const effectiveState: SkillNodeState =
-    controlledState === "default" && isHovered ? "hover" : controlledState;
+  // Determine if we should show the overlap badge
+  const showOverlapBadge = controlledState === "conflict";
+  
+  // For visual state, overlap can still be hover/pressed
+  let effectiveState: SkillNodeState = controlledState;
+  if (controlledState === "conflict") {
+    effectiveState = isHovered ? "hover" : "default";
+  } else if (controlledState === "default" && isHovered) {
+    effectiveState = "hover";
+  }
 
   const stateKey = toStateKey(effectiveState);
   const handleClick = useCallback(() => { onClick?.(); }, [onClick]);
@@ -313,12 +302,12 @@ export function SkillNode({
     "data-skill-id": id,
     "data-state": effectiveState,
     className: "relative flex flex-col items-center border-none bg-transparent p-0 outline-none",
-    style: { width: stateKey === "overlap" ? OVERLAP_W : W, paddingBottom: 20 },
+    style: { width: showOverlapBadge ? OVERLAP_W : W, paddingBottom: 20 },
   };
 
   const content = (
     <>
-      <DiamondNode stateKey={stateKey} />
+      <DiamondNode stateKey={stateKey} showOverlapBadge={showOverlapBadge} />
       <NodeLabel label={label} />
     </>
   );
