@@ -108,11 +108,11 @@ export function DetailDrawerSectionHeading({ label }: TextProps) {
 
 export function DetailDrawerTriggerTag({ label }: TextProps) {
   return (
-    <div className="relative isolate inline-flex h-[43px] w-full max-w-full items-center overflow-hidden">
+    <div className="relative isolate inline-flex h-[43px] w-[304px] max-w-full items-center overflow-hidden">
       <img
         src={triggerBrush}
         alt=""
-        className="absolute left-0 top-0 h-[43px] w-[352px] max-w-none object-fill"
+        className="absolute left-[-24px] top-0 h-[43px] w-[352px] max-w-none object-fill"
         draggable={false}
       />
       <span

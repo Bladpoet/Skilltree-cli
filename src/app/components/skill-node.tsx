@@ -94,7 +94,7 @@ function DiamondNode({ stateKey, showOverlapBadge }: { stateKey: StateKey; showO
     stateKey === "hover" ? imgIconHover : stateKey === "pressed" ? imgIconPressed : imgIconDefault;
 
   // Sun icon position: centered at (50%-0.1px, 50%+0.01px) size 26.259
-  const sunSize = 26.259;
+  const sunSize = 32;
   const sunL = FRAME_SIZE / 2 - sunSize / 2 - 0.1;
   const sunT = FRAME_SIZE / 2 - sunSize / 2 + 0.01;
 
