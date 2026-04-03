@@ -165,7 +165,7 @@ function DiamondNode({ stateKey, showOverlapBadge }: { stateKey: StateKey; showO
                 className="absolute inset-0 max-w-none object-cover size-full"
                 style={{ 
                   mixBlendMode: "luminosity", 
-                  opacity: 0.4,
+                  opacity: 0.3,
                   filter: "grayscale(0.5) sepia(0.2)" 
                 }}
                 draggable={false}

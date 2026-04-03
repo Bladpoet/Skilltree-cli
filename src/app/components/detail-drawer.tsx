@@ -23,7 +23,12 @@ export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: Det
 
   return (
     <div className="absolute inset-0 z-20">
-      <div className="absolute inset-0 bg-[#191a1c]/40" />
+      <button
+        type="button"
+        aria-label="Close drawer overlay"
+        className="absolute inset-0 bg-[#191a1c]/40"
+        onClick={onClose}
+      />
       <div className="absolute inset-y-0 right-0 flex justify-end overflow-visible">
         <div
           className="relative h-full overflow-visible"
@@ -43,7 +48,7 @@ export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: Det
                   onClick={onClose}
                   className="flex shrink-0 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
                   aria-label="Close drawer"
-                  style={{ width: 24, height: 24 }}
+                  style={{ width: 32, height: 32 }}
                 >
                   <DetailDrawerCloseButton />
                 </button>

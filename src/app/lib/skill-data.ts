@@ -14,6 +14,8 @@ interface RawSkillLike {
   summary?: unknown;
   triggers?: unknown;
   trigger?: unknown;
+  dependents?: unknown;
+  dependent?: unknown;
   path?: unknown;
   filePath?: unknown;
   source?: unknown;
@@ -93,6 +95,9 @@ function normalizeSkill(rawSkill: RawSkillLike, index: number, schemaDifferences
   const triggers = asStringArray(rawSkill.triggers).length > 0
     ? asStringArray(rawSkill.triggers)
     : asStringArray(rawSkill.trigger);
+  const dependents = asStringArray(rawSkill.dependents).length > 0
+    ? asStringArray(rawSkill.dependents)
+    : asStringArray(rawSkill.dependent);
   const path = asString(rawSkill.path) || asString(rawSkill.filePath) || "Path unavailable";
   const source = asString(rawSkill.source, "Unknown source");
   const sourceUrl = asString(rawSkill.sourceUrl) || asString(rawSkill.url) || null;
@@ -114,12 +119,17 @@ function normalizeSkill(rawSkill: RawSkillLike, index: number, schemaDifferences
     noteDifference(schemaDifferences, "Used `trigger` when `triggers` was missing or not an array.");
   }
 
+  if (!Array.isArray(rawSkill.dependents) && rawSkill.dependent !== undefined) {
+    noteDifference(schemaDifferences, "Used `dependent` when `dependents` was missing or not an array.");
+  }
+
   return {
     id,
     name,
     category,
     description,
     triggers,
+    dependents: dependents.length > 0 ? dependents : undefined,
     path,
     source,
     sourceUrl,

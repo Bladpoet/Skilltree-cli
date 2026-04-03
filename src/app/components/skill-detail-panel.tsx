@@ -1,10 +1,12 @@
 import { SkillNode } from "./skill-node";
 import type { RelatedConflict, SkillRecord } from "../types/skills";
 import {
+  DetailDrawerCopyIcon,
   DetailDrawerSectionHeading,
   DetailDrawerTriggerTag,
 } from "./detail-drawer-primitives";
 import { Globe } from "lucide-react";
+import { useMemo, useState } from "react";
 
 interface SkillDetailPanelProps {
   skill: SkillRecord;
@@ -14,6 +16,11 @@ interface SkillDetailPanelProps {
 
 const DARK = "rgb(25,26,28)";
 
+interface SourceAffiliation {
+  label: string;
+  url: string;
+}
+
 function humanizeSegment(value: string) {
   return value
     .replace(/[-_]+/g, " ")
@@ -21,32 +28,77 @@ function humanizeSegment(value: string) {
 }
 
 function buildBreadcrumbs(skill: SkillRecord) {
-  const sourceSegments = skill.source.split("/").filter(Boolean).map(humanizeSegment);
-  if (sourceSegments.length >= 2) return [sourceSegments[0], sourceSegments[1], "..."];
+  const normalizedPath = skill.path?.trim();
+  if (!normalizedPath) return ["path", "unavailable", "...", "skill", "md"];
 
-  const pathSegments = skill.path
-    .split(/[\\/]+/)
-    .filter(Boolean)
-    .slice(-4, -1)
-    .map(humanizeSegment);
+  const normalized = normalizedPath.replace(/\\+/g, "/");
+  const isWindowsDrive = /^[A-Za-z]:\//.test(normalized);
+  const withoutDrive = normalized.replace(/^[A-Za-z]:\//, "");
+  const parts = withoutDrive.split("/").filter(Boolean);
 
-  if (pathSegments.length >= 2) return [pathSegments[0], pathSegments[1], "..."];
-  return [humanizeSegment(skill.category), humanizeSegment(skill.name), "..."];
+  if (parts.length <= 4) {
+    return isWindowsDrive ? [normalized.slice(0, 2), ...parts] : parts;
+  }
+
+  const head = parts.slice(0, 2);
+  const tail = parts.slice(-2);
+  return isWindowsDrive ? [normalized.slice(0, 2), ...head, "...", ...tail] : [...head, "...", ...tail];
+}
+
+function resolveSourceAffiliation(skill: SkillRecord): SourceAffiliation {
+  const haystack = `${skill.source} ${skill.sourceUrl ?? ""} ${skill.path}`.toLowerCase();
+
+  if (haystack.includes("openai")) {
+    return { label: "OpenAI", url: "https://openai.com" };
+  }
+
+  if (haystack.includes("anthropic") || haystack.includes("local/manual-install") || haystack.includes("/.claude/")) {
+    return { label: "Anthropic", url: "https://www.anthropic.com" };
+  }
+
+  if (haystack.includes("github") || skill.source.includes("/") || skill.sourceUrl) {
+    return { label: "GitHub", url: "https://github.com" };
+  }
+
+  return { label: "GitHub", url: "https://github.com" };
 }
 
 function Breadcrumbs({ skill }: { skill: SkillRecord }) {
+  const [copied, setCopied] = useState(false);
   const breadcrumbs = buildBreadcrumbs(skill);
+  const pathToCopy = useMemo(() => {
+    const normalized = skill.path?.trim();
+    return normalized && normalized.length > 0 ? normalized : "Path unavailable";
+  }, [skill.path]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(pathToCopy);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1200);
+    } catch {
+      setCopied(false);
+    }
+  };
+
   return (
-    <div
-      className="flex flex-wrap items-center gap-x-1 gap-y-1"
-      style={{ fontFamily: "'Marcellus', serif", fontSize: "12px", lineHeight: "1.33", color: "rgb(109,115,126)" }}
-    >
-      {breadcrumbs.map((crumb, index) => (
-        <span key={`${crumb}-${index}`} className="contents">
-          {index > 0 && <span>/</span>}
-          <span>{crumb}</span>
-        </span>
-      ))}
+    <div className="flex items-center gap-2">
+      <div
+        className="min-w-0 truncate"
+        style={{ fontFamily: "'Marcellus', serif", fontSize: "12px", lineHeight: "1.33", color: "rgb(109,115,126)" }}
+        title={pathToCopy}
+      >
+        {breadcrumbs.join("/")}
+      </div>
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="relative inline-flex h-4 w-4 shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
+        title={copied ? "Copied" : "Copy path"}
+        aria-label={copied ? "Path copied" : "Copy path"}
+      >
+        <DetailDrawerCopyIcon />
+      </button>
     </div>
   );
 }
@@ -82,6 +134,7 @@ function OverlapNodes({
 
 export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: SkillDetailPanelProps) {
   const dependents = skill.dependents ?? [];
+  const sourceAffiliation = resolveSourceAffiliation(skill);
 
   return (
     <div className="flex flex-col gap-6" style={{ color: DARK }}>
@@ -137,26 +190,16 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
       {/* Source */}
       <div className="flex flex-col gap-3">
         <DetailDrawerSectionHeading label="Source" />
-        {skill.sourceUrl ? (
-          <a
-            href={skill.sourceUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="flex w-fit items-center gap-2 transition-opacity hover:opacity-80"
-            style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.4", color: DARK }}
-          >
-            <Globe size={16} className="shrink-0" style={{ color: "rgb(109,115,126)" }} />
-            <span className="underline underline-offset-2">{skill.source}</span>
-          </a>
-        ) : (
-          <div
-            className="flex w-fit items-center gap-2"
-            style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.4", color: DARK }}
-          >
-            <Globe size={16} className="shrink-0" style={{ color: "rgb(109,115,126)" }} />
-            <span>{skill.source}</span>
-          </div>
-        )}
+        <a
+          href={sourceAffiliation.url}
+          target="_blank"
+          rel="noreferrer"
+          className="flex w-fit items-center gap-2 transition-opacity hover:opacity-80"
+          style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.4", color: DARK }}
+        >
+          <Globe size={16} className="shrink-0" style={{ color: "rgb(109,115,126)" }} />
+          <span className="underline underline-offset-2">{sourceAffiliation.label}</span>
+        </a>
       </div>
 
       {/* Overlaps */}

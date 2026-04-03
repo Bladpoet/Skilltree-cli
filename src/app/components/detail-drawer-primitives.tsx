@@ -1,3 +1,5 @@
+import closeBrush from "../../assets/drawer-close-brush.svg";
+import copyIcon from "../../assets/drawer-copy-icon.svg";
 import drawerEdge from "../../assets/drawer-edge-brush.svg";
 import sectionSeparator from "../../assets/drawer-section-separator.svg";
 import sourceGlyph from "../../assets/pencil-exported/9L2EO.png";
@@ -28,13 +30,11 @@ export function DetailDrawerDecorativeEdge() {
 }
 
 export function DetailDrawerCloseButton() {
-  return (
-    <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-      <rect width={24} height={24} rx={3} fill="white" />
-      <line x1={7} y1={7} x2={17} y2={17} stroke="rgb(25,26,28)" strokeWidth={2} strokeLinecap="round" />
-      <line x1={17} y1={7} x2={7} y2={17} stroke="rgb(25,26,28)" strokeWidth={2} strokeLinecap="round" />
-    </svg>
-  );
+  return <img src={closeBrush} alt="" className="h-8 w-8 shrink-0" draggable={false} />;
+}
+
+export function DetailDrawerCopyIcon() {
+  return <img src={copyIcon} alt="" className="h-4 w-4 shrink-0" draggable={false} />;
 }
 
 export function DetailDrawerSourceIcon() {

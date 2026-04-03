@@ -1,4 +1,4 @@
-import { StatBadge } from "./stat-badge";
+import { StatBadgeGroup } from "./stat-badge";
 
 interface TopBarProps {
   stats: {
@@ -31,11 +31,13 @@ export function TopBar({ stats }: TopBarProps) {
       >
         Claude Skills
       </h1>
-      <div className="flex items-start gap-[22.206px]">
-        {STAT_LABELS.map(({ key, label }) => (
-          <StatBadge key={key} value={stats[key]} label={label} />
-        ))}
-      </div>
+      <StatBadgeGroup
+        items={STAT_LABELS.map(({ key, label }) => ({
+          key,
+          value: stats[key],
+          label,
+        }))}
+      />
     </div>
   );
 }
