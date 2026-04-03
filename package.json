@@ -1,8 +1,20 @@
 {
-  "name": "@figma/my-make-file",
-  "private": true,
-  "version": "0.0.1",
+  "name": "skilltree-cli",
+  "version": "0.1.0",
+  "description": "Visual skill tree viewer for Claude Code and other AI tool skills installed on your machine.",
   "type": "module",
+  "bin": {
+    "skilltree": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "generate.js",
+    "claude-skills-icons/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "skills:generate": "node generate.js",
     "skills:watch": "node generate.js --watch",

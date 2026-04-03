@@ -1,15 +1,26 @@
 import { promises as fs } from "node:fs";
 import { watch as fsWatch } from "node:fs";
+import { fileURLToPath } from "node:url";
 import os from "node:os";
 import path from "node:path";
 
+const __scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const cwd = process.cwd();
 const home = os.homedir();
-const outputPath = path.join(cwd, "public", "skills.json");
-const iconLibraryRoot = path.join(cwd, "claude-skills-icons");
+
+const outputArgIndex = process.argv.indexOf("--output");
+const outputPath = outputArgIndex !== -1
+  ? process.argv[outputArgIndex + 1]
+  : path.join(cwd, "public", "skills.json");
+
+const iconsDirArgIndex = process.argv.indexOf("--icons-dir");
+const generatedIconsDir = iconsDirArgIndex !== -1
+  ? process.argv[iconsDirArgIndex + 1]
+  : path.join(cwd, "public", "skill-icons");
+
+const iconLibraryRoot = path.join(__scriptDir, "claude-skills-icons");
 const iconLibraryIndexPath = path.join(iconLibraryRoot, "index.json");
 const iconLibraryIconsDir = path.join(iconLibraryRoot, "icons");
-const generatedIconsDir = path.join(cwd, "public", "skill-icons");
 const shouldWatch = process.argv.includes("--watch");
 
 const scanRoots = [

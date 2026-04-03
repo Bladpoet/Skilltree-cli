@@ -1,0 +1,20 @@
+# Source files — not needed at runtime
+src/
+public/
+
+# Dev config
+vite.config.ts
+tailwind.config.*
+postcss.config.*
+tsconfig*.json
+.eslintrc*
+.prettierrc*
+
+# Stale scanner output that may exist in dist from local dev runs
+dist/skills.json
+dist/skill-icons/
+
+# Misc
+.claude/
+*.md.bak
+node_modules/
