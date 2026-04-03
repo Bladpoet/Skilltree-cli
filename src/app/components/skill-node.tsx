@@ -9,6 +9,7 @@ export interface SkillNodeProps {
   iconKey?: string;
   iconPath?: string;
   iconName?: string;
+  showOverlapBadge?: boolean;
   state?: SkillNodeState;
   onClick?: () => void;
   interactive?: boolean;
@@ -43,6 +44,14 @@ interface StateColors {
   insetShadow?: string;
 }
 
+interface HighlightToken {
+  visible: boolean;
+  size: number;
+  blur: number;
+  opacity: number;
+  color: string;
+}
+
 const COLORS: Record<StateKey, StateColors> = {
   default: {
     baseStroke: "#d2d2d2",
@@ -63,6 +72,37 @@ const COLORS: Record<StateKey, StateColors> = {
   overlap: {
     baseStroke: "#d2d2d2",
     outlineStroke: "#ae9a73",
+  },
+};
+
+const HIGHLIGHT_TOKENS: Record<StateKey, HighlightToken> = {
+  default: {
+    visible: true,
+    size: 18,
+    blur: 9,
+    opacity: 0.42,
+    color: "#F9C93D",
+  },
+  hover: {
+    visible: true,
+    size: 22,
+    blur: 12,
+    opacity: 0.62,
+    color: "#F9C93D",
+  },
+  pressed: {
+    visible: false,
+    size: 0,
+    blur: 0,
+    opacity: 0,
+    color: "#F9C93D",
+  },
+  overlap: {
+    visible: true,
+    size: 18,
+    blur: 9,
+    opacity: 0.42,
+    color: "#F9C93D",
   },
 };
 
@@ -93,7 +133,7 @@ function iconFilterForState(stateKey: StateKey): string {
   }
 
   if (stateKey === "pressed") {
-    return "brightness(0) saturate(100%) invert(91%) sepia(28%) saturate(635%) hue-rotate(357deg) brightness(95%) contrast(92%)";
+    return "brightness(0) saturate(100%) invert(24%) sepia(30%) saturate(1240%) hue-rotate(11deg) brightness(94%) contrast(90%)";
   }
 
   return "brightness(0) saturate(100%) invert(84%) sepia(22%) saturate(349%) hue-rotate(355deg) brightness(93%) contrast(89%)";
@@ -138,6 +178,29 @@ function IconGlyph({
       className="absolute block max-w-none size-full"
       style={{ filter: iconFilterForState(stateKey) }}
       draggable={false}
+    />
+  );
+}
+
+function IconHighlight({ stateKey }: { stateKey: StateKey }) {
+  const token = HIGHLIGHT_TOKENS[stateKey];
+  if (!token.visible) {
+    return null;
+  }
+
+  return (
+    <div
+      aria-hidden
+      className="absolute rounded-full pointer-events-none"
+      style={{
+        left: `calc(50% - ${token.size / 2}px)`,
+        top: `calc(50% - ${token.size / 2}px)`,
+        width: token.size,
+        height: token.size,
+        background: token.color,
+        opacity: token.opacity,
+        filter: `blur(${token.blur}px)`,
+      }}
     />
   );
 }
@@ -286,6 +349,7 @@ function DiamondNode({
           className="absolute"
           style={{ left: sunL, top: sunT, width: sunSize, height: sunSize }}
         >
+          <IconHighlight stateKey={stateKey} />
           {stateKey === "hover" ? (
             <IconGlyph stateKey={stateKey} iconPath={iconPath} iconName={iconName} />
           ) : (
@@ -334,14 +398,14 @@ export function SkillNode({
   label,
   iconPath,
   iconName,
+  showOverlapBadge: forceOverlapBadge,
   state: controlledState = "default",
   onClick,
   interactive = true,
 }: SkillNodeProps) {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Determine if we should show the overlap badge
-  const showOverlapBadge = controlledState === "conflict";
+  const showOverlapBadge = forceOverlapBadge ?? controlledState === "conflict";
   
   // For visual state, overlap can still be hover/pressed
   let effectiveState: SkillNodeState = controlledState;

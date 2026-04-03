@@ -16,7 +16,7 @@ interface StatBadgeGroupProps {
   items: StatBadgeGroupItem[];
 }
 
-const STAT_BADGE_SCALE = 0.8;
+const STAT_BADGE_SCALE = 1;
 const BADGE_WIDTH = 77.72;
 const BADGE_HEIGHT = 87.467;
 const BADGE_RING_SIZE = 77.72;
@@ -44,7 +44,7 @@ export function StatBadge({ value, label }: StatBadgeProps) {
       >
         <span
           className="text-center text-white"
-          style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "24px", fontWeight: 600, lineHeight: 1 }}
+          style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "32px", fontWeight: 600, lineHeight: 1 }}
         >
           {value}
         </span>

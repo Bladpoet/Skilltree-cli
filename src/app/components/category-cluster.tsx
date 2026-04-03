@@ -39,6 +39,10 @@ function getSkillState(skill: SkillRecord, isSelected: boolean): SkillNodeState 
   return skill.conflictsWith.length > 0 ? "conflict" : "default";
 }
 
+function hasOverlap(skill: SkillRecord): boolean {
+  return skill.conflictsWith.length > 0;
+}
+
 export function CategoryCluster({
   categoryName,
   skills,
@@ -102,6 +106,7 @@ export function CategoryCluster({
               iconKey={skill.name}
               iconPath={skill.iconPath}
               iconName={skill.iconName ?? skill.icon}
+              showOverlapBadge={hasOverlap(skill)}
               state={getSkillState(skill, selectedId === skill.id)}
               onClick={() => onSelectSkill?.(skill.id)}
             />

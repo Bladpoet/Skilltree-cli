@@ -6,6 +6,24 @@ interface CategoryRailProps {
   children?: ReactNode;
 }
 
+const RAIL_FADE_WIDTH_PX = 400;
+
+function getRailMask(canScrollLeft: boolean, canScrollRight: boolean): string | undefined {
+  if (canScrollLeft && canScrollRight) {
+    return `linear-gradient(to right, transparent 0px, black ${RAIL_FADE_WIDTH_PX}px, black calc(100% - ${RAIL_FADE_WIDTH_PX}px), transparent 100%)`;
+  }
+
+  if (canScrollLeft) {
+    return `linear-gradient(to right, transparent 0px, black ${RAIL_FADE_WIDTH_PX}px, black 100%)`;
+  }
+
+  if (canScrollRight) {
+    return `linear-gradient(to right, black 0px, black calc(100% - ${RAIL_FADE_WIDTH_PX}px), transparent 100%)`;
+  }
+
+  return undefined;
+}
+
 export function CategoryRail({ children }: CategoryRailProps) {
   const railRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -46,18 +64,13 @@ export function CategoryRail({ children }: CategoryRailProps) {
     });
   };
 
+  const railMask = getRailMask(canScrollLeft, canScrollRight);
+
   return (
     <div className="relative flex-1">
       <div className="pointer-events-none absolute top-0 left-12 right-12 h-[6px] overflow-hidden">
         <img src={railDividerBrush} alt="" className="block h-full w-full object-fill opacity-60" draggable={false} />
       </div>
-
-      <div
-        className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#0d0800] to-transparent transition-opacity duration-200 ${canScrollLeft ? "opacity-100" : "opacity-0"}`}
-      />
-      <div
-        className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#0d0800] to-transparent transition-opacity duration-200 ${canScrollRight ? "opacity-100" : "opacity-0"}`}
-      />
 
       <button
         type="button"
@@ -82,8 +95,20 @@ export function CategoryRail({ children }: CategoryRailProps) {
       <div
         ref={railRef}
         className="h-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        style={
+          railMask
+            ? {
+                WebkitMaskImage: railMask,
+                maskImage: railMask,
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskSize: "100% 100%",
+                maskSize: "100% 100%",
+              }
+            : undefined
+        }
       >
-        <div className="flex h-full min-w-full w-max items-start gap-[95px] px-12 pt-24 pb-16">
+        <div className="flex h-full min-w-full w-max items-start gap-[95px] px-12 pt-16 pb-16">
           {children}
         </div>
       </div>
