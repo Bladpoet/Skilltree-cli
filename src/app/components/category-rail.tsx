@@ -49,7 +49,7 @@ export function CategoryRail({ children }: CategoryRailProps) {
   return (
     <div className="relative flex-1">
       <div className="pointer-events-none absolute top-0 left-12 right-12 h-[6px] overflow-hidden">
-        <img src={railDividerBrush} alt="" className="block h-full w-full object-fill" draggable={false} />
+        <img src={railDividerBrush} alt="" className="block h-full w-full object-fill opacity-60" draggable={false} />
       </div>
 
       <div
@@ -83,7 +83,7 @@ export function CategoryRail({ children }: CategoryRailProps) {
         ref={railRef}
         className="h-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <div className="flex h-full min-w-full w-max items-start gap-[95px] px-12 pt-8 pb-8">
+        <div className="flex h-full min-w-full w-max items-start gap-[95px] px-12 pt-24 pb-16">
           {children}
         </div>
       </div>

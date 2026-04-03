@@ -78,8 +78,9 @@ export function DetailDrawerCategoryPill({ label }: TextProps) {
 
 export function DetailDrawerSectionHeading({ label }: TextProps) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full flex-col items-start gap-2">
       <h3
+        className="w-full text-left"
         style={{
           fontFamily: "'Marcellus SC', serif",
           fontSize: "14px",
@@ -89,8 +90,17 @@ export function DetailDrawerSectionHeading({ label }: TextProps) {
       >
         {label}
       </h3>
-      <div className="relative h-[0.922px] w-full overflow-hidden">
-        <img src={sectionSeparator} alt="" className="absolute inset-0 h-full w-full object-fill" draggable={false} />
+      <div className="h-[0.922px] w-full overflow-hidden">
+        <img
+          src={sectionSeparator}
+          alt=""
+          className="block h-full max-w-none object-fill"
+          style={{
+            marginLeft: "-80px",
+            width: "calc(100% + 80px)",
+          }}
+          draggable={false}
+        />
       </div>
     </div>
   );
