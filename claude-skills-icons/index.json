@@ -1,0 +1,6637 @@
+[
+  {
+    "name": "default",
+    "file": "default.svg",
+    "description": "generic fallback, unknown skill, unclassified, uncategorized, miscellaneous, fallback icon",
+    "tags": [
+      "default",
+      "fallback",
+      "unknown",
+      "generic",
+      "misc",
+      "unclassified",
+      "placeholder"
+    ],
+    "weight": 0.1
+  },
+  {
+    "name": "accessible",
+    "file": "accessible.svg",
+    "description": "accessibility compliance, inclusive design, screen reader support, WCAG standards, usability for all users, disability accommodation",
+    "tags": [
+      "accessibility",
+      "a11y",
+      "inclusive",
+      "compliance",
+      "wcag",
+      "screen-reader",
+      "disability",
+      "usability",
+      "universal",
+      "design",
+      "support",
+      "standards"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "activity",
+    "file": "activity.svg",
+    "description": "activity monitoring, heartbeat detection, system pulse, live status tracking, real-time metrics, operational health",
+    "tags": [
+      "activity",
+      "monitoring",
+      "heartbeat",
+      "pulse",
+      "status",
+      "tracking",
+      "metrics",
+      "health",
+      "real-time",
+      "operations",
+      "system",
+      "live"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "address-book",
+    "file": "address-book.svg",
+    "description": "contact management, directory listing, user profiles, team roster, address management, networking contacts",
+    "tags": [
+      "contacts",
+      "directory",
+      "profiles",
+      "roster",
+      "networking",
+      "team",
+      "users",
+      "address",
+      "management",
+      "phonebook",
+      "people",
+      "listing"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "adjustments-cog",
+    "file": "adjustments-cog.svg",
+    "description": "system configuration, settings management, parameter tuning, preference controls, operational adjustments, technical configuration",
+    "tags": [
+      "configuration",
+      "settings",
+      "tuning",
+      "preferences",
+      "controls",
+      "parameters",
+      "system",
+      "technical",
+      "management",
+      "ops",
+      "admin",
+      "gear"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "ai",
+    "file": "ai.svg",
+    "description": "artificial intelligence, machine learning, neural networks, AI automation, intelligent systems, cognitive computing",
+    "tags": [
+      "ai",
+      "artificial-intelligence",
+      "machine-learning",
+      "neural",
+      "automation",
+      "intelligent",
+      "cognitive",
+      "ml",
+      "deep-learning",
+      "smart",
+      "computing",
+      "algorithms"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "alert-octagon",
+    "file": "alert-octagon.svg",
+    "description": "critical warning, error alert, danger notification, system failure, blocking issue, urgent attention required",
+    "tags": [
+      "warning",
+      "error",
+      "critical",
+      "danger",
+      "alert",
+      "failure",
+      "urgent",
+      "blocking",
+      "notification",
+      "attention",
+      "issue",
+      "stop"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "alert-square",
+    "file": "alert-square.svg",
+    "description": "warning notification, caution alert, issue flagging, attention required, problem detection, status warning",
+    "tags": [
+      "warning",
+      "alert",
+      "caution",
+      "notification",
+      "issue",
+      "flag",
+      "attention",
+      "problem",
+      "detection",
+      "status",
+      "notice",
+      "signal"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "alert-square-rounded",
+    "file": "alert-square-rounded.svg",
+    "description": "warning notification, caution alert, issue flagging, attention required, problem detection, status warning",
+    "tags": [
+      "warning",
+      "alert",
+      "caution",
+      "notification",
+      "issue",
+      "flag",
+      "attention",
+      "problem",
+      "detection",
+      "status",
+      "notice",
+      "signal"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "alert-triangle",
+    "file": "alert-triangle.svg",
+    "description": "warning alert, error detection, risk notification, security warning, code smell detection, potential issue identification",
+    "tags": [
+      "warning",
+      "error",
+      "risk",
+      "security",
+      "detection",
+      "alert",
+      "caution",
+      "issue",
+      "code-smell",
+      "notification",
+      "triangle",
+      "danger"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "align-left",
+    "file": "align-left.svg",
+    "description": "text alignment, layout formatting, content positioning, left alignment, typography control, design formatting",
+    "tags": [
+      "alignment",
+      "text",
+      "layout",
+      "formatting",
+      "positioning",
+      "typography",
+      "design",
+      "content",
+      "left",
+      "editorial",
+      "structure",
+      "arrange"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "analyze",
+    "file": "analyze.svg",
+    "description": "data analysis, code inspection, performance profiling, metric evaluation, pattern recognition, diagnostic review",
+    "tags": [
+      "analysis",
+      "inspection",
+      "profiling",
+      "evaluation",
+      "diagnostic",
+      "metrics",
+      "review",
+      "patterns",
+      "data",
+      "investigation",
+      "examination",
+      "audit"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "antenna",
+    "file": "antenna.svg",
+    "description": "signal reception, data broadcasting, network connectivity, wireless communication, signal strength, transmission",
+    "tags": [
+      "signal",
+      "broadcast",
+      "wireless",
+      "connectivity",
+      "network",
+      "reception",
+      "transmission",
+      "communication",
+      "radio",
+      "data",
+      "strength",
+      "antenna"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "api",
+    "file": "api.svg",
+    "description": "API design, interface development, endpoint management, REST services, GraphQL, API documentation, integration points",
+    "tags": [
+      "api",
+      "endpoint",
+      "rest",
+      "graphql",
+      "interface",
+      "service",
+      "integration",
+      "documentation",
+      "web-service",
+      "backend",
+      "development",
+      "design"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "app-window",
+    "file": "app-window.svg",
+    "description": "application interface, browser window, web app testing, UI automation, viewport management, frontend development",
+    "tags": [
+      "application",
+      "browser",
+      "window",
+      "web-app",
+      "frontend",
+      "ui",
+      "viewport",
+      "testing",
+      "automation",
+      "interface",
+      "desktop",
+      "screen"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "arrow-autofit-down",
+    "file": "arrow-autofit-down.svg",
+    "description": "auto-layout, content fitting, responsive design, automatic sizing, downward flow, adaptive layout",
+    "tags": [
+      "autofit",
+      "layout",
+      "responsive",
+      "sizing",
+      "adaptive",
+      "flow",
+      "down",
+      "auto",
+      "fit",
+      "content",
+      "arrangement",
+      "compression"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "arrow-iteration",
+    "file": "arrow-iteration.svg",
+    "description": "iterative process, feedback loop, development cycle, continuous improvement, agile iteration, sprint cycle",
+    "tags": [
+      "iteration",
+      "loop",
+      "cycle",
+      "feedback",
+      "agile",
+      "sprint",
+      "improvement",
+      "process",
+      "development",
+      "continuous",
+      "repeat",
+      "workflow"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "arrows-down-up",
+    "file": "arrows-down-up.svg",
+    "description": "data synchronization, bidirectional flow, import export, two-way communication, data transfer, sync operations",
+    "tags": [
+      "sync",
+      "transfer",
+      "bidirectional",
+      "import",
+      "export",
+      "flow",
+      "data",
+      "communication",
+      "synchronization",
+      "exchange",
+      "up-down",
+      "two-way"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "arrows-split",
+    "file": "arrows-split.svg",
+    "description": "routing decisions, path branching, request routing, load balancing, workflow splitting, decision tree, fork execution",
+    "tags": [
+      "routing",
+      "branching",
+      "split",
+      "fork",
+      "decision",
+      "load-balancing",
+      "workflow",
+      "path",
+      "request",
+      "distribution",
+      "diverge",
+      "redirect"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "artboard",
+    "file": "artboard.svg",
+    "description": "design canvas, UI mockup, visual layout, design workspace, creative composition, pixel design, prototyping surface",
+    "tags": [
+      "design",
+      "canvas",
+      "mockup",
+      "layout",
+      "workspace",
+      "creative",
+      "ui",
+      "prototype",
+      "visual",
+      "composition",
+      "pixel",
+      "artboard"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "augmented-reality",
+    "file": "augmented-reality.svg",
+    "description": "AR development, spatial computing, mixed reality, 3D overlay, immersive experience, AR integration, computer vision",
+    "tags": [
+      "ar",
+      "augmented-reality",
+      "spatial",
+      "3d",
+      "immersive",
+      "mixed-reality",
+      "overlay",
+      "vision",
+      "computing",
+      "experience",
+      "integration",
+      "reality"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "award",
+    "file": "award.svg",
+    "description": "achievement recognition, quality badge, excellence award, certification, accomplishment, milestone completion, top performer",
+    "tags": [
+      "award",
+      "achievement",
+      "badge",
+      "recognition",
+      "excellence",
+      "certification",
+      "accomplishment",
+      "milestone",
+      "quality",
+      "top",
+      "winner",
+      "honor"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "bell",
+    "file": "bell.svg",
+    "description": "notification system, alert delivery, push notifications, event signaling, reminder alerts, messaging alerts",
+    "tags": [
+      "notification",
+      "alert",
+      "push",
+      "reminder",
+      "signal",
+      "event",
+      "messaging",
+      "alarm",
+      "bell",
+      "delivery",
+      "announce",
+      "ping"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "binary",
+    "file": "binary.svg",
+    "description": "binary analysis, low-level programming, bitwise operations, data encoding, machine code, binary formats, hex analysis",
+    "tags": [
+      "binary",
+      "low-level",
+      "bitwise",
+      "encoding",
+      "machine-code",
+      "hex",
+      "analysis",
+      "data",
+      "programming",
+      "computation",
+      "bits",
+      "bytes"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "binoculars",
+    "file": "binoculars.svg",
+    "description": "deep research, exploration, discovery, investigation, code exploration, finding patterns, detailed examination",
+    "tags": [
+      "research",
+      "exploration",
+      "discovery",
+      "investigation",
+      "examination",
+      "finding",
+      "search",
+      "scan",
+      "observe",
+      "detail",
+      "deep",
+      "look"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "bolt",
+    "file": "bolt.svg",
+    "description": "speed optimization, fast execution, performance boost, lightning fast, quick deployment, rapid processing",
+    "tags": [
+      "speed",
+      "fast",
+      "performance",
+      "optimization",
+      "quick",
+      "rapid",
+      "lightning",
+      "boost",
+      "execution",
+      "deployment",
+      "power",
+      "energy"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "book",
+    "file": "book.svg",
+    "description": "documentation, knowledge base, reference guide, learning resource, technical manual, documentation reading",
+    "tags": [
+      "documentation",
+      "knowledge",
+      "reference",
+      "guide",
+      "learning",
+      "manual",
+      "reading",
+      "book",
+      "resource",
+      "wiki",
+      "docs",
+      "tutorial"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "book-2",
+    "file": "book-2.svg",
+    "description": "technical documentation, development conventions, coding standards, project guidelines, best practices reference",
+    "tags": [
+      "documentation",
+      "conventions",
+      "standards",
+      "guidelines",
+      "practices",
+      "reference",
+      "technical",
+      "coding",
+      "development",
+      "rules",
+      "book",
+      "guide"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "books",
+    "file": "books.svg",
+    "description": "knowledge repository, skill library, learning catalog, reference collection, documentation archive, skill discovery",
+    "tags": [
+      "knowledge",
+      "library",
+      "catalog",
+      "collection",
+      "archive",
+      "discovery",
+      "learning",
+      "skills",
+      "reference",
+      "books",
+      "repository",
+      "education"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "box",
+    "file": "box.svg",
+    "description": "package management, container deployment, modular components, boxed solution, product packaging, encapsulation",
+    "tags": [
+      "package",
+      "container",
+      "module",
+      "encapsulation",
+      "deployment",
+      "box",
+      "product",
+      "component",
+      "bundled",
+      "wrapped",
+      "shipping",
+      "delivery"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "brain",
+    "file": "brain.svg",
+    "description": "artificial intelligence, machine learning, cognitive processing, intelligent reasoning, knowledge synthesis, neural computing, smart automation",
+    "tags": [
+      "ai",
+      "intelligence",
+      "ml",
+      "cognitive",
+      "reasoning",
+      "knowledge",
+      "neural",
+      "smart",
+      "learning",
+      "thinking",
+      "brain",
+      "computing"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "brand-angular",
+    "file": "brand-angular.svg",
+    "description": "Angular framework development, TypeScript components, Angular CLI, RxJS observables, Angular best practices",
+    "tags": [
+      "angular",
+      "typescript",
+      "framework",
+      "rxjs",
+      "cli",
+      "components",
+      "frontend",
+      "web",
+      "development",
+      "google",
+      "spa",
+      "ng"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-azure",
+    "file": "brand-azure.svg",
+    "description": "Microsoft Azure cloud services, Azure DevOps, cloud infrastructure, Azure pipelines, Microsoft cloud platform",
+    "tags": [
+      "azure",
+      "microsoft",
+      "cloud",
+      "devops",
+      "infrastructure",
+      "pipelines",
+      "platform",
+      "services",
+      "compute",
+      "storage",
+      "enterprise",
+      "ms"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-chrome",
+    "file": "brand-chrome.svg",
+    "description": "Chrome browser, Chrome DevTools, browser debugging, Chrome extensions, web development in Chrome",
+    "tags": [
+      "chrome",
+      "browser",
+      "devtools",
+      "debugging",
+      "extensions",
+      "google",
+      "web",
+      "development",
+      "inspector",
+      "testing",
+      "chromium",
+      "browser-dev"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-cloudflare",
+    "file": "brand-cloudflare.svg",
+    "description": "Cloudflare platform, Workers deployment, edge computing, CDN, DNS management, Cloudflare Pages, R2 storage",
+    "tags": [
+      "cloudflare",
+      "workers",
+      "edge",
+      "cdn",
+      "dns",
+      "pages",
+      "r2",
+      "deployment",
+      "platform",
+      "serverless",
+      "networking",
+      "security"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-flutter",
+    "file": "brand-flutter.svg",
+    "description": "Flutter framework, Dart development, cross-platform mobile apps, Flutter widgets, UI rendering",
+    "tags": [
+      "flutter",
+      "dart",
+      "mobile",
+      "cross-platform",
+      "widgets",
+      "ui",
+      "google",
+      "app",
+      "development",
+      "rendering",
+      "ios",
+      "android"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-github",
+    "file": "brand-github.svg",
+    "description": "GitHub platform, repository management, pull requests, issues, code hosting, GitHub Actions, open source",
+    "tags": [
+      "github",
+      "repository",
+      "pull-request",
+      "issues",
+      "code-hosting",
+      "actions",
+      "open-source",
+      "git",
+      "collaboration",
+      "version-control",
+      "ci-cd",
+      "social-coding"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-golang",
+    "file": "brand-golang.svg",
+    "description": "Go programming language, Go patterns, goroutines, channels, Go standard library, backend development in Go",
+    "tags": [
+      "golang",
+      "go",
+      "programming",
+      "goroutines",
+      "channels",
+      "backend",
+      "language",
+      "patterns",
+      "concurrency",
+      "google",
+      "system",
+      "performance"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-google",
+    "file": "brand-google.svg",
+    "description": "Google services, Google APIs, Google Cloud Platform, Google Workspace, Google integration",
+    "tags": [
+      "google",
+      "services",
+      "apis",
+      "cloud",
+      "workspace",
+      "integration",
+      "platform",
+      "search",
+      "maps",
+      "auth",
+      "enterprise",
+      "gcp"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "brand-javascript",
+    "file": "brand-javascript.svg",
+    "description": "JavaScript language, ES6+ features, Node.js runtime, JavaScript patterns, web scripting",
+    "tags": [
+      "javascript",
+      "js",
+      "es6",
+      "node",
+      "runtime",
+      "web",
+      "scripting",
+      "language",
+      "programming",
+      "frontend",
+      "backend",
+      "async"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-openai",
+    "file": "brand-openai.svg",
+    "description": "OpenAI platform, GPT models, ChatGPT, DALL-E, AI API integration, OpenAI SDK, language models",
+    "tags": [
+      "openai",
+      "gpt",
+      "chatgpt",
+      "ai",
+      "language-model",
+      "api",
+      "sdk",
+      "dall-e",
+      "llm",
+      "generative",
+      "models",
+      "inference"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-python",
+    "file": "brand-python.svg",
+    "description": "Python programming, Python best practices, pip packages, Python ecosystem, data science with Python",
+    "tags": [
+      "python",
+      "programming",
+      "pip",
+      "data-science",
+      "language",
+      "ecosystem",
+      "scripts",
+      "automation",
+      "backend",
+      "ml",
+      "django",
+      "fastapi"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-rust",
+    "file": "brand-rust.svg",
+    "description": "Rust programming language, memory safety, ownership model, Rust patterns, systems programming in Rust",
+    "tags": [
+      "rust",
+      "programming",
+      "memory-safety",
+      "ownership",
+      "systems",
+      "language",
+      "cargo",
+      "performance",
+      "safe",
+      "concurrent",
+      "backend",
+      "wasm"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-swift",
+    "file": "brand-swift.svg",
+    "description": "Swift programming, iOS development, Apple ecosystem, Swift concurrency, protocol-oriented programming",
+    "tags": [
+      "swift",
+      "ios",
+      "apple",
+      "programming",
+      "mobile",
+      "xcode",
+      "concurrency",
+      "protocol",
+      "language",
+      "macos",
+      "development",
+      "uikit"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-terraform",
+    "file": "brand-terraform.svg",
+    "description": "Terraform infrastructure as code, cloud provisioning, Terraform modules, IaC best practices, resource management",
+    "tags": [
+      "terraform",
+      "iac",
+      "infrastructure",
+      "provisioning",
+      "modules",
+      "cloud",
+      "devops",
+      "hcl",
+      "automation",
+      "resources",
+      "hashicorp",
+      "deployment"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-typescript",
+    "file": "brand-typescript.svg",
+    "description": "TypeScript language, type safety, TypeScript patterns, static typing, TypeScript tooling",
+    "tags": [
+      "typescript",
+      "ts",
+      "types",
+      "type-safety",
+      "static-typing",
+      "language",
+      "programming",
+      "microsoft",
+      "tooling",
+      "frontend",
+      "backend",
+      "compile"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-vercel",
+    "file": "brand-vercel.svg",
+    "description": "Vercel deployment, Next.js hosting, edge functions, Vercel analytics, frontend deployment platform",
+    "tags": [
+      "vercel",
+      "deployment",
+      "nextjs",
+      "hosting",
+      "edge",
+      "analytics",
+      "frontend",
+      "platform",
+      "serverless",
+      "preview",
+      "ci-cd",
+      "web"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-vue",
+    "file": "brand-vue.svg",
+    "description": "Vue.js framework, Vue composition API, Vue ecosystem, Vue components, reactive programming",
+    "tags": [
+      "vue",
+      "vuejs",
+      "framework",
+      "composition-api",
+      "reactive",
+      "components",
+      "frontend",
+      "javascript",
+      "web",
+      "pinia",
+      "vite",
+      "nuxt"
+    ],
+    "weight": 1
+  },
+  {
+    "name": "brand-windows",
+    "file": "brand-windows.svg",
+    "description": "Microsoft Windows platform, Windows development, WinUI, Windows APIs, Microsoft ecosystem",
+    "tags": [
+      "windows",
+      "microsoft",
+      "winui",
+      "apis",
+      "platform",
+      "development",
+      "desktop",
+      "os",
+      "ecosystem",
+      "dotnet",
+      "uwp",
+      "wpf"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "brand-wordpress",
+    "file": "brand-wordpress.svg",
+    "description": "WordPress development, CMS customization, WordPress plugins, theme development, WordPress ecosystem",
+    "tags": [
+      "wordpress",
+      "cms",
+      "plugins",
+      "themes",
+      "development",
+      "php",
+      "website",
+      "blog",
+      "customization",
+      "ecosystem",
+      "content",
+      "publishing"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "briefcase",
+    "file": "briefcase.svg",
+    "description": "project management, business operations, professional work, task management, portfolio management, business planning",
+    "tags": [
+      "project",
+      "management",
+      "business",
+      "professional",
+      "tasks",
+      "portfolio",
+      "planning",
+      "operations",
+      "work",
+      "briefcase",
+      "enterprise",
+      "organization"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "browser",
+    "file": "browser.svg",
+    "description": "web browsing, browser automation, web testing, headless browser, web scraping, browser interaction",
+    "tags": [
+      "browser",
+      "web",
+      "automation",
+      "testing",
+      "scraping",
+      "headless",
+      "interaction",
+      "navigation",
+      "internet",
+      "playwright",
+      "selenium",
+      "puppeteer"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "browser-check",
+    "file": "browser-check.svg",
+    "description": "browser compatibility testing, cross-browser validation, browser verification, web compatibility check",
+    "tags": [
+      "browser",
+      "compatibility",
+      "testing",
+      "cross-browser",
+      "validation",
+      "verification",
+      "check",
+      "web",
+      "quality",
+      "assurance",
+      "responsive",
+      "support"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "brush",
+    "file": "brush.svg",
+    "description": "design styling, visual customization, UI theming, creative design, painting, artistic rendering, design tool",
+    "tags": [
+      "design",
+      "styling",
+      "customization",
+      "theming",
+      "creative",
+      "painting",
+      "artistic",
+      "ui",
+      "visual",
+      "tool",
+      "rendering",
+      "art"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "bug",
+    "file": "bug.svg",
+    "description": "bug tracking, defect identification, issue debugging, error finding, software defects, bug reporting",
+    "tags": [
+      "bug",
+      "defect",
+      "debugging",
+      "error",
+      "issue",
+      "tracking",
+      "finding",
+      "software",
+      "reporting",
+      "fix",
+      "problem",
+      "troubleshoot"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "bug-off",
+    "file": "bug-off.svg",
+    "description": "bug fixing, error resolution, defect elimination, bug prevention, code cleanup, error handling",
+    "tags": [
+      "bug-fix",
+      "resolution",
+      "elimination",
+      "prevention",
+      "cleanup",
+      "error-handling",
+      "fix",
+      "debug",
+      "resolve",
+      "patch",
+      "repair",
+      "correct"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "building",
+    "file": "building.svg",
+    "description": "architecture design, system construction, building components, structural design, infrastructure planning",
+    "tags": [
+      "architecture",
+      "construction",
+      "system",
+      "building",
+      "structure",
+      "design",
+      "infrastructure",
+      "planning",
+      "components",
+      "foundation",
+      "framework",
+      "engineering"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "building-arch",
+    "file": "building-arch.svg",
+    "description": "architectural decisions, system architecture, design patterns, structural planning, ADR documentation, foundation design",
+    "tags": [
+      "architecture",
+      "decisions",
+      "adr",
+      "patterns",
+      "structural",
+      "planning",
+      "foundation",
+      "design",
+      "system",
+      "documentation",
+      "engineering",
+      "blueprint"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "bulb",
+    "file": "bulb.svg",
+    "description": "idea generation, innovation, creative thinking, brainstorming, insights, light bulb moment, problem solving",
+    "tags": [
+      "idea",
+      "innovation",
+      "creative",
+      "brainstorming",
+      "insight",
+      "thinking",
+      "solution",
+      "light",
+      "moment",
+      "invention",
+      "discovery",
+      "spark"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "calendar-event",
+    "file": "calendar-event.svg",
+    "description": "scheduling, event management, sprint planning, timeline tracking, deadline management, calendar integration",
+    "tags": [
+      "calendar",
+      "scheduling",
+      "events",
+      "sprint",
+      "planning",
+      "timeline",
+      "deadline",
+      "tracking",
+      "management",
+      "dates",
+      "agile",
+      "scrum"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "cast",
+    "file": "cast.svg",
+    "description": "screen casting, remote control, device mirroring, streaming, remote browser, cast connection, display sharing",
+    "tags": [
+      "cast",
+      "streaming",
+      "remote",
+      "mirroring",
+      "screen",
+      "device",
+      "connection",
+      "display",
+      "sharing",
+      "broadcast",
+      "control",
+      "chromecast"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "certificate",
+    "file": "certificate.svg",
+    "description": "security certificates, SSL/TLS, authentication tokens, credential verification, trust metadata, digital signatures",
+    "tags": [
+      "certificate",
+      "ssl",
+      "tls",
+      "authentication",
+      "credentials",
+      "trust",
+      "security",
+      "verification",
+      "digital",
+      "signature",
+      "token",
+      "identity"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "chart-area",
+    "file": "chart-area.svg",
+    "description": "data visualization, area charts, market research, analytics dashboard, trend analysis, statistical reporting",
+    "tags": [
+      "chart",
+      "area",
+      "visualization",
+      "analytics",
+      "data",
+      "market",
+      "research",
+      "trends",
+      "statistics",
+      "dashboard",
+      "reporting",
+      "metrics"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "chart-bar",
+    "file": "chart-bar.svg",
+    "description": "bar chart visualization, data comparison, metrics display, performance metrics, lead intelligence, statistical analysis",
+    "tags": [
+      "chart",
+      "bar",
+      "visualization",
+      "comparison",
+      "metrics",
+      "performance",
+      "statistics",
+      "analysis",
+      "data",
+      "intelligence",
+      "dashboard",
+      "report"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "chart-bubble",
+    "file": "chart-bubble.svg",
+    "description": "bubble chart, risk assessment, multi-dimensional data, scatter plot, correlation analysis, risk visualization",
+    "tags": [
+      "bubble",
+      "chart",
+      "risk",
+      "assessment",
+      "multi-dimensional",
+      "scatter",
+      "correlation",
+      "analysis",
+      "visualization",
+      "data",
+      "plot",
+      "matrix"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "chart-dots",
+    "file": "chart-dots.svg",
+    "description": "scatter plot, data point analysis, agent evaluation, performance comparison, metric plotting, benchmark results",
+    "tags": [
+      "scatter",
+      "dots",
+      "analysis",
+      "evaluation",
+      "comparison",
+      "benchmark",
+      "metrics",
+      "performance",
+      "data",
+      "points",
+      "plotting",
+      "results"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "chart-dots-2",
+    "file": "chart-dots-2.svg",
+    "description": "machine learning metrics, ML evaluation, model comparison, training results, Azure ML, data point visualization",
+    "tags": [
+      "ml",
+      "machine-learning",
+      "evaluation",
+      "model",
+      "training",
+      "results",
+      "azure",
+      "metrics",
+      "comparison",
+      "data",
+      "visualization",
+      "workspace"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "chart-dots-3",
+    "file": "chart-dots-3.svg",
+    "description": "strategic analysis, business intelligence, data point mapping, analyst insights, strategic planning, business metrics",
+    "tags": [
+      "strategic",
+      "analysis",
+      "business",
+      "intelligence",
+      "mapping",
+      "insights",
+      "planning",
+      "metrics",
+      "analyst",
+      "data",
+      "dots",
+      "chart"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "chart-histogram",
+    "file": "chart-histogram.svg",
+    "description": "histogram visualization, data distribution, frequency analysis, statistical distribution, data profiling",
+    "tags": [
+      "histogram",
+      "distribution",
+      "frequency",
+      "statistical",
+      "profiling",
+      "data",
+      "visualization",
+      "analysis",
+      "bins",
+      "range",
+      "chart",
+      "analytics"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "chart-line",
+    "file": "chart-line.svg",
+    "description": "line chart, trend tracking, performance over time, code quality metrics, growth tracking, time series data",
+    "tags": [
+      "line",
+      "chart",
+      "trend",
+      "tracking",
+      "performance",
+      "quality",
+      "metrics",
+      "growth",
+      "time-series",
+      "data",
+      "progress",
+      "analytics"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "chart-radar",
+    "file": "chart-radar.svg",
+    "description": "radar chart, multi-dimensional evaluation, LLM assessment, skill comparison, capability mapping, spider chart",
+    "tags": [
+      "radar",
+      "chart",
+      "evaluation",
+      "llm",
+      "assessment",
+      "comparison",
+      "capability",
+      "mapping",
+      "spider",
+      "multi-dimensional",
+      "skills",
+      "analysis"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "chart-treemap",
+    "file": "chart-treemap.svg",
+    "description": "treemap visualization, hierarchical data, file size analysis, codebase breakdown, nested data visualization",
+    "tags": [
+      "treemap",
+      "hierarchical",
+      "file-size",
+      "codebase",
+      "nested",
+      "data",
+      "visualization",
+      "breakdown",
+      "structure",
+      "analysis",
+      "chart",
+      "mapping"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "check",
+    "file": "check.svg",
+    "description": "verification, validation, completion confirmation, quality check, approval, task completion, success state",
+    "tags": [
+      "check",
+      "verify",
+      "validate",
+      "complete",
+      "approval",
+      "success",
+      "done",
+      "confirmation",
+      "quality",
+      "task",
+      "pass",
+      "ok"
+    ],
+    "weight": 0.4
+  },
+  {
+    "name": "checkbox",
+    "file": "checkbox.svg",
+    "description": "task checklist, QA testing, item verification, test cases, checklist management, quality assurance reporting",
+    "tags": [
+      "checkbox",
+      "checklist",
+      "qa",
+      "testing",
+      "verification",
+      "tasks",
+      "cases",
+      "management",
+      "quality",
+      "assurance",
+      "items",
+      "reporting"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "checklist",
+    "file": "checklist.svg",
+    "description": "comprehensive checklist, systematic review, QA process, quality gates, verification steps, audit checklist",
+    "tags": [
+      "checklist",
+      "systematic",
+      "review",
+      "qa",
+      "quality",
+      "gates",
+      "verification",
+      "audit",
+      "steps",
+      "process",
+      "comprehensive",
+      "check"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "checks",
+    "file": "checks.svg",
+    "description": "multiple validations, readiness verification, implementation readiness, multi-check system, comprehensive verification",
+    "tags": [
+      "checks",
+      "validation",
+      "readiness",
+      "verification",
+      "multiple",
+      "comprehensive",
+      "system",
+      "implementation",
+      "quality",
+      "audit",
+      "review",
+      "confirm"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "checkup-list",
+    "file": "checkup-list.svg",
+    "description": "formal evaluation, health checkup, system diagnostics, evaluation framework, assessment checklist, formal review",
+    "tags": [
+      "checkup",
+      "evaluation",
+      "health",
+      "diagnostics",
+      "framework",
+      "assessment",
+      "formal",
+      "review",
+      "system",
+      "list",
+      "inspection",
+      "audit"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "circle-check",
+    "file": "circle-check.svg",
+    "description": "verification complete, validation passed, verification loop, quality confirmed, successful check, circular approval",
+    "tags": [
+      "verification",
+      "validation",
+      "complete",
+      "passed",
+      "quality",
+      "confirmed",
+      "success",
+      "approval",
+      "check",
+      "loop",
+      "circular",
+      "done"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "circle-off",
+    "file": "circle-off.svg",
+    "description": "disabled state, turned off, anti-pattern detection, feature disabled, inactive status, deactivated",
+    "tags": [
+      "disabled",
+      "off",
+      "inactive",
+      "anti-pattern",
+      "deactivated",
+      "feature",
+      "status",
+      "turned",
+      "state",
+      "blocked",
+      "stopped",
+      "unavailable"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "circuit-ground",
+    "file": "circuit-ground.svg",
+    "description": "AI engineering foundation, circuit design, electrical engineering, grounding, AI system architecture, infrastructure",
+    "tags": [
+      "ai",
+      "engineering",
+      "foundation",
+      "circuit",
+      "electrical",
+      "ground",
+      "architecture",
+      "infrastructure",
+      "system",
+      "design",
+      "base",
+      "core"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "click",
+    "file": "click.svg",
+    "description": "user interaction, click automation, E2E testing, web interaction, mouse events, automated clicking, UI testing",
+    "tags": [
+      "click",
+      "interaction",
+      "automation",
+      "e2e",
+      "testing",
+      "web",
+      "mouse",
+      "events",
+      "ui",
+      "automated",
+      "user",
+      "action"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "clipboard-check",
+    "file": "clipboard-check.svg",
+    "description": "policy review, configuration check, compliance verification, checklist review, policy management, settings audit",
+    "tags": [
+      "clipboard",
+      "check",
+      "policy",
+      "configuration",
+      "compliance",
+      "verification",
+      "review",
+      "management",
+      "audit",
+      "settings",
+      "rules",
+      "governance"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "clipboard-text",
+    "file": "clipboard-text.svg",
+    "description": "product brief, documentation notes, text management, content clipboard, requirement documentation, brief creation",
+    "tags": [
+      "clipboard",
+      "text",
+      "brief",
+      "documentation",
+      "notes",
+      "content",
+      "requirements",
+      "product",
+      "management",
+      "writing",
+      "copy",
+      "paste"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "clock",
+    "file": "clock.svg",
+    "description": "time management, scheduling, office hours, time tracking, deadline management, temporal operations, timing",
+    "tags": [
+      "clock",
+      "time",
+      "scheduling",
+      "tracking",
+      "deadline",
+      "management",
+      "hours",
+      "temporal",
+      "timing",
+      "office",
+      "schedule",
+      "duration"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "cloud-code",
+    "file": "cloud-code.svg",
+    "description": "cloud development, cloud-based coding, Azure AI projects, cloud SDK, cloud programming, cloud-native development",
+    "tags": [
+      "cloud",
+      "code",
+      "development",
+      "azure",
+      "ai",
+      "projects",
+      "sdk",
+      "programming",
+      "native",
+      "platform",
+      "services",
+      "compute"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "cloud-cog",
+    "file": "cloud-cog.svg",
+    "description": "cloud configuration, cloud settings, Azure AI agents, persistent cloud services, cloud management, cloud operations",
+    "tags": [
+      "cloud",
+      "configuration",
+      "settings",
+      "azure",
+      "agents",
+      "persistent",
+      "management",
+      "operations",
+      "services",
+      "gear",
+      "admin",
+      "platform"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "cloud-computing",
+    "file": "cloud-computing.svg",
+    "description": "cloud infrastructure, distributed computing, cloud services, Azure AI projects, cloud architecture, enterprise cloud",
+    "tags": [
+      "cloud",
+      "computing",
+      "infrastructure",
+      "distributed",
+      "services",
+      "azure",
+      "architecture",
+      "enterprise",
+      "platform",
+      "compute",
+      "hosting",
+      "scale"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "cloud-data-connection",
+    "file": "cloud-data-connection.svg",
+    "description": "cloud data integration, data pipeline, Azure AI Foundry, data connection, cloud database, data streaming",
+    "tags": [
+      "cloud",
+      "data",
+      "connection",
+      "integration",
+      "pipeline",
+      "azure",
+      "foundry",
+      "database",
+      "streaming",
+      "sync",
+      "transfer",
+      "link"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "cloud-lock",
+    "file": "cloud-lock.svg",
+    "description": "cloud security, encrypted cloud storage, secure cloud services, cloud access control, protected cloud data",
+    "tags": [
+      "cloud",
+      "security",
+      "encryption",
+      "secure",
+      "access-control",
+      "protected",
+      "storage",
+      "lock",
+      "safety",
+      "privacy",
+      "authentication",
+      "guard"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "cloud-up",
+    "file": "cloud-up.svg",
+    "description": "cloud upload, cloud deployment, hosted agents, cloud scaling, upload to cloud, cloud provisioning",
+    "tags": [
+      "cloud",
+      "upload",
+      "deployment",
+      "hosted",
+      "agents",
+      "scaling",
+      "provisioning",
+      "up",
+      "hosting",
+      "server",
+      "platform",
+      "infrastructure"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "code",
+    "file": "code.svg",
+    "description": "code writing, programming, software development, coding standards, code implementation, development work",
+    "tags": [
+      "code",
+      "programming",
+      "development",
+      "writing",
+      "software",
+      "implementation",
+      "standards",
+      "coding",
+      "engineering",
+      "build",
+      "create",
+      "develop"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "code-asterisk",
+    "file": "code-asterisk.svg",
+    "description": "coding standards, code conventions, wildcard patterns, code guidelines, programming standards, best practices",
+    "tags": [
+      "code",
+      "standards",
+      "conventions",
+      "guidelines",
+      "programming",
+      "practices",
+      "asterisk",
+      "wildcard",
+      "patterns",
+      "rules",
+      "style",
+      "formatting"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "code-circle",
+    "file": "code-circle.svg",
+    "description": "code review cycle, circular code analysis, code review assistance, linting, style checking, code quality review",
+    "tags": [
+      "code",
+      "review",
+      "cycle",
+      "analysis",
+      "assistance",
+      "linting",
+      "style",
+      "quality",
+      "checking",
+      "circular",
+      "feedback",
+      "improvement"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "code-dots",
+    "file": "code-dots.svg",
+    "description": "code abstraction, API type adoption, code patterns, generated types, code structure, abstract coding patterns",
+    "tags": [
+      "code",
+      "abstraction",
+      "api",
+      "types",
+      "patterns",
+      "generated",
+      "structure",
+      "abstract",
+      "dots",
+      "migration",
+      "frontend",
+      "client"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "coffee",
+    "file": "coffee.svg",
+    "description": "Java programming, Java development, Spring Boot, Java coding standards, JVM, Java ecosystem",
+    "tags": [
+      "java",
+      "programming",
+      "spring-boot",
+      "coding",
+      "standards",
+      "jvm",
+      "ecosystem",
+      "development",
+      "backend",
+      "enterprise",
+      "oop",
+      "language"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "coin",
+    "file": "coin.svg",
+    "description": "payment processing, cryptocurrency, agent payments, x402 protocol, per-task budgets, financial transactions",
+    "tags": [
+      "payment",
+      "cryptocurrency",
+      "agent",
+      "x402",
+      "budget",
+      "financial",
+      "transaction",
+      "coin",
+      "money",
+      "token",
+      "economy",
+      "commerce"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "components",
+    "file": "components.svg",
+    "description": "component architecture, React components, component refactoring, UI components, modular design, component library",
+    "tags": [
+      "components",
+      "architecture",
+      "react",
+      "refactoring",
+      "ui",
+      "modular",
+      "design",
+      "library",
+      "structure",
+      "system",
+      "building-blocks",
+      "reusable"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "confetti",
+    "file": "confetti.svg",
+    "description": "celebration, party mode, agent collaboration, group discussion, festive event, team celebration, milestone achievement",
+    "tags": [
+      "celebration",
+      "party",
+      "collaboration",
+      "group",
+      "discussion",
+      "agents",
+      "team",
+      "festive",
+      "milestone",
+      "achievement",
+      "fun",
+      "event"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "copy",
+    "file": "copy.svg",
+    "description": "duplication detection, code copying, plagiarism check, duplicate review, copy prevention, code similarity",
+    "tags": [
+      "copy",
+      "duplication",
+      "plagiarism",
+      "duplicate",
+      "similarity",
+      "review",
+      "prevention",
+      "detect",
+      "clone",
+      "replicate",
+      "paste",
+      "overlap"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "cpu",
+    "file": "cpu.svg",
+    "description": "CPU processing, computational power, JIT optimization, V8 engine, processor performance, computing resources",
+    "tags": [
+      "cpu",
+      "processing",
+      "computation",
+      "jit",
+      "v8",
+      "performance",
+      "processor",
+      "computing",
+      "resources",
+      "engine",
+      "execution",
+      "hardware"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "cpu-2",
+    "file": "cpu-2.svg",
+    "description": "processor management, computing resources, system performance, CPU monitoring, computational analysis, hardware resources",
+    "tags": [
+      "cpu",
+      "processor",
+      "computing",
+      "resources",
+      "performance",
+      "monitoring",
+      "analysis",
+      "hardware",
+      "system",
+      "management",
+      "execution",
+      "power"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "cube",
+    "file": "cube.svg",
+    "description": "3D modeling, Minecraft debugging, block-based systems, 3D visualization, spatial computing, cube rendering",
+    "tags": [
+      "cube",
+      "3d",
+      "minecraft",
+      "block",
+      "spatial",
+      "visualization",
+      "modeling",
+      "rendering",
+      "gaming",
+      "debug",
+      "geometry",
+      "volume"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "cube-send",
+    "file": "cube-send.svg",
+    "description": "package delivery, data transmission, Turborepo monorepo, build system, task distribution, monorepo management",
+    "tags": [
+      "cube",
+      "send",
+      "delivery",
+      "transmission",
+      "turborepo",
+      "monorepo",
+      "build",
+      "task",
+      "distribution",
+      "management",
+      "pipeline",
+      "transfer"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "currency-bitcoin",
+    "file": "currency-bitcoin.svg",
+    "description": "Bitcoin cryptocurrency, CCXT exchange, crypto trading, blockchain, cryptocurrency API, digital currency",
+    "tags": [
+      "bitcoin",
+      "crypto",
+      "ccxt",
+      "exchange",
+      "trading",
+      "blockchain",
+      "api",
+      "digital",
+      "currency",
+      "php",
+      "finance",
+      "market"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "currency-ethereum",
+    "file": "currency-ethereum.svg",
+    "description": "Ethereum blockchain, smart contracts, ETH cryptocurrency, Web3 development, DeFi, Ethereum ecosystem",
+    "tags": [
+      "ethereum",
+      "blockchain",
+      "smart-contracts",
+      "eth",
+      "web3",
+      "defi",
+      "cryptocurrency",
+      "development",
+      "dapp",
+      "solidity",
+      "chain",
+      "crypto"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "currency-solana",
+    "file": "currency-solana.svg",
+    "description": "Solana blockchain, MAXIA marketplace, AI-to-AI marketplace, Solana ecosystem, crypto marketplace, agent commerce",
+    "tags": [
+      "solana",
+      "blockchain",
+      "marketplace",
+      "ai",
+      "agent",
+      "commerce",
+      "crypto",
+      "ecosystem",
+      "maxia",
+      "trading",
+      "defi",
+      "web3"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "cursor-text",
+    "file": "cursor-text.svg",
+    "description": "text cursor, code evaluation, nREPL interaction, Clojure evaluation, text editing, cursor positioning",
+    "tags": [
+      "cursor",
+      "text",
+      "evaluation",
+      "nrepl",
+      "clojure",
+      "editing",
+      "positioning",
+      "code",
+      "interactive",
+      "repl",
+      "input",
+      "typing"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "dashboard",
+    "file": "dashboard.svg",
+    "description": "dashboard view, sprint status, monitoring panel, code quality dashboard, status tracking, overview panel",
+    "tags": [
+      "dashboard",
+      "status",
+      "monitoring",
+      "sprint",
+      "tracking",
+      "overview",
+      "panel",
+      "quality",
+      "metrics",
+      "summary",
+      "view",
+      "report"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "database-cog",
+    "file": "database-cog.svg",
+    "description": "database configuration, database management, Zustand state management, database settings, data store configuration",
+    "tags": [
+      "database",
+      "configuration",
+      "management",
+      "zustand",
+      "state",
+      "settings",
+      "store",
+      "data",
+      "cog",
+      "admin",
+      "setup",
+      "options"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "database-export",
+    "file": "database-export.svg",
+    "description": "data export, database migration, data migration, export functionality, data transfer, database backup",
+    "tags": [
+      "database",
+      "export",
+      "migration",
+      "data",
+      "transfer",
+      "backup",
+      "move",
+      "convert",
+      "extract",
+      "output",
+      "save",
+      "dump"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "database-heart",
+    "file": "database-heart.svg",
+    "description": "database love, CockroachDB review, database quality, data affection, database health, database care",
+    "tags": [
+      "database",
+      "heart",
+      "love",
+      "cockroachdb",
+      "quality",
+      "health",
+      "care",
+      "review",
+      "crdb",
+      "data",
+      "affection",
+      "monitoring"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "database-search",
+    "file": "database-search.svg",
+    "description": "database querying, data search, TiDB validation, database exploration, data retrieval, database lookup",
+    "tags": [
+      "database",
+      "search",
+      "query",
+      "tidb",
+      "validation",
+      "exploration",
+      "retrieval",
+      "lookup",
+      "data",
+      "find",
+      "scan",
+      "investigate"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "database-share",
+    "file": "database-share.svg",
+    "description": "data sharing, database collaboration, shared data access, database distribution, data exchange, collaborative data",
+    "tags": [
+      "database",
+      "share",
+      "collaboration",
+      "access",
+      "distribution",
+      "exchange",
+      "data",
+      "collaborative",
+      "sync",
+      "team",
+      "public",
+      "export"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "deer",
+    "file": "deer.svg",
+    "description": "DeerFlow AI agent platform, DeerFlow API interaction, AI agent communication, DeerFlow integration",
+    "tags": [
+      "deerflow",
+      "ai",
+      "agent",
+      "platform",
+      "api",
+      "interaction",
+      "communication",
+      "integration",
+      "deer",
+      "service",
+      "http",
+      "remote"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "device-analytics",
+    "file": "device-analytics.svg",
+    "description": "device analytics, AI product engineering, product metrics, usage analytics, device monitoring, product intelligence",
+    "tags": [
+      "device",
+      "analytics",
+      "ai",
+      "product",
+      "metrics",
+      "usage",
+      "monitoring",
+      "intelligence",
+      "engineering",
+      "data",
+      "insights",
+      "tracking"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "device-desktop",
+    "file": "device-desktop.svg",
+    "description": "desktop application, UI/UX design, web design, desktop interface, screen design, desktop development",
+    "tags": [
+      "desktop",
+      "ui",
+      "ux",
+      "design",
+      "web",
+      "interface",
+      "screen",
+      "development",
+      "application",
+      "monitor",
+      "computer",
+      "display"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "device-mobile-check",
+    "file": "device-mobile-check.svg",
+    "description": "mobile testing, E2E mobile tests, mobile verification, responsive testing, mobile QA, mobile validation",
+    "tags": [
+      "mobile",
+      "testing",
+      "e2e",
+      "verification",
+      "responsive",
+      "qa",
+      "validation",
+      "check",
+      "device",
+      "phone",
+      "react",
+      "component"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "device-tablet-check",
+    "file": "device-tablet-check.svg",
+    "description": "tablet testing, E2E test generation, tablet verification, responsive design testing, tablet QA",
+    "tags": [
+      "tablet",
+      "testing",
+      "e2e",
+      "verification",
+      "responsive",
+      "qa",
+      "check",
+      "device",
+      "generation",
+      "automated",
+      "features",
+      "validation"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "devices",
+    "file": "devices.svg",
+    "description": "multi-device design, UX design specifications, responsive design, device planning, cross-platform UX, device mockups",
+    "tags": [
+      "devices",
+      "multi-device",
+      "ux",
+      "design",
+      "responsive",
+      "planning",
+      "cross-platform",
+      "mockups",
+      "specifications",
+      "layout",
+      "screen",
+      "platforms"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "diamond",
+    "file": "diamond.svg",
+    "description": "premium quality, luxury design, high-value component, premium feature, diamond standard, excellence",
+    "tags": [
+      "diamond",
+      "premium",
+      "luxury",
+      "quality",
+      "high-value",
+      "excellence",
+      "standard",
+      "valuable",
+      "rare",
+      "top",
+      "elite",
+      "best"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "drone",
+    "file": "drone.svg",
+    "description": "agentic engineering, autonomous operation, drone deployment, automated execution, eval-first approach, autonomous systems",
+    "tags": [
+      "drone",
+      "agentic",
+      "autonomous",
+      "deployment",
+      "automated",
+      "execution",
+      "eval",
+      "systems",
+      "engineering",
+      "operation",
+      "robot",
+      "flight"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "drone-off",
+    "file": "drone-off.svg",
+    "description": "disabled autonomous systems, AI agent development halted, drone disabled, autonomous mode off, agent development paused",
+    "tags": [
+      "drone",
+      "off",
+      "autonomous",
+      "ai",
+      "agent",
+      "development",
+      "disabled",
+      "paused",
+      "halted",
+      "inactive",
+      "stopped",
+      "deactivated"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "droplets",
+    "file": "droplets.svg",
+    "description": "Drizzle ORM, database schema, data flow, liquid data, database operations, ORM patterns, database management",
+    "tags": [
+      "drizzle",
+      "orm",
+      "database",
+      "schema",
+      "data",
+      "flow",
+      "liquid",
+      "operations",
+      "patterns",
+      "management",
+      "water",
+      "drops"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "ear",
+    "file": "ear.svg",
+    "description": "screen reader testing, audio accessibility, listening, audio feedback, voice accessibility, hearing support",
+    "tags": [
+      "ear",
+      "screen-reader",
+      "audio",
+      "accessibility",
+      "listening",
+      "voice",
+      "hearing",
+      "support",
+      "a11y",
+      "testing",
+      "feedback",
+      "sound"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "ear-scan",
+    "file": "ear-scan.svg",
+    "description": "audio transcription, speech-to-text, Azure AI transcription, voice recognition, audio analysis, speech processing",
+    "tags": [
+      "ear",
+      "scan",
+      "transcription",
+      "speech",
+      "azure",
+      "ai",
+      "voice",
+      "recognition",
+      "audio",
+      "analysis",
+      "processing",
+      "real-time"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "engine",
+    "file": "engine.svg",
+    "description": "voice AI engine, real-time voice processing, async voice architecture, voice engine development, conversational AI",
+    "tags": [
+      "engine",
+      "voice",
+      "ai",
+      "real-time",
+      "processing",
+      "async",
+      "architecture",
+      "conversational",
+      "development",
+      "audio",
+      "speech",
+      "system"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "eraser",
+    "file": "eraser.svg",
+    "description": "AI writing removal, content cleanup, anti-AI writing, text rewriting, human-like content, writing audit",
+    "tags": [
+      "eraser",
+      "ai-writing",
+      "cleanup",
+      "rewrite",
+      "human",
+      "content",
+      "audit",
+      "remove",
+      "text",
+      "editing",
+      "natural",
+      "authentic"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "eye",
+    "file": "eye.svg",
+    "description": "code review, visual inspection, pre-landing review, PR review, code observation, visual analysis",
+    "tags": [
+      "eye",
+      "review",
+      "inspection",
+      "observation",
+      "visual",
+      "analysis",
+      "code",
+      "pr",
+      "look",
+      "examine",
+      "scan",
+      "watch"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "eye-check",
+    "file": "eye-check.svg",
+    "description": "automated code review, verified review, PR inspection, code review approval, review validation, quality check",
+    "tags": [
+      "eye",
+      "check",
+      "review",
+      "automated",
+      "verified",
+      "approval",
+      "validation",
+      "code",
+      "pr",
+      "quality",
+      "inspection",
+      "audit"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "eye-code",
+    "file": "eye-code.svg",
+    "description": "code review expert, code inspection, AI-powered review, code analysis, code quality assessment, elite code review",
+    "tags": [
+      "eye",
+      "code",
+      "review",
+      "expert",
+      "inspection",
+      "ai",
+      "analysis",
+      "quality",
+      "assessment",
+      "elite",
+      "examination",
+      "scrutiny"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "eye-off",
+    "file": "eye-off.svg",
+    "description": "hidden content, content safety, visibility toggle, hidden features, private mode, content moderation",
+    "tags": [
+      "eye",
+      "off",
+      "hidden",
+      "content",
+      "safety",
+      "visibility",
+      "private",
+      "moderation",
+      "toggle",
+      "secret",
+      "invisible",
+      "censor"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "eye-spark",
+    "file": "eye-spark.svg",
+    "description": "AI-powered code review, intelligent code inspection, Codex review, automated code analysis, smart code review",
+    "tags": [
+      "eye",
+      "spark",
+      "ai",
+      "code",
+      "review",
+      "intelligent",
+      "codex",
+      "automated",
+      "analysis",
+      "smart",
+      "inspection",
+      "enhanced"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "face-id",
+    "file": "face-id.svg",
+    "description": "facial recognition, biometric authentication, identity verification, face detection, security authentication, biometric login",
+    "tags": [
+      "face",
+      "id",
+      "biometric",
+      "authentication",
+      "identity",
+      "verification",
+      "detection",
+      "security",
+      "recognition",
+      "login",
+      "scan",
+      "access"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "feather",
+    "file": "feather.svg",
+    "description": "technical writing, documentation curation, lightweight writing, documentation specialist, knowledge management, tech docs",
+    "tags": [
+      "feather",
+      "writing",
+      "technical",
+      "documentation",
+      "curation",
+      "lightweight",
+      "specialist",
+      "knowledge",
+      "management",
+      "content",
+      "docs",
+      "authoring"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "file-analytics",
+    "file": "file-analytics.svg",
+    "description": "file analysis, document intelligence, Azure AI document analysis, file metrics, document processing, text extraction",
+    "tags": [
+      "file",
+      "analytics",
+      "document",
+      "intelligence",
+      "azure",
+      "ai",
+      "analysis",
+      "processing",
+      "extraction",
+      "text",
+      "metrics",
+      "insights"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "file-check",
+    "file": "file-check.svg",
+    "description": "file verification, documentation update, post-ship review, file validation, document check, verified documentation",
+    "tags": [
+      "file",
+      "check",
+      "verification",
+      "documentation",
+      "post-ship",
+      "validation",
+      "review",
+      "update",
+      "confirmed",
+      "approved",
+      "done",
+      "complete"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "file-code-2",
+    "file": "file-code-2.svg",
+    "description": "code file, source code document, code documentation, programming file, code reference, developer documentation",
+    "tags": [
+      "file",
+      "code",
+      "source",
+      "document",
+      "programming",
+      "reference",
+      "developer",
+      "documentation",
+      "script",
+      "implementation",
+      "file-type",
+      "code-file"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "file-description",
+    "file": "file-description.svg",
+    "description": "PRD creation, product requirements document, requirement documentation, feature specification, product planning document",
+    "tags": [
+      "file",
+      "description",
+      "prd",
+      "requirements",
+      "product",
+      "documentation",
+      "specification",
+      "planning",
+      "feature",
+      "document",
+      "brief",
+      "details"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "file-info",
+    "file": "file-info.svg",
+    "description": "file information, document metadata, file details, document properties, file attributes, information file",
+    "tags": [
+      "file",
+      "info",
+      "metadata",
+      "details",
+      "properties",
+      "attributes",
+      "information",
+      "document",
+      "data",
+      "description",
+      "about",
+      "specs"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "file-invoice",
+    "file": "file-invoice.svg",
+    "description": "document analysis, form recognition, Azure AI form recognizer, invoice processing, document parsing, structured data extraction",
+    "tags": [
+      "file",
+      "invoice",
+      "document",
+      "analysis",
+      "form",
+      "azure",
+      "ai",
+      "parsing",
+      "extraction",
+      "structured",
+      "data",
+      "recognition"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "file-pencil",
+    "file": "file-pencil.svg",
+    "description": "PRD editing, document editing, file modification, document updates, editing workflow, document revision",
+    "tags": [
+      "file",
+      "pencil",
+      "edit",
+      "document",
+      "modification",
+      "updates",
+      "revision",
+      "writing",
+      "change",
+      "update",
+      "draft",
+      "authoring"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "file-plus",
+    "file": "file-plus.svg",
+    "description": "add documentation, new file creation, documentation addition, file creation, adding provider docs, new document",
+    "tags": [
+      "file",
+      "plus",
+      "add",
+      "new",
+      "creation",
+      "documentation",
+      "provider",
+      "create",
+      "insert",
+      "generate",
+      "make",
+      "produce"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "file-search",
+    "file": "file-search.svg",
+    "description": "documentation lookup, file search, Context7 MCP integration, document search, code search, library documentation lookup",
+    "tags": [
+      "file",
+      "search",
+      "documentation",
+      "context7",
+      "mcp",
+      "lookup",
+      "document",
+      "library",
+      "code",
+      "find",
+      "discover",
+      "reference"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "file-settings",
+    "file": "file-settings.svg",
+    "description": "AI context configuration, file settings, AI documentation setup, context management, file configuration, AI rules",
+    "tags": [
+      "file",
+      "settings",
+      "ai",
+      "context",
+      "configuration",
+      "documentation",
+      "management",
+      "rules",
+      "setup",
+      "config",
+      "options",
+      "preferences"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "file-stack",
+    "file": "file-stack.svg",
+    "description": "document stack, file organization, brownfield project documentation, stacked files, project context, documentation organization",
+    "tags": [
+      "file",
+      "stack",
+      "organization",
+      "documentation",
+      "brownfield",
+      "project",
+      "context",
+      "stacked",
+      "arrangement",
+      "structure",
+      "collection",
+      "archive"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "file-symlink",
+    "file": "file-symlink.svg",
+    "description": "file linking, symbolic links, file references, documentation links, file connections, cross-references",
+    "tags": [
+      "file",
+      "symlink",
+      "link",
+      "reference",
+      "connection",
+      "cross-reference",
+      "symbolic",
+      "pointer",
+      "alias",
+      "redirect",
+      "path",
+      "shortcut"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "file-type-doc",
+    "file": "file-type-doc.svg",
+    "description": "OpenAPI specification, document type, API spec generation, specification document, OpenAPI 3.1, API documentation format",
+    "tags": [
+      "file",
+      "type",
+      "doc",
+      "openapi",
+      "specification",
+      "api",
+      "document",
+      "format",
+      "spec",
+      "generation",
+      "schema",
+      "definition"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "file-word",
+    "file": "file-word.svg",
+    "description": "Word document, DOCX creation, document editing, Word file, Microsoft Word, document generation",
+    "tags": [
+      "file",
+      "word",
+      "docx",
+      "document",
+      "editing",
+      "microsoft",
+      "generation",
+      "create",
+      "read",
+      "office",
+      "text",
+      "format"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "filter",
+    "file": "filter.svg",
+    "description": "GitHub triage, issue filtering, PR filtering, data filtering, content filtering, read-only triage, issue management",
+    "tags": [
+      "filter",
+      "triage",
+      "github",
+      "issues",
+      "pr",
+      "data",
+      "content",
+      "management",
+      "sorting",
+      "screening",
+      "selection",
+      "refinement"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "fingerprint",
+    "file": "fingerprint.svg",
+    "description": "unique identification, agent identifier, biometric ID, unique signature, identity creation, agent fingerprint",
+    "tags": [
+      "fingerprint",
+      "identifier",
+      "unique",
+      "agent",
+      "biometric",
+      "identity",
+      "signature",
+      "creation",
+      "id",
+      "distinctive",
+      "authentication",
+      "marker"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "flag",
+    "file": "flag.svg",
+    "description": "flag management, checkpoint marking, milestone flag, review checkpoint, flag setting, progress marker",
+    "tags": [
+      "flag",
+      "checkpoint",
+      "milestone",
+      "review",
+      "marker",
+      "progress",
+      "marking",
+      "signaling",
+      "indicator",
+      "position",
+      "point",
+      "status"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "flag-2",
+    "file": "flag-2.svg",
+    "description": "feature flags, upcoming changes, Discourse feature flags, feature management, flag toggling, feature rollout",
+    "tags": [
+      "flag",
+      "feature",
+      "upcoming",
+      "changes",
+      "discourse",
+      "management",
+      "toggle",
+      "rollout",
+      "release",
+      "switch",
+      "enable",
+      "disable"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "flame",
+    "file": "flame.svg",
+    "description": "performance profiling, flame graph, CPU profiling, performance optimization, hot path detection, bottleneck analysis",
+    "tags": [
+      "flame",
+      "profiling",
+      "performance",
+      "cpu",
+      "optimization",
+      "hot-path",
+      "bottleneck",
+      "analysis",
+      "graph",
+      "fire",
+      "heat",
+      "speed"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "flask",
+    "file": "flask.svg",
+    "description": "technical research, experimentation, laboratory testing, research methodology, architecture research, scientific approach",
+    "tags": [
+      "flask",
+      "research",
+      "experiment",
+      "laboratory",
+      "testing",
+      "methodology",
+      "architecture",
+      "scientific",
+      "analysis",
+      "investigation",
+      "study",
+      "discovery"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "gauge",
+    "file": "gauge.svg",
+    "description": "performance measurement, benchmark testing, gauge monitoring, performance regression, speed testing, browse daemon",
+    "tags": [
+      "gauge",
+      "performance",
+      "benchmark",
+      "monitoring",
+      "regression",
+      "speed",
+      "testing",
+      "measurement",
+      "daemon",
+      "metrics",
+      "speedometer",
+      "tracking"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "gauge-off",
+    "file": "gauge-off.svg",
+    "description": "performance testing review, disabled monitoring, gauge disabled, performance assessment off, testing inactive",
+    "tags": [
+      "gauge",
+      "off",
+      "performance",
+      "testing",
+      "review",
+      "disabled",
+      "monitoring",
+      "assessment",
+      "inactive",
+      "stopped",
+      "ai-review",
+      "analysis"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "git-branch",
+    "file": "git-branch.svg",
+    "description": "Git branching, branch management, version control branching, Git workflow, branch strategy, Git operations",
+    "tags": [
+      "git",
+      "branch",
+      "version-control",
+      "workflow",
+      "strategy",
+      "management",
+      "operations",
+      "master",
+      "main",
+      "merge",
+      "checkout",
+      "scm"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "git-commit",
+    "file": "git-commit.svg",
+    "description": "Git commit, commit messages, version control commits, AI-generated commits, code check-in, commit history",
+    "tags": [
+      "git",
+      "commit",
+      "version-control",
+      "messages",
+      "ai-generated",
+      "check-in",
+      "history",
+      "save",
+      "snapshot",
+      "scm",
+      "push",
+      "record"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "git-compare",
+    "file": "git-compare.svg",
+    "description": "Git comparison, diff viewing, branch comparison, code comparison, version comparison, Git diff analysis",
+    "tags": [
+      "git",
+      "compare",
+      "diff",
+      "branch",
+      "code",
+      "version",
+      "comparison",
+      "analysis",
+      "changes",
+      "difference",
+      "contrast",
+      "review"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "git-merge",
+    "file": "git-merge.svg",
+    "description": "Git merging, branch merging, merge conflict resolution, code merging, version control merge, Flow type checking",
+    "tags": [
+      "git",
+      "merge",
+      "branch",
+      "conflict",
+      "resolution",
+      "code",
+      "version-control",
+      "flow",
+      "type-checking",
+      "combine",
+      "integrate",
+      "unite"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "git-pull-request",
+    "file": "git-pull-request.svg",
+    "description": "Pull request review, PR management, code review workflow, PR lifecycle, PyTorch PR review, code quality review",
+    "tags": [
+      "git",
+      "pull-request",
+      "pr",
+      "review",
+      "management",
+      "workflow",
+      "lifecycle",
+      "code-quality",
+      "pytorch",
+      "merge",
+      "feedback",
+      "collaboration"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "git-pull-request-closed",
+    "file": "git-pull-request-closed.svg",
+    "description": "PR finalization, PR closure, finalizing changes, PR completion, merge preparation, PR simplification",
+    "tags": [
+      "git",
+      "pull-request",
+      "closed",
+      "finalize",
+      "completion",
+      "merge",
+      "preparation",
+      "simplify",
+      "done",
+      "finish",
+      "resolve",
+      "conclude"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "globe",
+    "file": "globe.svg",
+    "description": "global research, domain research, international scope, worldwide access, global market, internet research",
+    "tags": [
+      "globe",
+      "global",
+      "research",
+      "domain",
+      "international",
+      "worldwide",
+      "market",
+      "internet",
+      "web",
+      "world",
+      "geographic",
+      "universal"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "hammer",
+    "file": "hammer.svg",
+    "description": "agent builder, tool building, construction, development tools, hammer tool, agent construction, building agents",
+    "tags": [
+      "hammer",
+      "builder",
+      "agent",
+      "construction",
+      "tools",
+      "development",
+      "building",
+      "crafting",
+      "creation",
+      "forge",
+      "make",
+      "implement"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "headset",
+    "file": "headset.svg",
+    "description": "voice support, headset communication, voice AI, real-time voice, bidirectional voice, voice applications, Azure AI Voice",
+    "tags": [
+      "headset",
+      "voice",
+      "ai",
+      "real-time",
+      "bidirectional",
+      "communication",
+      "audio",
+      "support",
+      "azure",
+      "applications",
+      "call",
+      "phone"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "heart-handshake",
+    "file": "heart-handshake.svg",
+    "description": "collaboration agreement, open source contribution, partnership, trust building, community collaboration, mutual agreement",
+    "tags": [
+      "heart",
+      "handshake",
+      "collaboration",
+      "agreement",
+      "open-source",
+      "partnership",
+      "trust",
+      "community",
+      "mutual",
+      "contribution",
+      "deal",
+      "cooperation"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "heartbeat",
+    "file": "heartbeat.svg",
+    "description": "system health, code quality monitoring, health check, vital signs, system pulse, quality dashboard, health tracking",
+    "tags": [
+      "heartbeat",
+      "health",
+      "monitoring",
+      "quality",
+      "system",
+      "vital",
+      "pulse",
+      "check",
+      "dashboard",
+      "tracking",
+      "alive",
+      "status"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "help",
+    "file": "help.svg",
+    "description": "help system, BMAD assistance, question answering, support system, guidance, help documentation, user assistance",
+    "tags": [
+      "help",
+      "assistance",
+      "question",
+      "answer",
+      "support",
+      "guidance",
+      "documentation",
+      "user",
+      "bmad",
+      "aid",
+      "faq",
+      "service"
+    ],
+    "weight": 0.4
+  },
+  {
+    "name": "hierarchy",
+    "file": "hierarchy.svg",
+    "description": "structural editing, document hierarchy, organizational structure, content hierarchy, structural organization, tree structure",
+    "tags": [
+      "hierarchy",
+      "structure",
+      "editing",
+      "organizational",
+      "content",
+      "tree",
+      "organization",
+      "levels",
+      "arrangement",
+      "nested",
+      "parent-child",
+      "order"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "hierarchy-2",
+    "file": "hierarchy-2.svg",
+    "description": "nested structure, hierarchical data, tree organization, multi-level structure, organizational chart, hierarchy management",
+    "tags": [
+      "hierarchy",
+      "nested",
+      "tree",
+      "organization",
+      "multi-level",
+      "chart",
+      "management",
+      "structure",
+      "levels",
+      "arrangement",
+      "parent-child",
+      "order"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "hierarchy-3",
+    "file": "hierarchy-3.svg",
+    "description": "project context creation, AI rules generation, project structure, hierarchy management, project organization, context hierarchy",
+    "tags": [
+      "hierarchy",
+      "project",
+      "context",
+      "ai",
+      "rules",
+      "structure",
+      "organization",
+      "management",
+      "creation",
+      "generation",
+      "setup",
+      "configuration"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "history",
+    "file": "history.svg",
+    "description": "commit history, retrospective analysis, version history, historical data, engineering retrospective, change history",
+    "tags": [
+      "history",
+      "retrospective",
+      "commit",
+      "version",
+      "historical",
+      "engineering",
+      "analysis",
+      "change",
+      "timeline",
+      "record",
+      "log",
+      "past"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "icons",
+    "file": "icons.svg",
+    "description": "icon library, icon management, icon system, design icons, visual icon set, icon collection, icon assets",
+    "tags": [
+      "icons",
+      "library",
+      "management",
+      "system",
+      "design",
+      "visual",
+      "collection",
+      "assets",
+      "set",
+      "symbols",
+      "graphics",
+      "images"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "id-badge",
+    "file": "id-badge.svg",
+    "description": "identity badge, resume generation, professional profile, identity management, credential display, professional identity",
+    "tags": [
+      "id",
+      "badge",
+      "resume",
+      "identity",
+      "professional",
+      "profile",
+      "credential",
+      "management",
+      "display",
+      "cv",
+      "career",
+      "qualifications"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "image-in-picture",
+    "file": "image-in-picture.svg",
+    "description": "picture-in-picture, image embedding, nested images, image composition, visual layering, image within image",
+    "tags": [
+      "image",
+      "picture",
+      "embedding",
+      "nested",
+      "composition",
+      "layering",
+      "within",
+      "visual",
+      "in-picture",
+      "frame",
+      "overlay",
+      "insert"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "infinity",
+    "file": "infinity.svg",
+    "description": "infinite loop, continuous integration, endless process, infinity symbol, CI/CD pipeline, continuous deployment, DevOps loop",
+    "tags": [
+      "infinity",
+      "loop",
+      "continuous",
+      "ci-cd",
+      "pipeline",
+      "endless",
+      "process",
+      "devops",
+      "infinite",
+      "cycle",
+      "automation",
+      "forever"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "ladder",
+    "file": "ladder.svg",
+    "description": "senior engineering, story execution, code implementation, career ladder, engineering progression, implementation agent",
+    "tags": [
+      "ladder",
+      "senior",
+      "engineering",
+      "story",
+      "execution",
+      "implementation",
+      "career",
+      "progression",
+      "agent",
+      "development",
+      "climb",
+      "growth"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "language",
+    "file": "language.svg",
+    "description": "document translation, language support, Azure AI translation, multilingual content, batch translation, language processing",
+    "tags": [
+      "language",
+      "translation",
+      "multilingual",
+      "azure",
+      "ai",
+      "document",
+      "batch",
+      "processing",
+      "locale",
+      "internationalization",
+      "i18n",
+      "text"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "layers-difference",
+    "file": "layers-difference.svg",
+    "description": "layer comparison, fullstack development, layer difference, React development, Node.js development, frontend backend integration",
+    "tags": [
+      "layers",
+      "difference",
+      "fullstack",
+      "react",
+      "node",
+      "frontend",
+      "backend",
+      "comparison",
+      "integration",
+      "development",
+      "stack",
+      "web"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "layout",
+    "file": "layout.svg",
+    "description": "UI/UX layout, frontend design, layout patterns, visual design, UI patterns, frontend development, design layout",
+    "tags": [
+      "layout",
+      "ui",
+      "ux",
+      "frontend",
+      "design",
+      "patterns",
+      "visual",
+      "development",
+      "interface",
+      "structure",
+      "arrangement",
+      "composition"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "layout-2",
+    "file": "layout-2.svg",
+    "description": "sprint status tracking, epic tracking, layout organization, sprint management, status layout, project tracking",
+    "tags": [
+      "layout",
+      "sprint",
+      "status",
+      "tracking",
+      "epic",
+      "management",
+      "organization",
+      "project",
+      "agile",
+      "scrum",
+      "progress",
+      "overview"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "layout-grid",
+    "file": "layout-grid.svg",
+    "description": "grid layout, dmux workflows, multi-agent orchestration, grid system, layout grid, agent coordination, workspace grid",
+    "tags": [
+      "layout",
+      "grid",
+      "dmux",
+      "multi-agent",
+      "orchestration",
+      "system",
+      "coordination",
+      "workspace",
+      "arrangement",
+      "matrix",
+      "panel",
+      "organization"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "layout-kanban",
+    "file": "layout-kanban.svg",
+    "description": "Kanban board, plan review, project management, task board, agile planning, visual management, workflow board",
+    "tags": [
+      "kanban",
+      "board",
+      "plan",
+      "review",
+      "management",
+      "agile",
+      "task",
+      "workflow",
+      "visual",
+      "planning",
+      "project",
+      "scrum"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "leaf",
+    "file": "leaf.svg",
+    "description": "green computing, eco-friendly development, sustainable coding, nature-inspired design, environmental awareness, clean code",
+    "tags": [
+      "leaf",
+      "green",
+      "eco",
+      "sustainable",
+      "nature",
+      "environmental",
+      "clean",
+      "code",
+      "organic",
+      "fresh",
+      "growth",
+      "natural"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "lego",
+    "file": "lego.svg",
+    "description": "skill building, modular construction, Claude Code skills, skill creation, building blocks, skill assembly, skill builder",
+    "tags": [
+      "lego",
+      "skill",
+      "building",
+      "modular",
+      "construction",
+      "blocks",
+      "assembly",
+      "creation",
+      "builder",
+      "claude",
+      "code",
+      "components"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "library",
+    "file": "library.svg",
+    "description": "library documentation, Context7 MCP, code library, documentation library, library reference, library lookup, knowledge library",
+    "tags": [
+      "library",
+      "documentation",
+      "context7",
+      "mcp",
+      "code",
+      "reference",
+      "knowledge",
+      "lookup",
+      "collection",
+      "repository",
+      "catalog",
+      "archive"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "license",
+    "file": "license.svg",
+    "description": "code license, license review, adversarial review, licensing compliance, code review, license management, legal review",
+    "tags": [
+      "license",
+      "review",
+      "compliance",
+      "legal",
+      "adversarial",
+      "code",
+      "management",
+      "parallel",
+      "layers",
+      "assessment",
+      "audit",
+      "policy"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "list-check",
+    "file": "list-check.svg",
+    "description": "coding standards checklist, TypeScript standards, JavaScript standards, React standards, Node.js standards, best practices",
+    "tags": [
+      "list",
+      "check",
+      "standards",
+      "typescript",
+      "javascript",
+      "react",
+      "node",
+      "best-practices",
+      "coding",
+      "guidelines",
+      "conventions",
+      "quality"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "list-search",
+    "file": "list-search.svg",
+    "description": "action audit, GitHub Actions security, list searching, security audit, workflow audit, vulnerability scanning, action review",
+    "tags": [
+      "list",
+      "search",
+      "audit",
+      "github",
+      "actions",
+      "security",
+      "vulnerability",
+      "workflow",
+      "scanning",
+      "review",
+      "inspection",
+      "analysis"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "list-tree",
+    "file": "list-tree.svg",
+    "description": "epic breakdown, user stories, tree structure, story breakdown, requirement decomposition, hierarchical task list",
+    "tags": [
+      "list",
+      "tree",
+      "epic",
+      "stories",
+      "breakdown",
+      "decomposition",
+      "hierarchical",
+      "requirement",
+      "task",
+      "user",
+      "agile",
+      "structure"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "lock-cog",
+    "file": "lock-cog.svg",
+    "description": "memory safety, security configuration, RAII patterns, ownership model, smart pointers, security settings, memory management",
+    "tags": [
+      "lock",
+      "cog",
+      "memory",
+      "safety",
+      "security",
+      "raii",
+      "ownership",
+      "smart-pointers",
+      "management",
+      "configuration",
+      "protection",
+      "patterns"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "logic-buffer",
+    "file": "logic-buffer.svg",
+    "description": "logic buffering, data buffering, logical operations, buffer management, data flow control, logical processing, signal buffering",
+    "tags": [
+      "logic",
+      "buffer",
+      "data",
+      "flow",
+      "control",
+      "processing",
+      "management",
+      "signal",
+      "operations",
+      "queue",
+      "temporary",
+      "storage"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "mail-ai",
+    "file": "mail-ai.svg",
+    "description": "AI email processing, automated email, intelligent mail, AI communication, email automation, smart messaging",
+    "tags": [
+      "mail",
+      "ai",
+      "email",
+      "automated",
+      "intelligent",
+      "communication",
+      "automation",
+      "smart",
+      "messaging",
+      "inbox",
+      "correspondence",
+      "response"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "map",
+    "file": "map.svg",
+    "description": "codebase mapping, project navigation, code exploration, codebase onboarding, code map, project structure visualization",
+    "tags": [
+      "map",
+      "codebase",
+      "navigation",
+      "exploration",
+      "onboarding",
+      "structure",
+      "visualization",
+      "project",
+      "analysis",
+      "discovery",
+      "layout",
+      "overview"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "map-2",
+    "file": "map-2.svg",
+    "description": "onboarding guide, codebase analysis, structured onboarding, project mapping, unfamiliar codebase, codebase documentation",
+    "tags": [
+      "map",
+      "onboarding",
+      "codebase",
+      "analysis",
+      "structured",
+      "project",
+      "documentation",
+      "guide",
+      "unfamiliar",
+      "exploration",
+      "discovery",
+      "learning"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "map-pin",
+    "file": "map-pin.svg",
+    "description": "location pinning, SEO geo optimization, geographic targeting, local SEO, location-based search, geo optimization",
+    "tags": [
+      "map",
+      "pin",
+      "location",
+      "seo",
+      "geo",
+      "geographic",
+      "targeting",
+      "local",
+      "search",
+      "optimization",
+      "position",
+      "place"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "markdown",
+    "file": "markdown.svg",
+    "description": "Markdown documentation, AI-native documentation, CLAUDE.md conversion, Markdown formatting, documentation writing, structured docs",
+    "tags": [
+      "markdown",
+      "documentation",
+      "ai",
+      "claude",
+      "md",
+      "formatting",
+      "writing",
+      "structured",
+      "conversion",
+      "docs",
+      "content",
+      "authoring"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "mask",
+    "file": "mask.svg",
+    "description": "persona creation, OpenClaw persona, identity crafting, soul forging, AI identity, persona design, character creation",
+    "tags": [
+      "mask",
+      "persona",
+      "identity",
+      "openclaw",
+      "soul",
+      "creation",
+      "ai",
+      "character",
+      "design",
+      "crafting",
+      "forging",
+      "personality"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "medical-cross",
+    "file": "medical-cross.svg",
+    "description": "medical compliance, FDA auditing, healthcare standards, medical device regulation, health tech, medical tech compliance",
+    "tags": [
+      "medical",
+      "cross",
+      "fda",
+      "compliance",
+      "healthcare",
+      "auditing",
+      "regulation",
+      "health",
+      "device",
+      "standards",
+      "audit",
+      "safety"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "message-2-code",
+    "file": "message-2-code.svg",
+    "description": "docstring writing, PyTorch documentation, code comments, function documentation, API documentation, code description",
+    "tags": [
+      "message",
+      "code",
+      "docstring",
+      "documentation",
+      "pytorch",
+      "comments",
+      "function",
+      "api",
+      "description",
+      "writing",
+      "reference",
+      "guide"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "message-chatbot",
+    "file": "message-chatbot.svg",
+    "description": "chatbot development, AI assistant building, conversational AI, chat application, LLM application, chat interface",
+    "tags": [
+      "message",
+      "chatbot",
+      "ai",
+      "assistant",
+      "conversational",
+      "chat",
+      "llm",
+      "application",
+      "development",
+      "interface",
+      "bot",
+      "dialogue"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "message-check",
+    "file": "message-check.svg",
+    "description": "PR review comments, addressing review feedback, message review, code review communication, review response, comment resolution",
+    "tags": [
+      "message",
+      "check",
+      "pr",
+      "review",
+      "comments",
+      "feedback",
+      "addressing",
+      "response",
+      "resolution",
+      "communication",
+      "code",
+      "discussion"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "message-code",
+    "file": "message-code.svg",
+    "description": "code review communication, receiving code review, code review feedback, review messages, code discussion, review implementation",
+    "tags": [
+      "message",
+      "code",
+      "review",
+      "feedback",
+      "receiving",
+      "communication",
+      "discussion",
+      "implementation",
+      "comments",
+      "suggestions",
+      "improvement",
+      "collaboration"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "message-dots",
+    "file": "message-dots.svg",
+    "description": "chat SDK, multi-platform bots, messaging platform, chat application, SDK development, cross-platform messaging",
+    "tags": [
+      "message",
+      "dots",
+      "chat",
+      "sdk",
+      "bots",
+      "messaging",
+      "platform",
+      "multi-platform",
+      "application",
+      "development",
+      "cross-platform",
+      "communication"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "message-star",
+    "file": "message-star.svg",
+    "description": "MolyKit AI chat, starred messages, premium messaging, AI chat toolkit, favorite messages, chat features",
+    "tags": [
+      "message",
+      "star",
+      "molykit",
+      "ai",
+      "chat",
+      "toolkit",
+      "premium",
+      "favorite",
+      "features",
+      "messaging",
+      "communication",
+      "highlighted"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "message-user",
+    "file": "message-user.svg",
+    "description": "user messaging, communication patterns, user interaction, messaging interface, user communication, chat user",
+    "tags": [
+      "message",
+      "user",
+      "messaging",
+      "communication",
+      "interaction",
+      "interface",
+      "chat",
+      "patterns",
+      "people",
+      "conversation",
+      "dialogue",
+      "social"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "microphone",
+    "file": "microphone.svg",
+    "description": "voice recording, Azure AI Voice, microphone input, voice AI, audio capture, voice integration, speech input",
+    "tags": [
+      "microphone",
+      "voice",
+      "azure",
+      "ai",
+      "recording",
+      "audio",
+      "capture",
+      "speech",
+      "input",
+      "integration",
+      "live",
+      "real-time"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "microphone-2",
+    "file": "microphone-2.svg",
+    "description": "brand voice creation, writing style profiling, voice analysis, style derivation, writing profile, brand identity voice",
+    "tags": [
+      "microphone",
+      "voice",
+      "brand",
+      "writing",
+      "style",
+      "profile",
+      "analysis",
+      "identity",
+      "creation",
+      "derivation",
+      "posts",
+      "signature"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "microscope",
+    "file": "microscope.svg",
+    "description": "unit testing, detailed examination, code inspection, test execution, VS Code unit tests, microscopic analysis, detailed testing",
+    "tags": [
+      "microscope",
+      "unit",
+      "testing",
+      "examination",
+      "inspection",
+      "detailed",
+      "code",
+      "test",
+      "execution",
+      "vscode",
+      "analysis",
+      "precision"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "mood-happy",
+    "file": "mood-happy.svg",
+    "description": "positive feedback, happy state, user satisfaction, positive sentiment, mood tracking, positive experience, satisfaction",
+    "tags": [
+      "mood",
+      "happy",
+      "positive",
+      "satisfaction",
+      "sentiment",
+      "feedback",
+      "experience",
+      "smile",
+      "joy",
+      "good",
+      "pleasant",
+      "delighted"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "movie",
+    "file": "movie.svg",
+    "description": "video editing, video processing, AI video editing, video cutting, video structuring, video production, media editing",
+    "tags": [
+      "movie",
+      "video",
+      "editing",
+      "ai",
+      "cutting",
+      "structuring",
+      "production",
+      "media",
+      "processing",
+      "timeline",
+      "clip",
+      "film"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "needle-thread",
+    "file": "needle-thread.svg",
+    "description": "precision work, careful integration, threading needle, delicate operation, precise connection, fine-grained work, meticulous task",
+    "tags": [
+      "needle",
+      "thread",
+      "precision",
+      "careful",
+      "integration",
+      "delicate",
+      "connection",
+      "fine",
+      "meticulous",
+      "exact",
+      "detailed",
+      "precise"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "network",
+    "file": "network.svg",
+    "description": "network architecture, AI/ML workflow, neural network, network topology, distributed systems, network design, connectivity",
+    "tags": [
+      "network",
+      "architecture",
+      "ai",
+      "ml",
+      "neural",
+      "topology",
+      "distributed",
+      "systems",
+      "design",
+      "connectivity",
+      "infrastructure",
+      "workflow"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "notes",
+    "file": "notes.svg",
+    "description": "writing plans, multi-step planning, requirement notes, task planning, spec documentation, planning notes, written plans",
+    "tags": [
+      "notes",
+      "planning",
+      "writing",
+      "multi-step",
+      "requirements",
+      "task",
+      "spec",
+      "documentation",
+      "plan",
+      "outline",
+      "draft",
+      "strategy"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "package",
+    "file": "package.svg",
+    "description": "package management, bundler testing, package organization, dependency management, package structure, module packaging",
+    "tags": [
+      "package",
+      "management",
+      "bundler",
+      "testing",
+      "dependency",
+      "structure",
+      "module",
+      "organization",
+      "bundling",
+      "distribution",
+      "npm",
+      "publish"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "package-export",
+    "file": "package-export.svg",
+    "description": "Python packaging, package distribution, export functionality, distributable packages, PyPI publishing, package structure",
+    "tags": [
+      "package",
+      "export",
+      "python",
+      "distribution",
+      "distributable",
+      "pypi",
+      "publishing",
+      "structure",
+      "setup",
+      "build",
+      "release",
+      "deployment"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "package-import",
+    "file": "package-import.svg",
+    "description": "package import, skill installation, skill search, Claude Code skills, package management, skill discovery, skill installation",
+    "tags": [
+      "package",
+      "import",
+      "skill",
+      "installation",
+      "search",
+      "claude",
+      "code",
+      "management",
+      "discovery",
+      "install",
+      "add",
+      "fetch"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "palette",
+    "file": "palette.svg",
+    "description": "color design, UI theming, frontend design, visual styling, design system, color palette, creative frontend development",
+    "tags": [
+      "palette",
+      "color",
+      "design",
+      "ui",
+      "theming",
+      "frontend",
+      "visual",
+      "styling",
+      "system",
+      "creative",
+      "aesthetic",
+      "artistic"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "paperclip",
+    "file": "paperclip.svg",
+    "description": "Paperclip API, task management, control plane, task orchestration, Paperclip integration, task automation, API interaction",
+    "tags": [
+      "paperclip",
+      "api",
+      "task",
+      "management",
+      "control",
+      "plane",
+      "orchestration",
+      "integration",
+      "automation",
+      "interaction",
+      "service",
+      "platform"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "parentheses",
+    "file": "parentheses.svg",
+    "description": "Clojure code review, Lisp syntax, parentheses matching, ClojureScript review, functional programming, code compliance",
+    "tags": [
+      "parentheses",
+      "clojure",
+      "lisp",
+      "syntax",
+      "review",
+      "clojurescript",
+      "functional",
+      "programming",
+      "compliance",
+      "code",
+      "matching",
+      "s-expression"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "pencil",
+    "file": "pencil.svg",
+    "description": "technical guide writing, guide creation, content writing, documentation authoring, guide generation, writing tutorials",
+    "tags": [
+      "pencil",
+      "writing",
+      "guide",
+      "technical",
+      "creation",
+      "content",
+      "documentation",
+      "authoring",
+      "tutorial",
+      "generation",
+      "real-world",
+      "teaching"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "pencil-code",
+    "file": "pencil-code.svg",
+    "description": "Discourse upcoming changes, code writing, feature flag authoring, code modification, upcoming feature writing, feature development",
+    "tags": [
+      "pencil",
+      "code",
+      "discourse",
+      "upcoming",
+      "changes",
+      "writing",
+      "feature",
+      "flag",
+      "authoring",
+      "modification",
+      "development",
+      "editing"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "phone",
+    "file": "phone.svg",
+    "description": "voice AI development, phone integration, voice applications, real-time voice, phone communication, voice expertise",
+    "tags": [
+      "phone",
+      "voice",
+      "ai",
+      "development",
+      "integration",
+      "applications",
+      "real-time",
+      "communication",
+      "expertise",
+      "call",
+      "telephony",
+      "speech"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "phone-call",
+    "file": "phone-call.svg",
+    "description": "customer support, phone support, call handling, customer service, support communication, call center, customer interaction",
+    "tags": [
+      "phone",
+      "call",
+      "customer",
+      "support",
+      "service",
+      "handling",
+      "communication",
+      "center",
+      "interaction",
+      "assistance",
+      "help",
+      "contact"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "phone-spark",
+    "file": "phone-spark.svg",
+    "description": "enhanced phone communication, smart calling, AI phone features, intelligent communication, voice enhancement, smart phone",
+    "tags": [
+      "phone",
+      "spark",
+      "enhanced",
+      "smart",
+      "ai",
+      "communication",
+      "voice",
+      "intelligent",
+      "features",
+      "calling",
+      "improved",
+      "advanced"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "photo",
+    "file": "photo.svg",
+    "description": "banner design, social media design, ad design, website hero, creative design, photo editing, visual design",
+    "tags": [
+      "photo",
+      "banner",
+      "social",
+      "media",
+      "ad",
+      "website",
+      "hero",
+      "creative",
+      "design",
+      "editing",
+      "visual",
+      "ckm"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "photo-ai",
+    "file": "photo-ai.svg",
+    "description": "AI image generation, fal.ai media, AI photo creation, image generation API, AI visual content, media generation",
+    "tags": [
+      "photo",
+      "ai",
+      "image",
+      "generation",
+      "fal",
+      "media",
+      "creation",
+      "api",
+      "visual",
+      "content",
+      "generate",
+      "synthesize"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "photo-edit",
+    "file": "photo-edit.svg",
+    "description": "photo editing, image manipulation, image studio, photo retouching, visual editing, image processing, photo enhancement",
+    "tags": [
+      "photo",
+      "edit",
+      "image",
+      "manipulation",
+      "studio",
+      "retouching",
+      "visual",
+      "processing",
+      "enhancement",
+      "editing",
+      "adjustment",
+      "filter"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "photo-scan",
+    "file": "photo-scan.svg",
+    "description": "image analysis, Azure AI Vision, photo scanning, image recognition, computer vision, document scanning, visual analysis",
+    "tags": [
+      "photo",
+      "scan",
+      "image",
+      "analysis",
+      "azure",
+      "ai",
+      "vision",
+      "recognition",
+      "computer",
+      "document",
+      "visual",
+      "processing"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "photo-spark",
+    "file": "photo-spark.svg",
+    "description": "AI Studio image generation, Gemini image creation, Google AI image, intelligent photo generation, AI image studio, creative AI",
+    "tags": [
+      "photo",
+      "spark",
+      "ai",
+      "studio",
+      "gemini",
+      "google",
+      "image",
+      "generation",
+      "creative",
+      "intelligent",
+      "synthesize",
+      "visual"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "player-play",
+    "file": "player-play.svg",
+    "description": "launch automation, VS Code automation, player control, launch and automate, code launching, automated execution",
+    "tags": [
+      "player",
+      "play",
+      "launch",
+      "automation",
+      "vscode",
+      "control",
+      "automate",
+      "execute",
+      "start",
+      "run",
+      "initiate",
+      "trigger"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "player-record",
+    "file": "player-record.svg",
+    "description": "demo creation, recording demos, Remix demos, demo documentation, demo writing, demo recording, example creation",
+    "tags": [
+      "player",
+      "record",
+      "demo",
+      "creation",
+      "remix",
+      "documentation",
+      "writing",
+      "recording",
+      "example",
+      "capture",
+      "video",
+      "presentation"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "player-track-next",
+    "file": "player-track-next.svg",
+    "description": "Gradio UI building, next track, progression, Gradio demos, Python UI, Gradio web UIs, next step",
+    "tags": [
+      "player",
+      "track",
+      "next",
+      "gradio",
+      "ui",
+      "building",
+      "progression",
+      "demos",
+      "python",
+      "web",
+      "interface",
+      "forward"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "plug",
+    "file": "plug.svg",
+    "description": "Claude API integration, Anthropic SDK, API connection, plugin development, API building, integration setup, API usage",
+    "tags": [
+      "plug",
+      "api",
+      "claude",
+      "anthropic",
+      "sdk",
+      "integration",
+      "connection",
+      "building",
+      "development",
+      "setup",
+      "usage",
+      "app"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "plug-connected",
+    "file": "plug-connected.svg",
+    "description": "MCP integration, server connection, connected plugin, MCP server setup, integration connection, plugin connectivity",
+    "tags": [
+      "plug",
+      "connected",
+      "mcp",
+      "integration",
+      "server",
+      "connection",
+      "setup",
+      "plugin",
+      "connectivity",
+      "link",
+      "bridge",
+      "interface"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "plug-x",
+    "file": "plug-x.svg",
+    "description": "VueUse composables, disconnected plugin, plugin removal, VueUse integration, composable patterns, Vue composition",
+    "tags": [
+      "plug",
+      "x",
+      "vueuse",
+      "composables",
+      "disconnected",
+      "removal",
+      "integration",
+      "vue",
+      "composition",
+      "patterns",
+      "unplug",
+      "disconnect"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "presentation",
+    "file": "presentation.svg",
+    "description": "Slidev presentations, developer slides, web-based slides, presentation creation, slide deck, technical presentation",
+    "tags": [
+      "presentation",
+      "slidev",
+      "slides",
+      "developer",
+      "web",
+      "creation",
+      "deck",
+      "technical",
+      "slidedeck",
+      "show",
+      "display",
+      "talk"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "presentation-analytics",
+    "file": "presentation-analytics.svg",
+    "description": "presentation metrics, analytics dashboard, presentation analysis, slide analytics, presentation performance, data presentation",
+    "tags": [
+      "presentation",
+      "analytics",
+      "metrics",
+      "dashboard",
+      "analysis",
+      "slide",
+      "performance",
+      "data",
+      "visualization",
+      "reporting",
+      "insights",
+      "tracking"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "progress",
+    "file": "progress.svg",
+    "description": "story implementation, progress tracking, story execution, development progress, implementation status, story completion",
+    "tags": [
+      "progress",
+      "story",
+      "implementation",
+      "tracking",
+      "execution",
+      "development",
+      "status",
+      "completion",
+      "advancement",
+      "forward",
+      "movement",
+      "context"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "prompt",
+    "file": "prompt.svg",
+    "description": "prompt lookup, prompt templates, prompt discovery, AI prompts, prompt management, prompt engineering, prompt optimization",
+    "tags": [
+      "prompt",
+      "lookup",
+      "templates",
+      "discovery",
+      "ai",
+      "management",
+      "engineering",
+      "optimization",
+      "search",
+      "retrieval",
+      "improvement",
+      "design"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "puzzle",
+    "file": "puzzle.svg",
+    "description": "agent SDK, puzzle solving, Agents SDK, Cloudflare Workers, puzzle integration, agent building, component assembly",
+    "tags": [
+      "puzzle",
+      "agent",
+      "sdk",
+      "cloudflare",
+      "workers",
+      "building",
+      "assembly",
+      "component",
+      "solving",
+      "integration",
+      "stateful",
+      "workflows"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "puzzle-2",
+    "file": "puzzle-2.svg",
+    "description": "web component design, React patterns, Vue patterns, Svelte patterns, component patterns, CSS-in-JS, component architecture",
+    "tags": [
+      "puzzle",
+      "component",
+      "design",
+      "react",
+      "vue",
+      "svelte",
+      "patterns",
+      "css-in-js",
+      "architecture",
+      "web",
+      "frontend",
+      "assembly"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "question-mark",
+    "file": "question-mark.svg",
+    "description": "PRFAQ challenge, questioning, working backwards, product concept, challenge questions, product validation, inquiry",
+    "tags": [
+      "question",
+      "mark",
+      "prfaq",
+      "challenge",
+      "working-backwards",
+      "product",
+      "concept",
+      "validation",
+      "inquiry",
+      "questioning",
+      "doubt",
+      "explore"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "radio",
+    "file": "radio.svg",
+    "description": "eventa library, event emission, radio broadcasting, transport-aware events, event library, event handling, eventa guide",
+    "tags": [
+      "radio",
+      "eventa",
+      "event",
+      "emission",
+      "broadcasting",
+      "transport",
+      "library",
+      "handling",
+      "guide",
+      "moeru",
+      "events",
+      "signal"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "refresh",
+    "file": "refresh.svg",
+    "description": "retrospective review, epic review, post-epic analysis, lessons learned, success assessment, refresh cycle, iteration review",
+    "tags": [
+      "refresh",
+      "retrospective",
+      "review",
+      "epic",
+      "lessons",
+      "success",
+      "assessment",
+      "cycle",
+      "iteration",
+      "post-mortem",
+      "analysis",
+      "improvement"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "refresh-alert",
+    "file": "refresh-alert.svg",
+    "description": "AI regression testing, sandbox testing, API testing, defect detection, automated testing, AI-assisted testing, regression alerts",
+    "tags": [
+      "refresh",
+      "alert",
+      "ai",
+      "regression",
+      "testing",
+      "sandbox",
+      "api",
+      "defect",
+      "automated",
+      "assisted",
+      "detection",
+      "workflow"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "refresh-dot",
+    "file": "refresh-dot.svg",
+    "description": "dependency updates, package updates, refresh updates, dependency management, version updates, project updates, dependency refresh",
+    "tags": [
+      "refresh",
+      "dot",
+      "dependency",
+      "updates",
+      "package",
+      "management",
+      "version",
+      "project",
+      "frontend",
+      "backend",
+      "upgrade",
+      "maintenance"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "repeat",
+    "file": "repeat.svg",
+    "description": "autonomous loops, Claude Code automation, repetitive tasks, loop patterns, autonomous execution, continuous operation, repeat cycle",
+    "tags": [
+      "repeat",
+      "autonomous",
+      "loops",
+      "claude",
+      "code",
+      "automation",
+      "repetitive",
+      "patterns",
+      "execution",
+      "continuous",
+      "cycle",
+      "operation"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "replace",
+    "file": "replace.svg",
+    "description": "tool renaming, deprecation handling, backward compatibility, tool replacement, migration, tool transition, compatibility layer",
+    "tags": [
+      "replace",
+      "renaming",
+      "deprecation",
+      "backward-compatibility",
+      "migration",
+      "transition",
+      "tool",
+      "compatibility",
+      "layer",
+      "update",
+      "change",
+      "swap"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "robot",
+    "file": "robot.svg",
+    "description": "coding agent, AI agent delegation, Codex agent, Claude Code agent, Pi agent, agent spawning, coding automation",
+    "tags": [
+      "robot",
+      "agent",
+      "coding",
+      "ai",
+      "delegation",
+      "codex",
+      "claude",
+      "pi",
+      "spawning",
+      "automation",
+      "background",
+      "task"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "robot-face",
+    "file": "robot-face.svg",
+    "description": "autonomous agent system, agent transformation, autonomous Claude Code, agent system, multi-agent, autonomous capabilities",
+    "tags": [
+      "robot",
+      "face",
+      "autonomous",
+      "agent",
+      "system",
+      "claude",
+      "code",
+      "multi-agent",
+      "capabilities",
+      "transformation",
+      "ai",
+      "independent"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "robot-off",
+    "file": "robot-off.svg",
+    "description": "disabled AI agent, robot disabled, AI system off, agent deactivation, AI shutdown, disabled automation, inactive agent",
+    "tags": [
+      "robot",
+      "off",
+      "ai",
+      "agent",
+      "disabled",
+      "deactivation",
+      "shutdown",
+      "inactive",
+      "system",
+      "automation",
+      "stopped",
+      "unavailable"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "rocket",
+    "file": "rocket.svg",
+    "description": "deployment, CI/CD pipeline, Docker container, release management, deployment patterns, shipping code, launch deployment",
+    "tags": [
+      "rocket",
+      "deployment",
+      "ci-cd",
+      "docker",
+      "container",
+      "release",
+      "patterns",
+      "shipping",
+      "launch",
+      "pipeline",
+      "deploy",
+      "production"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "route",
+    "file": "route.svg",
+    "description": "course correction, sprint changes, significant change management, route planning, change during execution, sprint adjustment",
+    "tags": [
+      "route",
+      "correction",
+      "sprint",
+      "changes",
+      "management",
+      "planning",
+      "execution",
+      "adjustment",
+      "significant",
+      "change",
+      "redirect",
+      "pivot"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "ruler",
+    "file": "ruler.svg",
+    "description": "design guide, UI design system, measurement, design consistency, design rules, Paperclip UI, design specification",
+    "tags": [
+      "ruler",
+      "design",
+      "guide",
+      "ui",
+      "system",
+      "measurement",
+      "consistency",
+      "rules",
+      "paperclip",
+      "specification",
+      "standards",
+      "precision"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "ruler-2",
+    "file": "ruler-2.svg",
+    "description": "design review, visual QA, spacing issues, design inconsistency, visual assessment, design quality, pixel perfection",
+    "tags": [
+      "ruler",
+      "design",
+      "review",
+      "visual",
+      "qa",
+      "spacing",
+      "inconsistency",
+      "assessment",
+      "quality",
+      "pixel",
+      "perfection",
+      "measurement"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "run",
+    "file": "run.svg",
+    "description": "quick development, story implementation, rapid execution, run command, development speed, implementation agent, fast coding",
+    "tags": [
+      "run",
+      "quick",
+      "development",
+      "story",
+      "implementation",
+      "execution",
+      "command",
+      "speed",
+      "agent",
+      "fast",
+      "coding",
+      "action"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "scan",
+    "file": "scan.svg",
+    "description": "codebase audit, repo scanning, file classification, cross-stack audit, source code analysis, repository scanning, asset audit",
+    "tags": [
+      "scan",
+      "codebase",
+      "audit",
+      "repo",
+      "classification",
+      "cross-stack",
+      "analysis",
+      "repository",
+      "asset",
+      "file",
+      "source",
+      "inventory"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "schema",
+    "file": "schema.svg",
+    "description": "architecture design, schema creation, solution design, AI agent architecture, design decisions, architectural planning, schema definition",
+    "tags": [
+      "schema",
+      "architecture",
+      "design",
+      "solution",
+      "ai",
+      "agent",
+      "decisions",
+      "planning",
+      "definition",
+      "structure",
+      "blueprint",
+      "model"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "school",
+    "file": "school.svg",
+    "description": "continuous learning, pattern extraction, Claude Code sessions, learning from sessions, knowledge accumulation, automatic learning",
+    "tags": [
+      "school",
+      "learning",
+      "continuous",
+      "pattern",
+      "extraction",
+      "claude",
+      "code",
+      "sessions",
+      "knowledge",
+      "accumulation",
+      "automatic",
+      "education"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "scissors",
+    "file": "scissors.svg",
+    "description": "document splitting, markdown splitting, shard documentation, document division, file splitting, content sharding, documentation splitting",
+    "tags": [
+      "scissors",
+      "split",
+      "document",
+      "markdown",
+      "shard",
+      "division",
+      "file",
+      "content",
+      "cut",
+      "separate",
+      "divide",
+      "fragment"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "script",
+    "file": "script.svg",
+    "description": "ShellCheck configuration, shell scripting, static analysis, shell script analysis, bash scripting, script linting, shell validation",
+    "tags": [
+      "script",
+      "shellcheck",
+      "shell",
+      "scripting",
+      "static-analysis",
+      "bash",
+      "linting",
+      "validation",
+      "configuration",
+      "analysis",
+      "usage",
+      "tool"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "search",
+    "file": "search.svg",
+    "description": "search functionality, research before coding, existing tools search, documentation search, code search, search-first workflow",
+    "tags": [
+      "search",
+      "research",
+      "coding",
+      "tools",
+      "documentation",
+      "code",
+      "workflow",
+      "find",
+      "discover",
+      "explore",
+      "investigate",
+      "lookup"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "search-off",
+    "file": "search-off.svg",
+    "description": "Exa neural search, web search, code search, company research, Exa MCP, neural search, alternative search",
+    "tags": [
+      "search",
+      "off",
+      "exa",
+      "neural",
+      "web",
+      "code",
+      "company",
+      "research",
+      "mcp",
+      "alternative",
+      "discovery",
+      "intelligence"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "send",
+    "file": "send.svg",
+    "description": "code review request, sending PR, code review submission, PR sending, review request, code submission, pull request submission",
+    "tags": [
+      "send",
+      "code",
+      "review",
+      "request",
+      "pr",
+      "submission",
+      "pull-request",
+      "submit",
+      "requesting",
+      "code-review",
+      "delivery",
+      "dispatch"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "server",
+    "file": "server.svg",
+    "description": "server-side calls, tRPC procedures, backend server, server code, direct server calls, tRPC integration, backend development",
+    "tags": [
+      "server",
+      "side",
+      "calls",
+      "trpc",
+      "procedures",
+      "backend",
+      "code",
+      "direct",
+      "integration",
+      "development",
+      "api",
+      "service"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "server-cog",
+    "file": "server-cog.svg",
+    "description": "backend code review, server configuration, backend quality, security review, maintainability review, backend assessment",
+    "tags": [
+      "server",
+      "cog",
+      "backend",
+      "code",
+      "review",
+      "configuration",
+      "quality",
+      "security",
+      "maintainability",
+      "assessment",
+      "analysis",
+      "admin"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "settings-2",
+    "file": "settings-2.svg",
+    "description": "agent mode implementation, PostHog AI agent, settings configuration, mode creation, agent configuration, AI agent modes",
+    "tags": [
+      "settings",
+      "agent",
+      "mode",
+      "posthog",
+      "ai",
+      "configuration",
+      "creation",
+      "implementation",
+      "modes",
+      "setup",
+      "options",
+      "preferences"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "settings-check",
+    "file": "settings-check.svg",
+    "description": "web test setup, settings verification, test environment configuration, Python test setup, web testing configuration, verified settings",
+    "tags": [
+      "settings",
+      "check",
+      "web",
+      "test",
+      "setup",
+      "verification",
+      "environment",
+      "configuration",
+      "python",
+      "testing",
+      "validated",
+      "confirmed"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "shadow",
+    "file": "shadow.svg",
+    "description": "shadcn management, shadow design, component management, shadcn UI, shadow styling, component library, shadcn projects",
+    "tags": [
+      "shadow",
+      "shadcn",
+      "management",
+      "component",
+      "ui",
+      "library",
+      "projects",
+      "styling",
+      "design",
+      "adding",
+      "searching",
+      "npm"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "shield",
+    "file": "shield.svg",
+    "description": "Azure AI content safety, content moderation, shield protection, content analysis, harmful content detection, safety analysis",
+    "tags": [
+      "shield",
+      "azure",
+      "ai",
+      "content",
+      "safety",
+      "moderation",
+      "protection",
+      "analysis",
+      "harmful",
+      "detection",
+      "security",
+      "guard"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "shield-bolt",
+    "file": "shield-bolt.svg",
+    "description": "DevSecOps, FinOps guardrails, autonomous security, AegisOps AI, security automation, Gemini security, autonomous guardrails",
+    "tags": [
+      "shield",
+      "bolt",
+      "devsecops",
+      "finops",
+      "guardrails",
+      "autonomous",
+      "security",
+      "aegisops",
+      "ai",
+      "gemini",
+      "automation",
+      "compliance"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "shield-check",
+    "file": "shield-check.svg",
+    "description": "security verification, shield validation, security check, compliance verification, security audit, safety check, verified protection",
+    "tags": [
+      "shield",
+      "check",
+      "security",
+      "verification",
+      "validation",
+      "compliance",
+      "audit",
+      "safety",
+      "protection",
+      "verified",
+      "confirmed",
+      "inspection"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "shield-cog",
+    "file": "shield-cog.svg",
+    "description": "SAST configuration, security testing, static analysis configuration, security settings, vulnerability detection, security tooling",
+    "tags": [
+      "shield",
+      "cog",
+      "sast",
+      "security",
+      "testing",
+      "static-analysis",
+      "configuration",
+      "vulnerability",
+      "tooling",
+      "settings",
+      "detection",
+      "scanning"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "shield-half",
+    "file": "shield-half.svg",
+    "description": "content safety, Azure AI content, half shield protection, content moderation, safety analysis, content filtering, harmful content",
+    "tags": [
+      "shield",
+      "half",
+      "content",
+      "safety",
+      "azure",
+      "ai",
+      "moderation",
+      "filtering",
+      "harmful",
+      "analysis",
+      "protection",
+      "guard"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "shield-lock",
+    "file": "shield-lock.svg",
+    "description": "Perl security, taint mode, input validation, security lock, Perl security patterns, secure coding, input sanitization",
+    "tags": [
+      "shield",
+      "lock",
+      "perl",
+      "security",
+      "taint",
+      "input",
+      "validation",
+      "sanitization",
+      "secure",
+      "coding",
+      "patterns",
+      "protection"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "shield-search",
+    "file": "shield-search.svg",
+    "description": "security scanning, Claude Code configuration scan, security audit, configuration security, .claude directory scan, security analysis",
+    "tags": [
+      "shield",
+      "search",
+      "security",
+      "scanning",
+      "claude",
+      "code",
+      "configuration",
+      "audit",
+      "directory",
+      "analysis",
+      "vulnerability",
+      "assessment"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "ship",
+    "file": "ship.svg",
+    "description": "shipping workflow, base branch merge, test running, PR review, ship code, merge and ship, production deployment",
+    "tags": [
+      "ship",
+      "workflow",
+      "merge",
+      "base",
+      "branch",
+      "test",
+      "review",
+      "production",
+      "deployment",
+      "release",
+      "deliver",
+      "launch"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "shopping-cart",
+    "file": "shopping-cart.svg",
+    "description": "e-commerce, shopping cart, online store, marketplace, e-commerce development, checkout flow, retail platform",
+    "tags": [
+      "shopping",
+      "cart",
+      "e-commerce",
+      "store",
+      "marketplace",
+      "checkout",
+      "retail",
+      "online",
+      "commerce",
+      "buy",
+      "sell",
+      "transaction"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "sitemap",
+    "file": "sitemap.svg",
+    "description": "REST API design, resource naming, API patterns, status codes, API architecture, sitemap structure, API naming",
+    "tags": [
+      "sitemap",
+      "rest",
+      "api",
+      "design",
+      "resource",
+      "naming",
+      "patterns",
+      "status",
+      "codes",
+      "architecture",
+      "structure",
+      "endpoints"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "slideshow",
+    "file": "slideshow.svg",
+    "description": "Slidev presentations, developer slides, web-based slides, presentation creation, slide deck, technical presentation, slideshow",
+    "tags": [
+      "slideshow",
+      "slidev",
+      "presentation",
+      "slides",
+      "developer",
+      "web",
+      "creation",
+      "deck",
+      "technical",
+      "talk",
+      "display",
+      "show"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "snowflake",
+    "file": "snowflake.svg",
+    "description": "directory freeze, session restriction, file restriction, frozen scope, directory lock, scope limitation, session freeze",
+    "tags": [
+      "snowflake",
+      "freeze",
+      "directory",
+      "session",
+      "restriction",
+      "file",
+      "lock",
+      "scope",
+      "limitation",
+      "frozen",
+      "constraint",
+      "boundary"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "sparkles",
+    "file": "sparkles.svg",
+    "description": "advanced elicitation, LLM improvement, reconsideration, prompt refinement, advanced prompting, LLM optimization, spark improvement",
+    "tags": [
+      "sparkles",
+      "elicitation",
+      "llm",
+      "improvement",
+      "reconsideration",
+      "refinement",
+      "prompting",
+      "optimization",
+      "advanced",
+      "enhancement",
+      "upgrade",
+      "boost"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "speakerphone",
+    "file": "speakerphone.svg",
+    "description": "public announcement, broadcasting, announcement system, public communication, broadcast message, announcement delivery, public speaking",
+    "tags": [
+      "speakerphone",
+      "announcement",
+      "broadcast",
+      "public",
+      "communication",
+      "message",
+      "delivery",
+      "speaking",
+      "amplify",
+      "loud",
+      "announce",
+      "publish"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "speedboat",
+    "file": "speedboat.svg",
+    "description": "V8 JIT optimization, high-performance JavaScript, speed optimization, V8 engine, JavaScript performance, JIT patterns, fast execution",
+    "tags": [
+      "speedboat",
+      "v8",
+      "jit",
+      "optimization",
+      "javascript",
+      "performance",
+      "speed",
+      "engine",
+      "patterns",
+      "fast",
+      "execution",
+      "high-performance"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "spider",
+    "file": "spider.svg",
+    "description": "web scraping, Scrapling, anti-bot bypass, web page scraping, automated scraping, web data extraction, spider crawling",
+    "tags": [
+      "spider",
+      "scraping",
+      "web",
+      "scrapling",
+      "anti-bot",
+      "bypass",
+      "extraction",
+      "automated",
+      "crawling",
+      "data",
+      "fetch",
+      "harvest"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "sql",
+    "file": "sql.svg",
+    "description": "HogQL queries, SQL examples, PostHog data, query reference, SQL patterns, data querying, query examples",
+    "tags": [
+      "sql",
+      "hogql",
+      "queries",
+      "posthog",
+      "data",
+      "reference",
+      "patterns",
+      "querying",
+      "examples",
+      "database",
+      "analysis",
+      "reporting"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "square-x",
+    "file": "square-x.svg",
+    "description": "xsai library, X square, AI SDK, xsai usage, AI library integration, xsai patterns, X mark square",
+    "tags": [
+      "square",
+      "x",
+      "xsai",
+      "ai",
+      "sdk",
+      "library",
+      "integration",
+      "patterns",
+      "mark",
+      "close",
+      "cancel",
+      "remove"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "star",
+    "file": "star.svg",
+    "description": "skill creation, star rating, featured skill, skill development, excellence, top skill, skill building, star quality",
+    "tags": [
+      "star",
+      "skill",
+      "creation",
+      "rating",
+      "featured",
+      "development",
+      "excellence",
+      "top",
+      "building",
+      "quality",
+      "favorite",
+      "highlight"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "sun",
+    "file": "sun.svg",
+    "description": "BrightData web search, web scraping, structured data extraction, SERP API, bright data, web data, sunny search",
+    "tags": [
+      "sun",
+      "brightdata",
+      "web",
+      "search",
+      "scraping",
+      "structured",
+      "data",
+      "serp",
+      "api",
+      "extraction",
+      "bright",
+      "light"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "switch",
+    "file": "switch.svg",
+    "description": "web app conversion, MCP App conversion, switching context, app transformation, conversion tool, app switching, context switch",
+    "tags": [
+      "switch",
+      "conversion",
+      "web",
+      "app",
+      "mcp",
+      "context",
+      "transformation",
+      "tool",
+      "convert",
+      "change",
+      "toggle",
+      "migrate"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "sword",
+    "file": "sword.svg",
+    "description": "adversarial review, cynical review, adversarial analysis, security review, attack analysis, adversarial testing, sword review",
+    "tags": [
+      "sword",
+      "adversarial",
+      "review",
+      "cynical",
+      "analysis",
+      "security",
+      "attack",
+      "testing",
+      "findings",
+      "report",
+      "critical",
+      "aggressive"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "tag",
+    "file": "tag.svg",
+    "description": "command naming, plugin naming, skill naming, tag management, naming conventions, label management, naming guidelines",
+    "tags": [
+      "tag",
+      "naming",
+      "command",
+      "plugin",
+      "skill",
+      "management",
+      "conventions",
+      "label",
+      "guidelines",
+      "identifier",
+      "classification",
+      "category"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "target-arrow",
+    "file": "target-arrow.svg",
+    "description": "edge case hunting, target analysis, boundary conditions, branching paths, edge case review, target review, precision testing",
+    "tags": [
+      "target",
+      "arrow",
+      "edge-case",
+      "hunting",
+      "boundary",
+      "conditions",
+      "branching",
+      "review",
+      "precision",
+      "testing",
+      "content",
+      "code"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "telescope",
+    "file": "telescope.svg",
+    "description": "deep research, WebSearch alternative, comprehensive research, deep investigation, thorough research, research skill, telescope view",
+    "tags": [
+      "telescope",
+      "deep",
+      "research",
+      "websearch",
+      "alternative",
+      "comprehensive",
+      "investigation",
+      "thorough",
+      "question",
+      "answer",
+      "explore",
+      "discover"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "terminal",
+    "file": "terminal.svg",
+    "description": "command development, terminal commands, CLI development, command creation, terminal interface, command line, CLI skills",
+    "tags": [
+      "terminal",
+      "command",
+      "development",
+      "cli",
+      "creation",
+      "interface",
+      "line",
+      "skills",
+      "shell",
+      "console",
+      "bash",
+      "script"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "terminal-2",
+    "file": "terminal-2.svg",
+    "description": "Context7 CLI, ctx7 CLI, library documentation fetch, AI context management, CLI tool, documentation CLI, terminal documentation",
+    "tags": [
+      "terminal",
+      "context7",
+      "cli",
+      "ctx7",
+      "library",
+      "documentation",
+      "fetch",
+      "ai",
+      "context",
+      "management",
+      "tool",
+      "terminal"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "test-pipe",
+    "file": "test-pipe.svg",
+    "description": "integration testing, VS Code integration tests, test execution, integration test running, test coverage, integration test patterns",
+    "tags": [
+      "test",
+      "pipe",
+      "integration",
+      "vscode",
+      "execution",
+      "running",
+      "coverage",
+      "patterns",
+      "testing",
+      "automated",
+      "suite",
+      "validation"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "test-pipe-2",
+    "file": "test-pipe-2.svg",
+    "description": "TDD workflow, test-driven development, feature implementation, bug fixing, refactoring, TDD practices, test-first development",
+    "tags": [
+      "test",
+      "pipe",
+      "tdd",
+      "workflow",
+      "driven",
+      "development",
+      "feature",
+      "bug",
+      "refactoring",
+      "practices",
+      "test-first",
+      "methodology"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "text-scan-2",
+    "file": "text-scan-2.svg",
+    "description": "text analytics, sentiment analysis, entity recognition, Azure AI text, text processing, natural language processing, text analysis",
+    "tags": [
+      "text",
+      "scan",
+      "analytics",
+      "sentiment",
+      "entity",
+      "recognition",
+      "azure",
+      "ai",
+      "processing",
+      "nlp",
+      "analysis",
+      "language"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "theater",
+    "file": "theater.svg",
+    "description": "Playwright CLI, browser automation, web page testing, Playwright automation, web testing, browser testing, theater automation",
+    "tags": [
+      "theater",
+      "playwright",
+      "cli",
+      "browser",
+      "automation",
+      "web",
+      "testing",
+      "page",
+      "automated",
+      "test",
+      "e2e",
+      "interaction"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "tool",
+    "file": "tool.svg",
+    "description": "lint error fixing, formatting issues, hygiene checks, tool usage, code cleanup, pre-commit hygiene, tool application",
+    "tags": [
+      "tool",
+      "lint",
+      "fix",
+      "formatting",
+      "hygiene",
+      "cleanup",
+      "pre-commit",
+      "usage",
+      "application",
+      "fixing",
+      "correction",
+      "maintenance"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "tools",
+    "file": "tools.svg",
+    "description": "multi-tool usage, tool instructions, tool selection, tool configuration, tool management, multiple tools, tool guidance",
+    "tags": [
+      "tools",
+      "multi",
+      "usage",
+      "instructions",
+      "selection",
+      "configuration",
+      "management",
+      "guidance",
+      "multiple",
+      "utility",
+      "instrument",
+      "assistance"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "topology-ring",
+    "file": "topology-ring.svg",
+    "description": "Azure AI agent framework, ring topology, persistent agents, agent architecture, topology design, agent framework, ring structure",
+    "tags": [
+      "topology",
+      "ring",
+      "azure",
+      "ai",
+      "agent",
+      "framework",
+      "persistent",
+      "architecture",
+      "design",
+      "structure",
+      "microsoft",
+      "pattern"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "topology-star",
+    "file": "topology-star.svg",
+    "description": "workspace audit, star topology, active repository audit, MCP servers audit, plugin audit, connector audit, topology analysis",
+    "tags": [
+      "topology",
+      "star",
+      "workspace",
+      "audit",
+      "repository",
+      "mcp",
+      "servers",
+      "plugin",
+      "connector",
+      "environment",
+      "analysis",
+      "inventory"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "transfer",
+    "file": "transfer.svg",
+    "description": "WPF to WinUI3 migration, migration guide, framework migration, technology transfer, migration patterns, code migration",
+    "tags": [
+      "transfer",
+      "migration",
+      "wpf",
+      "winui3",
+      "guide",
+      "framework",
+      "technology",
+      "patterns",
+      "code",
+      "porting",
+      "conversion",
+      "transition"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "transform",
+    "file": "transform.svg",
+    "description": "data transformation, content transformation, format conversion, data processing, transformation pipeline, data manipulation",
+    "tags": [
+      "transform",
+      "data",
+      "content",
+      "conversion",
+      "processing",
+      "pipeline",
+      "manipulation",
+      "format",
+      "change",
+      "modify",
+      "convert",
+      "reshape"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "trending-up",
+    "file": "trending-up.svg",
+    "description": "developer growth, chat history analysis, code practice identification, growth tracking, developer improvement, trend analysis",
+    "tags": [
+      "trending",
+      "up",
+      "developer",
+      "growth",
+      "chat",
+      "history",
+      "analysis",
+      "practice",
+      "improvement",
+      "tracking",
+      "trend",
+      "progress"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "trending-up-2",
+    "file": "trending-up-2.svg",
+    "description": "AI SEO optimization, AI search optimization, LLM citation, AI overview optimization, search engine optimization, AI visibility",
+    "tags": [
+      "trending",
+      "up",
+      "ai",
+      "seo",
+      "optimization",
+      "search",
+      "llm",
+      "citation",
+      "overview",
+      "visibility",
+      "ranking",
+      "discovery"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "triangle",
+    "file": "triangle.svg",
+    "description": "Vercel AI SDK expertise, Core API, generateText, streamText, triangle pattern, AI SDK patterns, Vercel integration",
+    "tags": [
+      "triangle",
+      "vercel",
+      "ai",
+      "sdk",
+      "core",
+      "api",
+      "generateText",
+      "streamText",
+      "patterns",
+      "integration",
+      "expert",
+      "streaming"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "user-check",
+    "file": "user-check.svg",
+    "description": "user verification, user validation, user approval, verified user, user confirmation, user authentication check",
+    "tags": [
+      "user",
+      "check",
+      "verification",
+      "validation",
+      "approval",
+      "confirmed",
+      "authentication",
+      "verified",
+      "identity",
+      "trust",
+      "access",
+      "permission"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "user-code",
+    "file": "user-code.svg",
+    "description": "author contributions, code author tracking, file contributions, branch contributions, contributor identification, code attribution",
+    "tags": [
+      "user",
+      "code",
+      "author",
+      "contributions",
+      "tracking",
+      "files",
+      "branch",
+      "contributor",
+      "identification",
+      "attribution",
+      "history",
+      "commit"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "user-heart",
+    "file": "user-heart.svg",
+    "description": "humanizer, AI writing removal, human-like content, content humanization, writing authenticity, user affection, human touch",
+    "tags": [
+      "user",
+      "heart",
+      "humanizer",
+      "ai-writing",
+      "human",
+      "content",
+      "authenticity",
+      "natural",
+      "writing",
+      "touch",
+      "personal",
+      "genuine"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "user-star",
+    "file": "user-star.svg",
+    "description": "starred user, premium user, user rating, top contributor, featured user, user excellence, user ranking",
+    "tags": [
+      "user",
+      "star",
+      "premium",
+      "rating",
+      "contributor",
+      "featured",
+      "excellence",
+      "ranking",
+      "top",
+      "highlighted",
+      "favorite",
+      "special"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "users",
+    "file": "users.svg",
+    "description": "QA team, multi-agent review, team collaboration, user group, team management, group review, team coordination",
+    "tags": [
+      "users",
+      "qa",
+      "team",
+      "multi-agent",
+      "collaboration",
+      "group",
+      "management",
+      "review",
+      "coordination",
+      "people",
+      "teamwork",
+      "collective"
+    ],
+    "weight": 0.5
+  },
+  {
+    "name": "users-group",
+    "file": "users-group.svg",
+    "description": "parallel code reviews, multi-reviewer patterns, quality dimensions, group review, team review, parallel review, reviewer coordination",
+    "tags": [
+      "users",
+      "group",
+      "parallel",
+      "reviews",
+      "multi-reviewer",
+      "quality",
+      "dimensions",
+      "team",
+      "coordination",
+      "patterns",
+      "collaborative",
+      "distributed"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "vector",
+    "file": "vector.svg",
+    "description": "RAG implementation, retrieval-augmented generation, vector search, LLM applications, vector database, RAG systems, retrieval systems",
+    "tags": [
+      "vector",
+      "rag",
+      "retrieval",
+      "augmented",
+      "generation",
+      "llm",
+      "applications",
+      "search",
+      "database",
+      "systems",
+      "embedding",
+      "semantic"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "vector-bezier-2",
+    "file": "vector-bezier-2.svg",
+    "description": "vector design, bezier curves, vector graphics, path editing, vector manipulation, graphic design, vector editing",
+    "tags": [
+      "vector",
+      "bezier",
+      "curves",
+      "graphics",
+      "path",
+      "editing",
+      "manipulation",
+      "design",
+      "graphic",
+      "drawing",
+      "shapes",
+      "illustration"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "versions",
+    "file": "versions.svg",
+    "description": "Claude Opus migration, version migration, Sonnet migration, version management, model migration, version transition, version comparison",
+    "tags": [
+      "versions",
+      "migration",
+      "claude",
+      "opus",
+      "sonnet",
+      "model",
+      "transition",
+      "management",
+      "comparison",
+      "upgrade",
+      "update",
+      "change"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "video",
+    "file": "video.svg",
+    "description": "UI demo videos, Playwright recording, demo video creation, video documentation, UI recording, demo capture, video generation",
+    "tags": [
+      "video",
+      "ui",
+      "demo",
+      "playwright",
+      "recording",
+      "creation",
+      "documentation",
+      "capture",
+      "generation",
+      "polish",
+      "presentation",
+      "showcase"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "volume",
+    "file": "volume.svg",
+    "description": "voice AI, Azure AI Voice, volume control, voice processing, bidirectional voice, voice applications, audio volume",
+    "tags": [
+      "volume",
+      "voice",
+      "azure",
+      "ai",
+      "control",
+      "processing",
+      "bidirectional",
+      "applications",
+      "audio",
+      "sound",
+      "level",
+      "real-time"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "walk",
+    "file": "walk.svg",
+    "description": "PR walkthrough, narrated video, pull request walkthrough, video narration, PR changes, code walkthrough, visual PR review",
+    "tags": [
+      "walk",
+      "pr",
+      "walkthrough",
+      "narrated",
+      "video",
+      "pull-request",
+      "changes",
+      "code",
+      "review",
+      "visual",
+      "presentation",
+      "demo"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "wand",
+    "file": "wand.svg",
+    "description": "prompt optimization, prompt analysis, intent matching, prompt improvement, ECC component matching, prompt wizard, prompt magic",
+    "tags": [
+      "wand",
+      "prompt",
+      "optimizer",
+      "analysis",
+      "intent",
+      "matching",
+      "improvement",
+      "ecc",
+      "component",
+      "wizard",
+      "magic",
+      "enhancement"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "wash-machine",
+    "file": "wash-machine.svg",
+    "description": "code hygiene, VS Code hygiene, pre-commit cleanup, code cleanliness, hygiene checks, code washing, automated cleanup",
+    "tags": [
+      "wash",
+      "machine",
+      "hygiene",
+      "code",
+      "cleanup",
+      "pre-commit",
+      "cleanliness",
+      "checks",
+      "automated",
+      "formatting",
+      "linting",
+      "maintenance"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "wave-sine",
+    "file": "wave-sine.svg",
+    "description": "ClawFlow runtime, task orchestration, flow substrate, authoring layer, runtime substrate, task coordination, workflow foundation",
+    "tags": [
+      "wave",
+      "sine",
+      "clawflow",
+      "runtime",
+      "task",
+      "orchestration",
+      "flow",
+      "substrate",
+      "authoring",
+      "coordination",
+      "workflow",
+      "foundation"
+    ],
+    "weight": 0.8
+  },
+  {
+    "name": "wind",
+    "file": "wind.svg",
+    "description": "UnoCSS, atomic CSS, Tailwind CSS, instant CSS, CSS engine, utility CSS, wind CSS, atomic styling",
+    "tags": [
+      "wind",
+      "unocss",
+      "atomic",
+      "css",
+      "tailwind",
+      "instant",
+      "engine",
+      "utility",
+      "styling",
+      "framework",
+      "fast",
+      "css-engine"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "window",
+    "file": "window.svg",
+    "description": "web renderer testing, browser window, window testing, renderer test case, web rendering, window management, browser testing",
+    "tags": [
+      "window",
+      "web",
+      "renderer",
+      "testing",
+      "browser",
+      "test",
+      "case",
+      "rendering",
+      "management",
+      "viewport",
+      "display",
+      "screen"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "world",
+    "file": "world.svg",
+    "description": "Azure AI translation, world translation, text translation, document translation, REST clients, global translation, world communication",
+    "tags": [
+      "world",
+      "azure",
+      "ai",
+      "translation",
+      "text",
+      "document",
+      "rest",
+      "clients",
+      "global",
+      "communication",
+      "language",
+      "translate"
+    ],
+    "weight": 0.6
+  },
+  {
+    "name": "world-search",
+    "file": "world-search.svg",
+    "description": "Tavily web search, content extraction, research tools, web research, search API, content search, world search",
+    "tags": [
+      "world",
+      "search",
+      "tavily",
+      "web",
+      "content",
+      "extraction",
+      "research",
+      "tools",
+      "api",
+      "discovery",
+      "investigation",
+      "lookup"
+    ],
+    "weight": 0.9
+  },
+  {
+    "name": "world-www",
+    "file": "world-www.svg",
+    "description": "domain name brainstorming, web domain ideas, domain checking, creative naming, domain availability, web naming, www domains",
+    "tags": [
+      "world",
+      "www",
+      "domain",
+      "name",
+      "brainstorming",
+      "ideas",
+      "checking",
+      "creative",
+      "naming",
+      "availability",
+      "web",
+      "url"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "writing",
+    "file": "writing.svg",
+    "description": "Agent Skills creation, Claude Code skills, skill writing, skill documentation, YAML frontmatter, skill generation, skill authoring",
+    "tags": [
+      "writing",
+      "agent",
+      "skills",
+      "claude",
+      "code",
+      "creation",
+      "documentation",
+      "yaml",
+      "frontmatter",
+      "generation",
+      "authoring",
+      "guide"
+    ],
+    "weight": 0.7
+  },
+  {
+    "name": "zoom-in",
+    "file": "zoom-in.svg",
+    "description": "code zoom, detailed inspection, zoom analysis, close examination, magnification, detailed review, focused analysis",
+    "tags": [
+      "zoom",
+      "in",
+      "detailed",
+      "inspection",
+      "analysis",
+      "examination",
+      "magnification",
+      "review",
+      "focused",
+      "close",
+      "deep",
+      "concentrated"
+    ],
+    "weight": 0.5
+  }
+]
