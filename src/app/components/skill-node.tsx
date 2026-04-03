@@ -1,8 +1,5 @@
 import { useState, useCallback } from "react";
 import imgEffect from "../../assets/node-effect.png";
-import imgIconDefault from "../../assets/node-icon.svg";
-import imgIconHover from "../../assets/node-icon-hover.svg";
-import imgIconPressed from "../../assets/node-icon-pressed.svg";
 
 export type SkillNodeState = "default" | "hover" | "selected" | "conflict";
 
@@ -10,6 +7,8 @@ export interface SkillNodeProps {
   id: string;
   label: string;
   iconKey?: string;
+  iconPath?: string;
+  iconName?: string;
   state?: SkillNodeState;
   onClick?: () => void;
   interactive?: boolean;
@@ -86,12 +85,77 @@ const OVERLAP_VECTOR_STROKE_B = "https://www.figma.com/api/mcp/asset/cfe3bdb8-0e
 const OVERLAP_VECTOR_STROKE_C = "https://www.figma.com/api/mcp/asset/91d9d264-b46c-4476-9a60-21178d3881c9";
 const OVERLAP_ELLIPSE_STROKE = "https://www.figma.com/api/mcp/asset/14abefaf-aaf3-40cd-b11a-bc78f73a2f97";
 
-function DiamondNode({ stateKey, showOverlapBadge }: { stateKey: StateKey; showOverlapBadge?: boolean }) {
+const DEFAULT_ICON_PATH = "/skill-icons/default.svg";
+
+function iconFilterForState(stateKey: StateKey): string {
+  if (stateKey === "hover") {
+    return "brightness(0) saturate(100%) invert(93%) sepia(63%) saturate(526%) hue-rotate(333deg) brightness(101%) contrast(97%)";
+  }
+
+  if (stateKey === "pressed") {
+    return "brightness(0) saturate(100%) invert(91%) sepia(28%) saturate(635%) hue-rotate(357deg) brightness(95%) contrast(92%)";
+  }
+
+  return "brightness(0) saturate(100%) invert(84%) sepia(22%) saturate(349%) hue-rotate(355deg) brightness(93%) contrast(89%)";
+}
+
+function IconGlyph({
+  stateKey,
+  iconPath,
+  iconName,
+}: {
+  stateKey: StateKey;
+  iconPath?: string;
+  iconName?: string;
+}) {
+  const resolvedIconSrc = iconPath && iconPath.trim().length > 0 ? iconPath : DEFAULT_ICON_PATH;
+
+  if (stateKey === "hover") {
+    return (
+      <div
+        className="flex items-center justify-center"
+        style={{ width: 32.16, height: 32.16, marginLeft: -0.08, marginTop: -0.08 }}
+      >
+        <div style={{ transform: "rotate(-15deg)", flex: "none" }}>
+          <div className="relative" style={{ width: 32, height: 32 }}>
+            <img
+              src={resolvedIconSrc}
+              alt={iconName ? `${iconName} icon` : ""}
+              className="absolute block max-w-none size-full"
+              style={{ filter: iconFilterForState(stateKey) }}
+              draggable={false}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={resolvedIconSrc}
+      alt={iconName ? `${iconName} icon` : ""}
+      className="absolute block max-w-none size-full"
+      style={{ filter: iconFilterForState(stateKey) }}
+      draggable={false}
+    />
+  );
+}
+
+function DiamondNode({
+  stateKey,
+  showOverlapBadge,
+  iconPath,
+  iconName,
+}: {
+  stateKey: StateKey;
+  showOverlapBadge?: boolean;
+  iconPath?: string;
+  iconName?: string;
+}) {
   const colors = COLORS[stateKey];
   const isActiveState = stateKey === "hover" || stateKey === "pressed";
   const decorationSrc = FIGMA_DECORATION_SRC[stateKey];
-  const iconSrc =
-    stateKey === "hover" ? imgIconHover : stateKey === "pressed" ? imgIconPressed : imgIconDefault;
 
   // Sun icon position: centered at (50%-0.1px, 50%+0.01px) size 26.259
   const sunSize = 32;
@@ -223,19 +287,9 @@ function DiamondNode({ stateKey, showOverlapBadge }: { stateKey: StateKey; showO
           style={{ left: sunL, top: sunT, width: sunSize, height: sunSize }}
         >
           {stateKey === "hover" ? (
-            // Hover: icon wrapped in slightly larger container, rotated -15deg
-            <div
-              className="flex items-center justify-center"
-              style={{ width: 32.16, height: 32.16, marginLeft: (sunSize - 32.16) / 2, marginTop: (sunSize - 32.16) / 2 }}
-            >
-              <div style={{ transform: "rotate(-15deg)", flex: "none" }}>
-                <div className="relative" style={{ width: sunSize, height: sunSize }}>
-                  <img src={iconSrc} alt="" className="absolute block max-w-none size-full" draggable={false} />
-                </div>
-              </div>
-            </div>
+            <IconGlyph stateKey={stateKey} iconPath={iconPath} iconName={iconName} />
           ) : (
-            <img src={iconSrc} alt="" className="absolute block max-w-none size-full" draggable={false} />
+            <IconGlyph stateKey={stateKey} iconPath={iconPath} iconName={iconName} />
           )}
         </div>
       </div>
@@ -278,6 +332,8 @@ function NodeLabel({ label }: { label: string }) {
 export function SkillNode({
   id,
   label,
+  iconPath,
+  iconName,
   state: controlledState = "default",
   onClick,
   interactive = true,
@@ -307,7 +363,7 @@ export function SkillNode({
 
   const content = (
     <>
-      <DiamondNode stateKey={stateKey} showOverlapBadge={showOverlapBadge} />
+      <DiamondNode stateKey={stateKey} showOverlapBadge={showOverlapBadge} iconPath={iconPath} iconName={iconName} />
       <NodeLabel label={label} />
     </>
   );

@@ -100,6 +100,8 @@ export function CategoryCluster({
               id={skill.id}
               label={skill.name}
               iconKey={skill.name}
+              iconPath={skill.iconPath}
+              iconName={skill.iconName ?? skill.icon}
               state={getSkillState(skill, selectedId === skill.id)}
               onClick={() => onSelectSkill?.(skill.id)}
             />

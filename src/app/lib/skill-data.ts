@@ -22,6 +22,12 @@ interface RawSkillLike {
   sourceUrl?: unknown;
   url?: unknown;
   conflictsWith?: unknown;
+  icon?: unknown;
+  iconName?: unknown;
+  iconFile?: unknown;
+  iconPath?: unknown;
+  iconSource?: unknown;
+  iconScore?: unknown;
 }
 
 interface RawConflictLike {
@@ -40,6 +46,12 @@ interface RawSkillDataSetLike {
     isMockData?: unknown;
     scannedAt?: unknown;
     counts?: Partial<SkillMetaCounts> | null;
+    iconAssignments?: {
+      assigned?: unknown;
+      unique?: unknown;
+      librarySize?: unknown;
+      missingFiles?: unknown;
+    } | null;
   } | null;
 }
 
@@ -66,6 +78,21 @@ function asStringArray(value: unknown): string[] {
   }
 
   return [];
+}
+
+function asNumber(value: unknown): number | undefined {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  return undefined;
 }
 
 function noteDifference(schemaDifferences: Set<string>, message: string) {
@@ -102,6 +129,12 @@ function normalizeSkill(rawSkill: RawSkillLike, index: number, schemaDifferences
   const source = asString(rawSkill.source, "Unknown source");
   const sourceUrl = asString(rawSkill.sourceUrl) || asString(rawSkill.url) || null;
   const conflictsWith = asStringArray(rawSkill.conflictsWith);
+  const icon = asString(rawSkill.icon) || undefined;
+  const iconName = asString(rawSkill.iconName) || undefined;
+  const iconFile = asString(rawSkill.iconFile) || undefined;
+  const iconPath = asString(rawSkill.iconPath) || undefined;
+  const iconSource = asString(rawSkill.iconSource) || undefined;
+  const iconScore = asNumber(rawSkill.iconScore);
 
   if (!asString(rawSkill.name) && asString(rawSkill.title)) {
     noteDifference(schemaDifferences, "Used `title` as the skill name when `name` was missing.");
@@ -134,6 +167,12 @@ function normalizeSkill(rawSkill: RawSkillLike, index: number, schemaDifferences
     source,
     sourceUrl,
     conflictsWith,
+    icon,
+    iconName,
+    iconFile,
+    iconPath,
+    iconSource,
+    iconScore,
   };
 }
 
@@ -256,6 +295,14 @@ export function normalizeSkillData(rawData: unknown, options?: { fallbackSource?
         isMockData: typeof rawDataSet.meta?.isMockData === "boolean" ? rawDataSet.meta.isMockData : isMockData,
         scannedAt: asString(rawDataSet.meta?.scannedAt, new Date(0).toISOString()),
         counts,
+        iconAssignments: rawDataSet.meta?.iconAssignments
+          ? {
+              assigned: asNumber(rawDataSet.meta.iconAssignments.assigned) ?? 0,
+              unique: asNumber(rawDataSet.meta.iconAssignments.unique) ?? 0,
+              librarySize: asNumber(rawDataSet.meta.iconAssignments.librarySize) ?? 0,
+              missingFiles: asNumber(rawDataSet.meta.iconAssignments.missingFiles) ?? 0,
+            }
+          : undefined,
       },
     },
     schemaDifferences: Array.from(schemaDifferences),

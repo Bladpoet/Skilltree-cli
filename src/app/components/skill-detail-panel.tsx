@@ -124,6 +124,8 @@ function OverlapNodes({
             id={`drawer-${entry.relatedSkill.id}`}
             label={humanizeSegment(entry.relatedSkill.name)}
             iconKey={entry.relatedSkill.name}
+            iconPath={entry.relatedSkill.iconPath}
+            iconName={entry.relatedSkill.iconName ?? entry.relatedSkill.icon}
             interactive={false}
           />
         </button>

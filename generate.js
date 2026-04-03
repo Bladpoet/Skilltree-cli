@@ -6,6 +6,10 @@ import path from "node:path";
 const cwd = process.cwd();
 const home = os.homedir();
 const outputPath = path.join(cwd, "public", "skills.json");
+const iconLibraryRoot = path.join(cwd, "claude-skills-icons");
+const iconLibraryIndexPath = path.join(iconLibraryRoot, "index.json");
+const iconLibraryIconsDir = path.join(iconLibraryRoot, "icons");
+const generatedIconsDir = path.join(cwd, "public", "skill-icons");
 const shouldWatch = process.argv.includes("--watch");
 
 const scanRoots = [
@@ -103,6 +107,19 @@ function tokenize(value) {
     .filter((token) => token.length >= 3 && !stopWords.has(token));
 }
 
+function tokenizeLoose(value) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 3);
+}
+
+function normalizeSearchText(value) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
 function containsWholeToken(text, token) {
   if (token.includes(" ")) {
     return text.includes(token);
@@ -192,72 +209,95 @@ function deriveCategory(filePath, name, description) {
   const normalizedName = name.toLowerCase();
   const normalizedDescription = description.toLowerCase();
   const combined = `${normalizedPath} ${normalizedName} ${normalizedDescription}`;
+  const source = deriveSource(filePath);
 
-  if (
-    containsWholeToken(combined, "stripe") ||
-    containsWholeToken(combined, "payment") ||
-    containsWholeToken(combined, "billing")
-  ) {
-    return "Finance";
+  const categorySignals = {
+    Finance: ["stripe", "payment", "billing", "invoice", "checkout", "subscription"],
+    Design: ["figma", "frontend", "design", "ui", "ux", "layout", "visual", "component"],
+    Automation: ["automation", "hook", "workflow", "install", "installer", "trigger", "event", "pipeline"],
+    Content: ["markdown", "docs", "documentation", "playground", "prompt", "content", "brief", "guide"],
+    Development: ["agent", "command", "plugin", "creator", "structure", "settings", "mcp", "scaffold"],
+  };
+
+  const scores = {
+    Development: 0,
+    Design: 0,
+    Automation: 0,
+    Content: 0,
+    Finance: 0,
+  };
+
+  const weightedHits = {
+    Finance: 3,
+    Design: 2,
+    Automation: 2,
+    Content: 2,
+    Development: 1,
+  };
+
+  for (const [category, signals] of Object.entries(categorySignals)) {
+    const seen = new Set();
+    for (const signal of signals) {
+      if (seen.has(signal)) {
+        continue;
+      }
+
+      if (containsWholeToken(combined, signal)) {
+        scores[category] += weightedHits[category];
+        seen.add(signal);
+      }
+    }
   }
 
-  if (
-    containsWholeToken(combined, "openai") ||
-    containsWholeToken(combined, "documentation") ||
-    normalizedName.endsWith("docs")
-  ) {
-    return "Knowledge";
+  if (normalizedName.endsWith("docs")) {
+    scores.Content += 2;
   }
 
-  if (containsWholeToken(combined, "mcp") || containsWholeToken(combined, "model context protocol")) {
-    return "Integration";
+  if (containsWholeToken(combined, "claude.md")) {
+    scores.Content += 3;
   }
 
-  if (
-    containsWholeToken(combined, "automation") ||
-    containsWholeToken(combined, "hook") ||
-    containsWholeToken(combined, "workflow") ||
-    containsWholeToken(combined, "install") ||
-    containsWholeToken(combined, "setup")
-  ) {
-    return "Automation";
+  if (containsWholeToken(combined, "model context protocol")) {
+    scores.Development += 2;
   }
 
-  if (
-    containsWholeToken(combined, "markdown") ||
-    containsWholeToken(combined, "writing") ||
-    containsWholeToken(combined, "content") ||
-    containsWholeToken(combined, "playground")
-  ) {
-    return "Content";
+  if (source === "claude-marketplace/stripe") {
+    scores.Finance += 6;
   }
 
-  if (containsWholeToken(combined, "example") || containsWholeToken(combined, "prototype")) {
-    return "Experimental";
+  if (source === "claude-marketplace/frontend-design" || containsWholeToken(combined, "figma")) {
+    scores.Design += 4;
   }
 
-  if (
-    containsWholeToken(combined, "agent") ||
-    containsWholeToken(combined, "command") ||
-    containsWholeToken(combined, "plugin") ||
-    containsWholeToken(combined, "structure") ||
-    containsWholeToken(combined, "settings") ||
-    containsWholeToken(combined, "creator") ||
-    containsWholeToken(combined, "development")
-  ) {
-    return "Development";
+  if (source === "claude-marketplace/hookify" || containsWholeToken(combined, "skill-installer")) {
+    scores.Automation += 4;
   }
 
-  if (
-    containsWholeToken(combined, "figma") ||
-    containsWholeToken(combined, "frontend") ||
-    containsWholeToken(combined, "design") ||
-    containsWholeToken(combined, "component")
-  ) {
-    return "Design";
+  if (source === "codex/system" && (containsWholeToken(combined, "docs") || containsWholeToken(combined, "documentation"))) {
+    scores.Content += 4;
   }
 
-  return "General";
+  if (containsWholeToken(combined, "recommender") && containsWholeToken(combined, "automation")) {
+    scores.Automation += 3;
+  }
+
+  if (containsWholeToken(combined, "hook-development")) {
+    scores.Automation += 3;
+  }
+
+  const priority = ["Development", "Design", "Automation", "Content", "Finance"];
+  let bestCategory = "Development";
+  let bestScore = -1;
+
+  for (const category of priority) {
+    const score = scores[category];
+    if (score > bestScore) {
+      bestCategory = category;
+      bestScore = score;
+    }
+  }
+
+  return bestCategory;
 }
 
 function deriveSource(filePath) {
@@ -310,6 +350,194 @@ function buildConflictSummary(skillA, skillB, overlappingTerms) {
   }
 
   return `${skillA.name} overlaps with ${skillB.name}.`;
+}
+
+function buildSkillTextForScoring(skill) {
+  const triggers = Array.isArray(skill.triggers) ? skill.triggers.join(" ") : "";
+  return normalizeSearchText(`${skill.name} ${skill.description} ${skill.category} ${triggers}`);
+}
+
+function scoreIconForSkill(icon, skillText) {
+  let score = 0;
+
+  for (const tag of icon.tags) {
+    const normalizedTag = normalizeSearchText(String(tag));
+    if (!normalizedTag) {
+      continue;
+    }
+
+    if (containsWholeToken(skillText, normalizedTag)) {
+      score += 2;
+    }
+  }
+
+  const matchedDescriptionWords = new Set();
+  for (const word of tokenizeLoose(icon.description)) {
+    if (matchedDescriptionWords.has(word)) {
+      continue;
+    }
+
+    if (containsWholeToken(skillText, word)) {
+      score += 0.5;
+      matchedDescriptionWords.add(word);
+    }
+  }
+
+  const normalizedIconName = normalizeSearchText(icon.name);
+  if (normalizedIconName && containsWholeToken(skillText, normalizedIconName)) {
+    score += 3;
+  }
+
+  return score * icon.weight;
+}
+
+async function loadIconLibrary() {
+  if (!(await pathExists(iconLibraryIndexPath))) {
+    throw new Error(`icon library index not found at ${iconLibraryIndexPath}`);
+  }
+
+  const raw = await fs.readFile(iconLibraryIndexPath, "utf8");
+  const parsed = JSON.parse(raw);
+  if (!Array.isArray(parsed)) {
+    throw new Error("icon library index must be an array");
+  }
+
+  const validIcons = [];
+  const missingFiles = [];
+
+  for (const entry of parsed) {
+    if (!entry || typeof entry !== "object") {
+      continue;
+    }
+
+    const name = String(entry.name ?? "").trim();
+    const file = String(entry.file ?? "").trim();
+    const description = String(entry.description ?? "").trim();
+    const tags = Array.isArray(entry.tags)
+      ? entry.tags.map((tag) => String(tag).trim()).filter(Boolean)
+      : [];
+    const weight = Number(entry.weight ?? 0.1);
+
+    if (!name || !file || !description || tags.length === 0 || Number.isNaN(weight)) {
+      continue;
+    }
+
+    const absoluteFilePath = path.join(iconLibraryIconsDir, file);
+    if (!(await pathExists(absoluteFilePath))) {
+      missingFiles.push(file);
+      continue;
+    }
+
+    validIcons.push({
+      name,
+      file,
+      description,
+      tags,
+      weight: Math.min(1, Math.max(0, weight)),
+      absoluteFilePath,
+      webPath: `/skill-icons/${file}`,
+    });
+  }
+
+  const fallbackIcon = validIcons.find((icon) => icon.name === "default") ?? validIcons[0] ?? null;
+  const nonFallbackIcons = validIcons.filter((icon) => !fallbackIcon || icon.name !== fallbackIcon.name);
+
+  return {
+    allIcons: validIcons,
+    nonFallbackIcons,
+    fallbackIcon,
+    missingFiles,
+  };
+}
+
+function assignUniqueIconsToSkills(skills, iconLibrary) {
+  const assignedBySkillId = new Map();
+  const usedIconNames = new Set();
+  const sortedSkills = [...skills].sort((a, b) => {
+    const byId = a.id.localeCompare(b.id);
+    if (byId !== 0) {
+      return byId;
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+
+  for (const skill of sortedSkills) {
+    const skillText = buildSkillTextForScoring(skill);
+    let bestIcon = null;
+    let bestScore = -Infinity;
+
+    for (const icon of iconLibrary.nonFallbackIcons) {
+      if (usedIconNames.has(icon.name)) {
+        continue;
+      }
+
+      const score = scoreIconForSkill(icon, skillText);
+      if (score > bestScore) {
+        bestScore = score;
+        bestIcon = icon;
+      }
+    }
+
+    if (!bestIcon && iconLibrary.fallbackIcon && !usedIconNames.has(iconLibrary.fallbackIcon.name)) {
+      bestIcon = iconLibrary.fallbackIcon;
+      bestScore = 0;
+    }
+
+    if (!bestIcon && iconLibrary.fallbackIcon) {
+      bestIcon = iconLibrary.fallbackIcon;
+      bestScore = 0;
+    }
+
+    if (!bestIcon) {
+      continue;
+    }
+
+    usedIconNames.add(bestIcon.name);
+    assignedBySkillId.set(skill.id, {
+      iconName: bestIcon.name,
+      iconFile: bestIcon.file,
+      iconPath: bestIcon.webPath,
+      iconSource: "custom-library",
+      iconScore: Number(bestScore.toFixed(3)),
+    });
+  }
+
+  const enriched = skills.map((skill) => {
+    const assignment = assignedBySkillId.get(skill.id);
+    if (!assignment) {
+      return skill;
+    }
+
+    return {
+      ...skill,
+      icon: assignment.iconName,
+      ...assignment,
+    };
+  });
+
+  return {
+    skills: enriched,
+    assignedCount: assignedBySkillId.size,
+    uniqueIconCount: usedIconNames.size,
+    usedIconNames,
+  };
+}
+
+async function syncAssignedIconAssets(usedIconNames, iconLibrary) {
+  const iconsByName = new Map(iconLibrary.allIcons.map((icon) => [icon.name, icon]));
+  await fs.rm(generatedIconsDir, { recursive: true, force: true });
+  await fs.mkdir(generatedIconsDir, { recursive: true });
+
+  const namesToCopy = Array.from(usedIconNames);
+  for (const name of namesToCopy) {
+    const icon = iconsByName.get(name);
+    if (!icon) {
+      continue;
+    }
+
+    await fs.copyFile(icon.absoluteFilePath, path.join(generatedIconsDir, icon.file));
+  }
 }
 
 function inferRelationships(skills) {
@@ -471,7 +699,11 @@ async function buildSkillData() {
     skills.push(await readSkill(filePath));
   }
 
-  const { skills: enrichedSkills, conflicts, similarCount } = inferRelationships(skills);
+  const iconLibrary = await loadIconLibrary();
+  const { skills: iconAssignedSkills, assignedCount, uniqueIconCount, usedIconNames } = assignUniqueIconsToSkills(skills, iconLibrary);
+  await syncAssignedIconAssets(usedIconNames, iconLibrary);
+
+  const { skills: enrichedSkills, conflicts, similarCount } = inferRelationships(iconAssignedSkills);
   const categories = new Set(enrichedSkills.map((skill) => skill.category)).size;
   const conflictingSkills = new Set(conflicts.flatMap((conflict) => [conflict.a, conflict.b])).size;
 
@@ -487,6 +719,12 @@ async function buildSkillData() {
         skills: enrichedSkills.length,
         conflicting: conflictingSkills,
         similar: similarCount,
+      },
+      iconAssignments: {
+        assigned: assignedCount,
+        unique: uniqueIconCount,
+        librarySize: iconLibrary.allIcons.length,
+        missingFiles: iconLibrary.missingFiles.length,
       },
     },
   };

@@ -17,6 +17,19 @@ export interface SkillRecord {
   source: string;
   sourceUrl: string | null;
   conflictsWith: string[];
+  icon?: string;
+  iconName?: string;
+  iconFile?: string;
+  iconPath?: string;
+  iconSource?: string;
+  iconScore?: number;
+}
+
+export interface SkillIconAssignmentMeta {
+  assigned: number;
+  unique: number;
+  librarySize: number;
+  missingFiles: number;
 }
 
 export interface RelatedConflict {
@@ -39,5 +52,6 @@ export interface SkillDataSet {
     isMockData: boolean;
     scannedAt: string;
     counts: SkillMetaCounts;
+    iconAssignments?: SkillIconAssignmentMeta;
   };
 }
