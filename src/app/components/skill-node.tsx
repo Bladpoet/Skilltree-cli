@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import imgEffect from "../../assets/node-effect.png";
+import { useSoundEffects } from "../hooks/use-sound-effects";
 
 export type SkillNodeState = "default" | "hover" | "selected" | "conflict";
 
@@ -149,44 +150,34 @@ function IconGlyph({
   iconName?: string;
 }) {
   const resolvedIconSrc = iconPath && iconPath.trim().length > 0 ? iconPath : DEFAULT_ICON_PATH;
-
-  if (stateKey === "hover") {
-    return (
-      <div
-        className="flex items-center justify-center"
-        style={{ width: 32.16, height: 32.16, marginLeft: -0.08, marginTop: -0.08 }}
-      >
-        <div style={{ transform: "rotate(-15deg)", flex: "none" }}>
-          <div className="relative" style={{ width: 32, height: 32 }}>
-            <img
-              src={resolvedIconSrc}
-              alt={iconName ? `${iconName} icon` : ""}
-              className="absolute block max-w-none size-full"
-              style={{ filter: iconFilterForState(stateKey) }}
-              draggable={false}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  const rotation = stateKey === "hover" ? -15 : 0;
+  const scale = stateKey === "pressed" ? 0.96 : 1;
   return (
-    <img
-      src={resolvedIconSrc}
-      alt={iconName ? `${iconName} icon` : ""}
-      className="absolute block max-w-none size-full"
-      style={{ filter: iconFilterForState(stateKey) }}
-      draggable={false}
-    />
+    <div
+      className="absolute inset-0 flex items-center justify-center"
+      style={{
+        transform: `rotate(${rotation}deg)`,
+        transition: "transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
+    >
+      <img
+        src={resolvedIconSrc}
+        alt={iconName ? `${iconName} icon` : ""}
+        className="block max-w-none size-full"
+        style={{
+          filter: iconFilterForState(stateKey),
+          transform: `scale(${scale})`,
+          transition:
+            "filter 220ms cubic-bezier(0.22, 1, 0.36, 1), transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+        draggable={false}
+      />
+    </div>
   );
 }
 
 function IconHighlight({ stateKey }: { stateKey: StateKey }) {
   const token = HIGHLIGHT_TOKENS[stateKey];
-  if (!token.visible) {
-    return null;
-  }
 
   return (
     <div
@@ -198,8 +189,10 @@ function IconHighlight({ stateKey }: { stateKey: StateKey }) {
         width: token.size,
         height: token.size,
         background: token.color,
-        opacity: token.opacity,
+        opacity: token.visible ? token.opacity : 0,
         filter: `blur(${token.blur}px)`,
+        transition:
+          "opacity 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1), height 220ms cubic-bezier(0.22, 1, 0.36, 1), left 220ms cubic-bezier(0.22, 1, 0.36, 1), top 220ms cubic-bezier(0.22, 1, 0.36, 1), filter 220ms cubic-bezier(0.22, 1, 0.36, 1)",
       }}
     />
   );
@@ -283,6 +276,8 @@ function DiamondNode({
                 boxShadow: isActiveState ? colors.boxShadow : undefined,
                 position: "relative",
                 backgroundColor: "#2f281d",
+                transition:
+                  "border-color 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms cubic-bezier(0.22, 1, 0.36, 1)",
               }}
             >
               {/* Effect texture overlay - must be INSIDE the base diamond for blend mode to work */}
@@ -311,15 +306,17 @@ function DiamondNode({
         >
           <div style={{ transform: "rotate(45deg)", flex: "none" }}>
             <div
-              style={{
-                width: OUTLINE_SIZE,
-                height: OUTLINE_SIZE,
-                border: `0.493px solid ${colors.outlineStroke}`,
-                opacity: 0.8,
-                boxSizing: "border-box",
-              }}
-            />
-          </div>
+                style={{
+                  width: OUTLINE_SIZE,
+                  height: OUTLINE_SIZE,
+                  border: `0.493px solid ${colors.outlineStroke}`,
+                  opacity: 0.8,
+                  boxSizing: "border-box",
+                  transition:
+                    "border-color 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+              />
+            </div>
         </div>
 
         {/* Decoration image — rotated 90deg, inset ~15-17% */}
@@ -333,8 +330,15 @@ function DiamondNode({
                   width: 59.29,
                   height: 59.29,
                   transform: "translate(calc(-50% - 0.1px), calc(-50% - 0.83px))",
+                  transition: "all 220ms cubic-bezier(0.22, 1, 0.36, 1)",
                 }
-              : { left: DECORATION_L, top: DECORATION_T, width: DECORATION_SIZE, height: DECORATION_SIZE }
+              : {
+                  left: DECORATION_L,
+                  top: DECORATION_T,
+                  width: DECORATION_SIZE,
+                  height: DECORATION_SIZE,
+                  transition: "all 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+                }
           }
         >
           <div style={{ transform: "rotate(90deg)", flex: "none", width: "100%", height: "100%" }}>
@@ -404,6 +408,7 @@ export function SkillNode({
   interactive = true,
 }: SkillNodeProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const { playHover, playClick } = useSoundEffects();
 
   const showOverlapBadge = forceOverlapBadge ?? controlledState === "conflict";
   
@@ -416,7 +421,7 @@ export function SkillNode({
   }
 
   const stateKey = toStateKey(effectiveState);
-  const handleClick = useCallback(() => { onClick?.(); }, [onClick]);
+  const handleClick = useCallback(() => { playClick(); onClick?.(); }, [onClick, playClick]);
 
   const commonProps = {
     "data-skill-id": id,
@@ -440,9 +445,9 @@ export function SkillNode({
     <button
       {...commonProps}
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => { setIsHovered(true); playHover(); }}
       onMouseLeave={() => setIsHovered(false)}
-      className={`${commonProps.className} cursor-pointer transition-transform duration-150 hover:scale-[1.03] active:scale-100 focus-visible:outline-2 focus-visible:outline-[#DCB773] focus-visible:outline-offset-4`}
+      className={`${commonProps.className} cursor-pointer transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03] active:scale-[0.99] focus-visible:outline-2 focus-visible:outline-[#DCB773] focus-visible:outline-offset-4`}
       title={label}
     >
       {content}
