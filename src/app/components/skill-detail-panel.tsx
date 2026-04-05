@@ -14,7 +14,7 @@ interface SkillDetailPanelProps {
   onSelectConflict: (skillId: string) => void;
 }
 
-const DARK = "rgb(25,26,28)";
+const DARK = "#282521";
 
 interface SourceAffiliation {
   label: string;
@@ -85,7 +85,7 @@ function Breadcrumbs({ skill }: { skill: SkillRecord }) {
     <div className="flex items-center gap-2">
       <div
         className="min-w-0 truncate"
-        style={{ fontFamily: "'Marcellus', serif", fontSize: "12px", lineHeight: "1.33", color: "rgb(109,115,126)" }}
+        style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "12px", lineHeight: "16px", color: "#7E766D" }}
         title={pathToCopy}
       >
         {breadcrumbs.join("/")}
@@ -144,7 +144,7 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
       <div className="flex flex-col gap-1">
         <h2
           className="break-words"
-          style={{ fontFamily: "'Marcellus SC', serif", fontSize: "28px", lineHeight: "1.1", color: DARK }}
+          style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 400, fontSize: "20px", lineHeight: "1.2", color: DARK }}
         >
           {humanizeSegment(skill.name)}
         </h2>
@@ -152,7 +152,7 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
       </div>
 
       {/* Description */}
-      <p style={{ fontFamily: "'Marcellus', serif", fontSize: "16px", lineHeight: "1.6", color: DARK }}>
+      <p style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 100, fontSize: "15px", lineHeight: "1.6", color: DARK }}>
         {skill.description}
       </p>
 
@@ -164,7 +164,7 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
             <DetailDrawerTriggerTag key={trigger} label={trigger} />
           ))}
           {skill.triggers.length === 0 && (
-            <span style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", color: "rgb(109,115,126)" }}>
+            <span style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", color: "#7E766D" }}>
               None defined
             </span>
           )}
@@ -179,9 +179,9 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
             {dependents.map((dep) => (
               <div
                 key={dep}
-                style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.5", color: DARK }}
+                style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", lineHeight: "1.5", color: DARK }}
               >
-                <span style={{ color: "rgb(109,115,126)", marginRight: 6 }}>↳</span>
+                <span style={{ color: "#7E766D", marginRight: 6 }}>↳</span>
                 {humanizeSegment(dep)}
               </div>
             ))}
@@ -197,9 +197,9 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
           target="_blank"
           rel="noreferrer"
           className="flex w-fit items-center gap-2 transition-opacity hover:opacity-80"
-          style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.4", color: DARK }}
+          style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", lineHeight: "1.4", color: "#225AD6" }}
         >
-          <Globe size={16} className="shrink-0" style={{ color: "rgb(109,115,126)" }} />
+          <Globe size={16} className="shrink-0" style={{ color: "#7E766D" }} />
           <span className="underline underline-offset-2">{sourceAffiliation.label}</span>
         </a>
       </div>

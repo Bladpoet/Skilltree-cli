@@ -374,7 +374,7 @@ function NodeLabel({ label }: { label: string }) {
         height: 20,
         marginTop: -20,
         background:
-          "linear-gradient(90deg, rgba(53,54,56,0) 0%, #5e5f62 50.5%, rgba(53,54,56,0) 100%)",
+          "linear-gradient(90deg, transparent 0%, #28160A 50.5%, transparent 100%)",
         paddingLeft: 4.626,
         paddingRight: 4.626,
         boxSizing: "border-box",
@@ -383,10 +383,10 @@ function NodeLabel({ label }: { label: string }) {
       <span
         className="block truncate text-center text-white whitespace-nowrap"
         style={{
-          fontFamily: "'Rajdhani', sans-serif",
-          fontSize: "13px",
-          fontWeight: 600,
-          lineHeight: "20px",
+          fontFamily: "'Albertus Nova', serif",
+          fontSize: "12px",
+          fontWeight: 300,
+          lineHeight: "150%",
           maxWidth: 88,
         }}
         title={label}

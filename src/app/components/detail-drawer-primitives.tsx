@@ -62,11 +62,12 @@ export function DetailDrawerCategoryPill({ label }: TextProps) {
       <span
         className="relative z-10 truncate"
         style={{
-          fontFamily: "'Rajdhani', sans-serif",
+          fontFamily: "'Albertus Nova', serif",
           fontSize: "12px",
-          fontWeight: 600,
-          color: "rgb(10,6,1)",
+          fontWeight: 700,
+          color: "#0A0601",
           lineHeight: "1",
+          letterSpacing: "0.72px", /* 6% of 12px */
           paddingLeft: 8,
         }}
       >
@@ -82,10 +83,11 @@ export function DetailDrawerSectionHeading({ label }: TextProps) {
       <h3
         className="w-full text-left"
         style={{
-          fontFamily: "'Marcellus SC', serif",
+          fontFamily: "'Albertus Nova', serif",
           fontSize: "14px",
+          fontWeight: 400,
           lineHeight: "1.2",
-          color: "rgb(109,115,126)",
+          color: "#7E766D",
         }}
       >
         {label}
@@ -118,11 +120,12 @@ export function DetailDrawerTriggerTag({ label }: TextProps) {
       <span
         className="relative z-10 max-w-[calc(100%-24px)] truncate whitespace-nowrap text-[14px] text-white"
         style={{
-          fontFamily: "'Marcellus', serif",
+          fontFamily: "'Albertus Nova', serif",
+          fontWeight: 400,
           lineHeight: "normal",
           marginLeft: 16,
           marginRight: 16,
-          textShadow: "0px 0px 2px rgba(0,0,0,0.8)",
+          filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.5))",
         }}
       >
         {label}

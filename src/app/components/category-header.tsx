@@ -17,8 +17,8 @@ export function CategoryHeader({ name, variant = "indented" }: CategoryHeaderPro
         <span
           className="block w-full whitespace-nowrap text-center"
           style={{
-            fontFamily: "'Rajdhani', sans-serif",
-            fontWeight: 600,
+            fontFamily: "'Albertus Nova', serif",
+            fontWeight: 700,
             fontSize: "16px",
             lineHeight: "1.25",
             color: "rgb(255,255,255)",
