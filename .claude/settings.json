@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "mcp__figma-console__figma_get_component_for_development_deep"
+      "mcp__figma-console__figma_get_component_for_development_deep",
+      "Bash(npm pack:*)"
     ]
   }
 }

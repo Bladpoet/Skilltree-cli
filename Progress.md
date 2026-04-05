@@ -371,3 +371,52 @@ If this moves to Cursor later, preserve:
 
 ### Next Recommended Step
 - Compare this recreated scanner against the original project scanner if it exists elsewhere, then either merge in the richer metadata rules or add a lightweight post-scan metadata layer so duplicate names, source links, and conflict inference become more precise.
+
+## Step 5 - Scanner Icons, Category Tuning, Motion Polish
+
+### Completed
+- Integrated custom icon library scanning from local `claude-skills-icons/index.json` and assigned icons per skill in scanner output.
+- Enforced strict unique icon assignment per scan and copied only used icon assets to `public/skill-icons/`.
+- Extended skill schema and normalization to support icon metadata (`icon`, `iconName`, `iconFile`, `iconPath`, `iconSource`, `iconScore`).
+- Updated skill node rendering to consume scanner-assigned icon paths and preserve state-aware visuals.
+- Retuned scanner category grouping with weighted source/content heuristics to reduce over-fragmentation.
+- Updated pressed-state icon tint to dark brown and ensured overlap warning triangle is shown for overlapping nodes in selected/pressed flow.
+- Added tokenized blurred icon highlight for default and hover states (hover stronger).
+- Increased top stat badge size.
+- Replaced rail edge overlay fade with CSS `mask-image` fade for cleaner blending over textured backgrounds.
+- Improved drawer entry motion with eased overlay fade and panel slide/scale animation.
+- Converted `claude-skills-icons` from gitlink to regular tracked directory so future icon-library edits commit normally.
+
+### Components Created
+- `public/skill-icons/*` (generated icon asset set)
+
+### Components Updated
+- `generate.js`
+- `src/app/types/skills.ts`
+- `src/app/lib/skill-data.ts`
+- `src/app/components/skill-node.tsx`
+- `src/app/components/category-cluster.tsx`
+- `src/app/components/skill-detail-panel.tsx`
+- `src/app/components/category-rail.tsx`
+- `src/app/components/stat-badge.tsx`
+- `src/app/components/detail-drawer.tsx`
+- `claude-skills-icons/*` (now regular tracked directory)
+
+### Decisions Made
+- Kept scanner as the source of truth for icon assignment and passed icon metadata through the app data model.
+- Used strict uniqueness per scan for icon distribution.
+- Used tokenized visual parameters for glow/fade sizing to simplify future tuning.
+- Used CSS masking for overflow fade to blend independently of background coloration.
+
+### Assumptions
+- Skill count remains below icon-library size in normal runs; fallback icon is available if exhausted.
+- Source/path-based category weighting is preferable to broad generic category defaults.
+- Smooth motion should preserve existing Figma-inspired visual hierarchy and not change core layout.
+
+### Known Issues
+- `public/skills.json` remains ignored by git and is regenerated locally.
+- Category heuristics are rule-based and may still need occasional override mappings for edge-case skills.
+- Some motion values may still need final timing calibration against Figma references.
+
+### Next Recommended Step
+- Add a lightweight category-overrides map and optional scanner diagnostics output (top icon/category scores per skill), then run a visual parity pass for motion timing across default/hover/pressed/drawer transitions.
