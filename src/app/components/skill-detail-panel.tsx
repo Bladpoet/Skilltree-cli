@@ -65,6 +65,7 @@ function resolveSourceAffiliation(skill: SkillRecord): SourceAffiliation {
 
 function Breadcrumbs({ skill }: { skill: SkillRecord }) {
   const [copied, setCopied] = useState(false);
+  const [copyHovered, setCopyHovered] = useState(false);
   const breadcrumbs = buildBreadcrumbs(skill);
   const pathToCopy = useMemo(() => {
     const normalized = skill.path?.trim();
@@ -93,11 +94,14 @@ function Breadcrumbs({ skill }: { skill: SkillRecord }) {
       <button
         type="button"
         onClick={handleCopy}
+        onMouseEnter={() => setCopyHovered(true)}
+        onMouseLeave={() => setCopyHovered(false)}
         className="relative inline-flex h-4 w-4 shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
+        style={{ cursor: "pointer" }}
         title={copied ? "Copied" : "Copy path"}
         aria-label={copied ? "Path copied" : "Copy path"}
       >
-        <DetailDrawerCopyIcon />
+        <DetailDrawerCopyIcon isHovered={copyHovered} copied={copied} />
       </button>
     </div>
   );

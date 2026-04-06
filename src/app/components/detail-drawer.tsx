@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   DetailDrawerCategoryPill,
   DetailDrawerCloseButton,
@@ -20,6 +20,7 @@ const DRAWER_PANEL_ANIMATION = `drawer-panel-enter 320ms ${DRAWER_EASE} both`;
 export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: DetailDrawerProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const { playDrawerOpen, playDrawerClose } = useSoundEffects();
+  const [closeHovered, setCloseHovered] = useState(false);
 
   // Play sound when drawer opens
   useEffect(() => {
@@ -79,11 +80,13 @@ export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: Det
                   <DetailDrawerCategoryPill label={categoryLabel ?? "Skill"} />
                   <button
                     onClick={() => { playDrawerClose(); onClose?.(); }}
+                    onMouseEnter={() => setCloseHovered(true)}
+                    onMouseLeave={() => setCloseHovered(false)}
                     className="flex shrink-0 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
                     aria-label="Close drawer"
-                    style={{ width: 32, height: 32 }}
+                    style={{ width: 32, height: 32, cursor: "pointer" }}
                   >
-                    <DetailDrawerCloseButton />
+                    <DetailDrawerCloseButton isHovered={closeHovered} />
                   </button>
                 </div>
                 <div className="mt-6">{children}</div>

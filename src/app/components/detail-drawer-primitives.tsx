@@ -1,9 +1,12 @@
-import closeBrush from "../../assets/drawer-close-brush.svg";
-import copyIcon from "../../assets/drawer-copy-icon.svg";
 import drawerEdge from "../../assets/drawer-edge-brush.svg";
 import sectionSeparator from "../../assets/drawer-section-separator.svg";
 import sourceGlyph from "../../assets/pencil-exported/9L2EO.png";
 import triggerBrush from "../../assets/drawer-trigger-brush.svg";
+
+import closeIcon from "../../assets/close-icon.svg";
+import copyIconSrc from "../../assets/copy-icon.svg";
+import checkIcon from "../../assets/check-icon.svg";
+import hoverDecoration from "../../assets/hover-decoration.svg";
 
 interface TextProps {
   label: string;
@@ -29,12 +32,67 @@ export function DetailDrawerDecorativeEdge() {
   );
 }
 
-export function DetailDrawerCloseButton() {
-  return <img src={closeBrush} alt="" className="h-8 w-8 shrink-0" draggable={false} />;
+interface CloseButtonProps {
+  isHovered: boolean;
 }
 
-export function DetailDrawerCopyIcon() {
-  return <img src={copyIcon} alt="" className="h-4 w-4 shrink-0" draggable={false} />;
+interface CopyIconProps {
+  isHovered: boolean;
+  copied: boolean;
+}
+
+export function DetailDrawerCloseButton({ isHovered }: CloseButtonProps) {
+  const iconColor = isHovered ? "#282521" : "#635949";
+  return (
+    <div className="relative h-8 w-8 shrink-0">
+      <img
+        src={hoverDecoration}
+        alt=""
+        className="absolute inset-0 transition-opacity duration-200"
+        style={{ opacity: isHovered ? 1 : 0 }}
+        draggable={false}
+      />
+      <img
+        src={closeIcon}
+        alt=""
+        className="absolute inset-0 h-full w-full"
+        style={{ color: iconColor }}
+        draggable={false}
+      />
+    </div>
+  );
+}
+
+export function DetailDrawerCopyIcon({ isHovered, copied }: CopyIconProps) {
+  let iconColor = "#7E766D";
+  if (copied) {
+    iconColor = "#494542";
+  } else if (isHovered) {
+    iconColor = "#282521";
+  }
+
+  return (
+    <div className="relative h-4 w-4 shrink-0">
+      <img
+        src={hoverDecoration}
+        alt=""
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-200"
+        style={{ 
+          opacity: isHovered ? 1 : 0,
+          width: 16,
+          height: "auto"
+        }}
+        draggable={false}
+      />
+      <img
+        src={copied ? checkIcon : copyIconSrc}
+        alt=""
+        className="absolute inset-0 h-full w-full"
+        style={{ color: iconColor }}
+        draggable={false}
+      />
+    </div>
+  );
 }
 
 export function DetailDrawerSourceIcon() {
