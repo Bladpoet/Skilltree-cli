@@ -83,7 +83,7 @@ function Breadcrumbs({ skill }: { skill: SkillRecord }) {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-4">
       <div
         className="min-w-0 truncate"
         style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "12px", lineHeight: "16px", color: "#7E766D" }}
@@ -96,7 +96,7 @@ function Breadcrumbs({ skill }: { skill: SkillRecord }) {
         onClick={handleCopy}
         onMouseEnter={() => setCopyHovered(true)}
         onMouseLeave={() => setCopyHovered(false)}
-        className="relative inline-flex h-4 w-4 shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
+        className="relative inline-flex h-4 w-4 shrink-0 items-center justify-center overflow-visible opacity-90 transition-opacity hover:opacity-100"
         style={{ cursor: "pointer" }}
         title={copied ? "Copied" : "Copy path"}
         aria-label={copied ? "Path copied" : "Copy path"}
