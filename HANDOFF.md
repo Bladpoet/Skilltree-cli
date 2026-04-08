@@ -18,6 +18,21 @@
   - Set dark body background in `index.html` for seamless transitions
   - Background (gradient + image) persists throughout fade sequence, only content fades
 
+- **SVG Brushstroke Connectors** (2026-04-08) — Exact Figma-to-code connector implementation
+  - Exported `src/assets/connector-vertical.svg` (1×78px brushstroke, fill="#C2AE87") and `src/assets/connector-horizontal.svg` (60×1px brushstroke) from Figma
+  - Added `TemplateLine` interface to `src/app/lib/category-cluster-templates.ts` with fields: `id`, `x`, `y`, `length`, `orientation`
+  - Rewrote all 7 category cluster templates with exact absolute coordinates extracted from Figma:
+    - Template 1 (1 node): Single node, no connectors
+    - Template 2 (2 nodes): Vertical pair with 1 vertical connector (x=120, y=84, length=78)
+    - Template 3 (3 nodes): Triangle with 1 vertical (x=117, y=84, length=42) + 1 horizontal (x=89, y=126, length=60)
+    - Template 4 (4 nodes): T-shape with 1 vertical (x=117, y=84, length=78) + 1 horizontal (x=88, y=126, length=60)
+    - Template 5 (5 nodes): Vertical spine with 2 verticals + 1 horizontal
+    - Template 6 (6 nodes): Vertical spine with 2 verticals + 2 horizontals
+    - Template 7 (7+ nodes): Vertical spine with 3 nodes + 2 horizontal pairs
+  - Updated `DecorativeConnector` in `src/app/components/category-cluster.tsx` to render SVG brushstroke images instead of `<line>` elements
+  - Replaced SVG connector layer with absolute-positioned `<img>` elements from `template.lines`, sized dynamically by `length` and `orientation`
+  - Coordinates extracted directly from Figma via Desktop Bridge plugin to ensure pixel-perfect accuracy
+
 ## Next Steps / Future Polish
 - Test splash on various screen sizes and connections
 - Optional: Add user preference to skip splash on return visits (localStorage)

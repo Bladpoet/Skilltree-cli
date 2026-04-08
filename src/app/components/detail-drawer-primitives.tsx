@@ -48,16 +48,8 @@ export function DetailDrawerCloseButton({ isHovered }: CloseButtonProps) {
       <img
         src={hoverDecoration}
         alt=""
-        className="transition-opacity duration-200"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          opacity: isHovered ? 1 : 0,
-          width: 25,
-          height: 31
-        }}
+        className="absolute inset-1 transition-opacity duration-200"
+        style={{ opacity: isHovered ? 1 : 0 }}
         draggable={false}
       />
       <img
@@ -80,26 +72,23 @@ export function DetailDrawerCopyIcon({ isHovered, copied }: CopyIconProps) {
   }
 
   return (
-    <div className="relative h-4 w-4 shrink-0 overflow-visible">
+    <div className="relative h-4 w-4 shrink-0">
       <img
         src={hoverDecoration}
         alt=""
-        className="transition-opacity duration-200"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+        className="absolute inset-0 transition-opacity duration-200"
+        style={{ 
           opacity: isHovered ? 1 : 0,
-          width: 25,
-          height: 31
+          width: "200%",
+          height: "200%",
+          objectFit: "contain"
         }}
         draggable={false}
       />
       <img
         src={copied ? checkIcon : copyIconSrc}
         alt=""
-        className="absolute inset-0 h-full w-full overflow-visible"
+        className="absolute inset-0 h-full w-full"
         style={{ color: iconColor }}
         draggable={false}
       />
