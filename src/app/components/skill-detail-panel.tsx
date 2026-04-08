@@ -145,7 +145,7 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
   return (
     <div className="flex flex-col gap-6" style={{ color: DARK }}>
       {/* Skill name + breadcrumbs */}
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-4">
         <h2
           className="break-words"
           style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 400, fontSize: "20px", lineHeight: "1.2", color: DARK }}

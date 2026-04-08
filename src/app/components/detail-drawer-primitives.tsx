@@ -72,24 +72,24 @@ export function DetailDrawerCopyIcon({ isHovered, copied }: CopyIconProps) {
   }
 
   return (
-    <div className="relative h-4 w-4 shrink-0">
+    <div className="relative h-8 w-8 shrink-0">
       <img
         src={hoverDecoration}
         alt=""
         className="absolute inset-0 transition-opacity duration-200"
         style={{ 
           opacity: isHovered ? 1 : 0,
-          width: "200%",
-          height: "200%",
-          objectFit: "contain"
+          width: "100%",
+          height: "100%",
+          objectFit: "fill"
         }}
         draggable={false}
       />
       <img
         src={copied ? checkIcon : copyIconSrc}
         alt=""
-        className="absolute inset-0 h-full w-full"
-        style={{ color: iconColor }}
+        className="absolute h-4 w-4"
+        style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", color: iconColor }}
         draggable={false}
       />
     </div>
@@ -180,7 +180,7 @@ export function DetailDrawerTriggerTag({ label }: TextProps) {
         className="relative z-10 max-w-[calc(100%-24px)] truncate whitespace-nowrap text-[14px] text-white"
         style={{
           fontFamily: "'Albertus Nova', serif",
-          fontWeight: 400,
+          fontWeight: 300,
           lineHeight: "normal",
           marginLeft: 16,
           marginRight: 16,

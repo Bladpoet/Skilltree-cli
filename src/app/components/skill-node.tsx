@@ -370,7 +370,7 @@ function NodeLabel({ label }: { label: string }) {
     <div
       className="relative z-10 flex items-center justify-center overflow-hidden shrink-0"
       style={{
-        width: "100%",
+        width: "150%",
         height: 20,
         marginTop: -20,
         background:
@@ -381,13 +381,15 @@ function NodeLabel({ label }: { label: string }) {
       }}
     >
       <span
-        className="block truncate text-center text-white whitespace-nowrap"
+        className="block truncate text-center whitespace-nowrap"
         style={{
           fontFamily: "'Albertus Nova', serif",
           fontSize: "12px",
           fontWeight: 300,
           lineHeight: "150%",
-          maxWidth: 88,
+          maxWidth: 110,
+          color: "#F1E7DC",
+          letterSpacing: "0.72px",
         }}
         title={label}
       >
