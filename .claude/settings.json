@@ -14,7 +14,12 @@
       "WebFetch(domain:deepwiki.com)",
       "WebFetch(domain:www.skillsdirectory.com)",
       "WebFetch(domain:bibek-poudel.medium.com)",
-      "WebFetch(domain:zread.ai)"
+      "WebFetch(domain:zread.ai)",
+      "Read(//tmp/**)",
+      "Read(//c/Users/USER/Downloads/**)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\USER\\Downloads"
     ]
   }
 }

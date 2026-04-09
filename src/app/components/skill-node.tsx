@@ -1,5 +1,9 @@
 import { useState, useCallback } from "react";
 import imgEffect from "../../assets/node-effect.png";
+import overlapIconBg from "../../assets/overlap-icon-bg.svg";
+import overlapIconBrush from "../../assets/overlap-icon-brush.svg";
+import nodeDecorationDefault from "../../assets/node-decoration-default.svg";
+import nodeDecorationPressed from "../../assets/node-decoration-pressed.svg";
 import { useSoundEffects } from "../hooks/use-sound-effects";
 
 export type SkillNodeState = "default" | "hover" | "selected" | "conflict";
@@ -113,18 +117,13 @@ function toStateKey(state: SkillNodeState): StateKey {
   return state as StateKey;
 }
 
-const FIGMA_DECORATION_SRC: Record<StateKey, string> = {
-  default: "https://www.figma.com/api/mcp/asset/80bcbfbf-037d-4ade-8279-25a98dd63207",
-  hover: "https://www.figma.com/api/mcp/asset/02821831-739a-4659-b732-835405d52699",
-  pressed: "https://www.figma.com/api/mcp/asset/8f1d14bb-0bde-402b-9935-15f78458328b",
-  overlap: "https://www.figma.com/api/mcp/asset/78881cf2-f6ed-4b74-adcf-9d596561ad36",
+const DECORATION_SRC: Record<StateKey, string> = {
+  default: nodeDecorationDefault,
+  hover: nodeDecorationDefault,
+  pressed: nodeDecorationPressed,
+  overlap: nodeDecorationDefault,
 };
 
-const OVERLAP_VECTOR = "https://www.figma.com/api/mcp/asset/a805a779-6ed0-468f-a900-388fb62586c2";
-const OVERLAP_VECTOR_STROKE_A = "https://www.figma.com/api/mcp/asset/8dd16920-2c4c-4415-9e58-33cd3c79c952";
-const OVERLAP_VECTOR_STROKE_B = "https://www.figma.com/api/mcp/asset/cfe3bdb8-0e9b-4502-bee5-0f108b1d0c63";
-const OVERLAP_VECTOR_STROKE_C = "https://www.figma.com/api/mcp/asset/91d9d264-b46c-4476-9a60-21178d3881c9";
-const OVERLAP_ELLIPSE_STROKE = "https://www.figma.com/api/mcp/asset/14abefaf-aaf3-40cd-b11a-bc78f73a2f97";
 
 const DEFAULT_ICON_PATH = "/skill-icons/default.svg";
 
@@ -211,7 +210,7 @@ function DiamondNode({
 }) {
   const colors = COLORS[stateKey];
   const isActiveState = stateKey === "hover" || stateKey === "pressed";
-  const decorationSrc = FIGMA_DECORATION_SRC[stateKey];
+  const decorationSrc = DECORATION_SRC[stateKey];
 
   // Sun icon position: centered at (50%-0.1px, 50%+0.01px) size 26.259
   const sunSize = 32;
@@ -223,37 +222,21 @@ function DiamondNode({
       className="relative shrink-0"
       style={{ width: W, height: H }}
     >
-      {/* Overlap badge — centered at top, sticking out above diamond */}
+      {/* Overlap badge — two stacked SVGs (brown bg + golden caution) centered at top */}
       {showOverlapBadge && (
         <div
           className="absolute z-10"
           style={{
-            width: 17.478,
-            left: "calc(50% + 0.28px)",
+            width: 22,
+            height: 19,
+            left: "50%",
             transform: "translateX(-50%)",
-            top: "-5.75%",
-            bottom: "85.65%",
-            overflow: "clip",
+            top: "-10px",
           }}
         >
-          <div className="absolute" style={{ inset: "11.12% 8.34% 16.68% 8.34%" }}>
-            <img alt="" src={OVERLAP_VECTOR} className="absolute block max-w-none size-full" draggable={false} />
-          </div>
-          <div className="absolute" style={{ inset: "8.15% 4.2% 12.58% 4.48%" }}>
-            <img alt="" src={OVERLAP_VECTOR_STROKE_A} className="absolute block max-w-none size-full" draggable={false} />
-          </div>
-          <div className="absolute flex items-center justify-center" style={{ inset: "8.15% 4.49% 12.58% 4.2%" }}>
-            <div style={{ width: 15.96, height: 13.855, transform: "rotate(180deg) scaleY(-1)", flex: "none" }}>
-              <div className="relative size-full">
-                <img alt="" src={OVERLAP_VECTOR_STROKE_B} className="absolute block max-w-none size-full" draggable={false} />
-              </div>
-            </div>
-          </div>
-          <div className="absolute" style={{ inset: "37.5% 45.83% 45.83% 45.83%" }}>
-            <img alt="" src={OVERLAP_VECTOR_STROKE_C} className="absolute block max-w-none size-full" draggable={false} />
-          </div>
-          <div className="absolute" style={{ inset: "59% 43.23% 29.71% 45.2%" }}>
-            <img alt="" src={OVERLAP_ELLIPSE_STROKE} className="absolute block max-w-none size-full" draggable={false} />
+          <div className="relative w-full h-full">
+            <img src={overlapIconBg} alt="" className="absolute inset-0 w-full h-full" draggable={false} />
+            <img src={overlapIconBrush} alt="overlapping skill" className="absolute inset-0 w-full h-full" draggable={false} />
           </div>
         </div>
       )}
