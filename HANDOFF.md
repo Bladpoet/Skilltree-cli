@@ -10,6 +10,18 @@
 - **NEW: Splash screen** — 3-second loading animation before main app (smooth fade-out, no blank flashes)
 
 ## Last Completed
+- **Scanner Bug Fixes + Overlap Scoring Overhaul** (2026-04-09) — Restored skill count from 7 to 31 + trustworthy overlap detection
+  - Fixed `ignoredDirectoryNames` set — removed `"cache"` which was blocking `~/.claude/plugins/cache/` tree
+  - Restored `~/.claude/plugins/marketplaces` to baseScanRoots (was deleted, re-added as permanent base root alongside plugin cache paths)
+  - Fixed trigger extraction — now uses `fullDescription` instead of truncated display description (avoids losing "Use when..." clauses)
+  - Capped trigger phrases at 40 characters for drawer chip display (ensures one-liners without CSS ellipsis)
+  - Implemented multi-signal overlap scoring system to replace binary conflict/similar logic:
+    - Added `levenshtein()` utility for slug similarity detection
+    - Added `genericActionVerbs` set to filter noise words before token comparison
+    - New scoring: identical slug = 10pts (instant flag), near-identical = 5pts, +2 per shared trigger token, +1 per shared description token, threshold 6
+    - Result: overlap badge dropped from inflated count to only genuine overlaps (skills with shared domain signals like "copywriting" ↔ "copy-editing")
+  - Verified: 31 skills found (up from 7), 9 genuine overlaps (vs many false positives), 6 categories (10-category system from previous work)
+
 - `3e71b4a` - Add npx CLI packaging for skilltree-cli
 - **Splash Screen Feature** (2026-04-06) - 3-second loading screen with smooth app transition
   - Created `src/app/components/splash-screen.tsx` — full-featured splash with animated logo, title, pulsing dots, tagline

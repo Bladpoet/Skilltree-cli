@@ -8,7 +8,10 @@
   },
   "files": [
     "bin/",
-    "dist/",
+    "dist/assets/",
+    "dist/fonts/",
+    "dist/index.html",
+    "dist/sounds/",
     "generate.js",
     "claude-skills-icons/"
   ],
@@ -20,6 +23,7 @@
     "skills:watch": "node generate.js --watch",
     "dev:real": "npm run skills:generate && vite",
     "build": "vite build",
+    "prepack": "npm run build",
     "dev": "vite"
   },
   "dependencies": {

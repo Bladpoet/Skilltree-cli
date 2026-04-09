@@ -23,18 +23,67 @@ const iconLibraryIndexPath = path.join(iconLibraryRoot, "index.json");
 const iconLibraryIconsDir = path.join(iconLibraryRoot, "icons");
 const shouldWatch = process.argv.includes("--watch");
 
-const scanRoots = [
-  path.join(home, ".codex", "skills"),
+// Helper: Build list of plugin cache paths from installed_plugins.json
+async function getPluginCachePaths() {
+  const pluginsPaths = [];
+  const installedPluginsPath = path.join(home, ".claude", "plugins", "installed_plugins.json");
+
+  if (await pathExists(installedPluginsPath)) {
+    try {
+      const content = await fs.readFile(installedPluginsPath, "utf8");
+      const installed = JSON.parse(content);
+
+      if (installed.plugins && Array.isArray(installed.plugins)) {
+        for (const plugin of installed.plugins) {
+          if (plugin.marketplace && plugin.name && plugin.version) {
+            const cachePath = path.join(
+              home,
+              ".claude",
+              "plugins",
+              "cache",
+              plugin.marketplace,
+              plugin.name,
+              plugin.version,
+              "skills"
+            );
+            pluginsPaths.push(cachePath);
+          }
+        }
+      }
+    } catch (error) {
+      // Silently skip if file doesn't parse or doesn't exist
+    }
+  }
+
+  return pluginsPaths;
+}
+
+// Base scan roots (these are checked first; non-existent paths silently skipped)
+const baseScanRoots = [
+  // Global/user-level
+  path.join(home, ".agents", "skills"),
   path.join(home, ".claude", "skills"),
+  path.join(home, ".cursor", "skills"),
+  path.join(home, ".config", "opencode", "skills"),
+  path.join(home, ".codex", "skills"),
+  // Plugin marketplace (legacy path, still used by marketplace plugins)
   path.join(home, ".claude", "plugins", "marketplaces"),
+  // Project-level (relative to cwd)
+  path.join(cwd, ".agents", "skills"),
+  path.join(cwd, ".claude", "skills"),
+  path.join(cwd, ".cursor", "skills"),
+  path.join(cwd, ".opencode", "skills"),
+  path.join(cwd, ".github", "skills"),
 ];
+
+// Plugin cache paths are added dynamically via getPluginCachePaths()
+let scanRoots = baseScanRoots;
 
 const ignoredDirectoryNames = new Set([
   ".git",
   "node_modules",
   "dist",
   "build",
-  "cache",
   "backups",
 ]);
 
@@ -146,22 +195,81 @@ function parseFrontmatter(markdown) {
   }
 
   const data = {};
+  const lines = frontmatterMatch[1].split(/\r?\n/);
+  let i = 0;
 
-  for (const line of frontmatterMatch[1].split(/\r?\n/)) {
+  while (i < lines.length) {
+    const line = lines[i];
     const separatorIndex = line.indexOf(":");
+
     if (separatorIndex === -1) {
+      i++;
       continue;
     }
 
     const key = line.slice(0, separatorIndex).trim();
     const rawValue = line.slice(separatorIndex + 1).trim();
-    data[key] = rawValue.replace(/^['"]|['"]$/g, "");
+
+    // Check if this is a nested block (e.g., "metadata:")
+    if (rawValue === "") {
+      const nested = {};
+      i++;
+
+      // Read indented sub-keys
+      while (i < lines.length) {
+        const nextLine = lines[i];
+        // Check if line starts with whitespace (indented)
+        if (nextLine.match(/^\s+/) && nextLine.trim() !== "") {
+          const subSeparatorIndex = nextLine.indexOf(":");
+          if (subSeparatorIndex !== -1) {
+            const subKey = nextLine.slice(nextLine.search(/\S/), subSeparatorIndex).trim();
+            const subRawValue = nextLine.slice(subSeparatorIndex + 1).trim();
+            const subValue = subRawValue.replace(/^['"]|['"]$/g, "");
+
+            // Handle tags specially — split on comma and trim
+            if (subKey === "tags") {
+              nested[subKey] = subValue
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag.length > 0);
+            } else {
+              nested[subKey] = subValue;
+            }
+
+            i++;
+            continue;
+          }
+        }
+
+        // Non-indented line or end of input — exit nested block
+        break;
+      }
+
+      data[key] = nested;
+    } else {
+      // Regular flat key:value
+      data[key] = rawValue.replace(/^['"]|['"]$/g, "");
+      i++;
+    }
   }
 
   return {
     data,
     body: markdown.slice(frontmatterMatch[0].length),
   };
+}
+
+function firstDefinedString(...values) {
+  for (const value of values) {
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (trimmed.length > 0) {
+        return trimmed;
+      }
+    }
+  }
+
+  return null;
 }
 
 function extractDescription(frontmatterDescription, body) {
@@ -178,12 +286,52 @@ function extractDescription(frontmatterDescription, body) {
   return paragraphs[0] ?? "No description available.";
 }
 
+function normalizeDisplayDescription(shortDescription, fullDescription) {
+  // Priority: use shortDescription if present, otherwise truncate full description
+  if (shortDescription && shortDescription.trim().length > 0) {
+    return shortDescription.trim();
+  }
+
+  // Truncate full description to 300 characters
+  const maxLength = 300;
+  if (fullDescription.length > maxLength) {
+    return fullDescription.slice(0, maxLength) + "...";
+  }
+
+  return fullDescription;
+}
+
 function extractTriggerPhrases(description, name) {
   const phrases = [];
+
+  // Step 1: Look for explicit "Use when..." clauses first
+  const useWhenPatterns = [
+    /use when (.+?)(?:\.|$)/i,
+    /use this when (.+?)(?:\.|$)/i,
+    /use this skill when (.+?)(?:\.|$)/i,
+    /this skill should be used when (.+?)(?:\.|$)/i,
+    /should be used when (.+?)(?:\.|$)/i,
+  ];
+
+  for (const pattern of useWhenPatterns) {
+    const match = description.match(pattern);
+    if (match) {
+      const clause = match[1]
+        .replace(/^the user\s+/i, "")
+        .replace(/^to\s+/i, "")
+        .replace(/["']/g, "")
+        .trim();
+
+      if (clause.length >= 3) {
+        phrases.push(clause);
+        break; // Only take the first "Use when..." clause
+      }
+    }
+  }
+
+  // Step 2: Apply sentence-level extraction for additional triggers
   const patterns = [
     /trigger when (.+?)(?:\.|$)/i,
-    /use this skill when (.+?)(?:\.|$)/i,
-    /should be used when (.+?)(?:\.|$)/i,
     /when the user asks to (.+?)(?:\.|$)/i,
     /when the user asks for (.+?)(?:\.|$)/i,
   ];
@@ -203,49 +351,120 @@ function extractTriggerPhrases(description, name) {
         .replace(/["']/g, "")
         .trim();
 
-      if (cleaned.length >= 3) {
+      if (cleaned.length >= 3 && !phrases.includes(cleaned)) {
         phrases.push(cleaned);
       }
     }
   }
 
+  // Step 3: Add skill name as fallback
   const nameLabel = titleCase(name.replace(/[-_]/g, " "));
-  phrases.push(nameLabel);
+  if (!phrases.includes(nameLabel)) {
+    phrases.push(nameLabel);
+  }
 
-  return Array.from(new Set(phrases)).slice(0, 6);
+  // Step 4: Deduplicate and cap phrase length to fit trigger chip (40 chars max)
+  const deduped = Array.from(new Set(phrases));
+  const capped = deduped.map(phrase =>
+    phrase.length > 40
+      ? phrase.slice(0, phrase.lastIndexOf(" ", 40)) || phrase.slice(0, 40)
+      : phrase
+  );
+
+  return capped.slice(0, 6);
 }
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, (_, i) =>
+    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
+const genericActionVerbs = new Set([
+  "create", "build", "generate", "make", "write", "add", "update", "edit",
+  "modify", "change", "manage", "handle", "process", "use", "help", "provide",
+  "enable", "support", "allow", "run", "execute", "perform", "set", "get",
+  "fetch", "load", "show", "display", "render", "list", "find", "search",
+  "check", "review", "analyze", "read", "open", "close", "start", "stop",
+  "move", "copy", "delete", "remove", "send", "receive", "save", "store",
+  "apply", "implement", "define", "configure", "setup", "install", "convert",
+  "format", "parse", "extract", "import", "export", "integrate", "connect",
+  "publish", "deploy",
+]);
 
 function deriveCategory(filePath, name, description) {
   const normalizedPath = normalizeWindowsPath(filePath).toLowerCase();
   const normalizedName = name.toLowerCase();
   const normalizedDescription = description.toLowerCase();
   const combined = `${normalizedPath} ${normalizedName} ${normalizedDescription}`;
-  const source = deriveSource(filePath);
 
+  // 10-category system with equal weights (2 for all)
   const categorySignals = {
-    Finance: ["stripe", "payment", "billing", "invoice", "checkout", "subscription"],
-    Design: ["figma", "frontend", "design", "ui", "ux", "layout", "visual", "component"],
-    Automation: ["automation", "hook", "workflow", "install", "installer", "trigger", "event", "pipeline"],
-    Content: ["markdown", "docs", "documentation", "playground", "prompt", "content", "brief", "guide"],
-    Development: ["agent", "command", "plugin", "creator", "structure", "settings", "mcp", "scaffold"],
+    Development: [
+      "typescript", "javascript", "python", "git", "api", "debug", "refactor", "test", "build",
+      "deploy", "database", "backend", "server", "node", "react", "code", "script", "terminal",
+      "sdk", "library", "mcp", "plugin", "agent",
+    ],
+    DevOps: [
+      "docker", "kubernetes", "ci", "cd", "pipeline", "infrastructure", "monitoring", "nginx",
+      "cloud", "aws", "heroku", "vercel", "ansible", "terraform", "container", "helm",
+    ],
+    Design: [
+      "figma", "frontend", "design", "ui", "ux", "layout", "visual", "component", "css",
+      "styling", "wireframe", "prototype", "typography", "colour", "color",
+    ],
+    Automation: [
+      "automation", "hook", "workflow", "webhook", "cron", "scheduler", "trigger", "event",
+      "installer", "recurring", "batch", "headless",
+    ],
+    Content: [
+      "markdown", "docs", "documentation", "writing", "blog", "readme", "guide", "brief",
+      "copywriting", "article", "draft", "editorial",
+    ],
+    Data: [
+      "analytics", "sql", "database", "spreadsheet", "csv", "chart", "visualisation", "visualization",
+      "dataset", "pandas", "etl", "dashboard", "metrics", "query",
+    ],
+    Research: [
+      "search", "summarise", "summarize", "research", "synthesis", "fact", "crawl", "scrape",
+      "survey", "analysis", "compare", "report",
+    ],
+    Communication: [
+      "email", "slack", "pr", "pull request", "changelog", "meeting", "notes", "message",
+      "notification", "announce", "newsletter",
+    ],
+    Security: [
+      "auth", "authentication", "permission", "secret", "vulnerability", "encrypt", "token",
+      "oauth", "firewall", "audit", "compliance", "pentest",
+    ],
+    Finance: [
+      "stripe", "payment", "billing", "invoice", "checkout", "subscription", "expense",
+      "budget", "accounting", "tax", "revenue",
+    ],
   };
 
-  const scores = {
-    Development: 0,
-    Design: 0,
-    Automation: 0,
-    Content: 0,
-    Finance: 0,
-  };
+  const scores = {};
+  const priority = [
+    "Development", "DevOps", "Design", "Automation", "Content",
+    "Data", "Research", "Communication", "Security", "Finance",
+  ];
 
-  const weightedHits = {
-    Finance: 3,
-    Design: 2,
-    Automation: 2,
-    Content: 2,
-    Development: 1,
-  };
+  // Initialize scores
+  for (const category of priority) {
+    scores[category] = 0;
+  }
 
+  // Score all categories equally (weight = 2)
+  const weight = 2;
   for (const [category, signals] of Object.entries(categorySignals)) {
     const seen = new Set();
     for (const signal of signals) {
@@ -254,49 +473,13 @@ function deriveCategory(filePath, name, description) {
       }
 
       if (containsWholeToken(combined, signal)) {
-        scores[category] += weightedHits[category];
+        scores[category] += weight;
         seen.add(signal);
       }
     }
   }
 
-  if (normalizedName.endsWith("docs")) {
-    scores.Content += 2;
-  }
-
-  if (containsWholeToken(combined, "claude.md")) {
-    scores.Content += 3;
-  }
-
-  if (containsWholeToken(combined, "model context protocol")) {
-    scores.Development += 2;
-  }
-
-  if (source === "claude-marketplace/stripe") {
-    scores.Finance += 6;
-  }
-
-  if (source === "claude-marketplace/frontend-design" || containsWholeToken(combined, "figma")) {
-    scores.Design += 4;
-  }
-
-  if (source === "claude-marketplace/hookify" || containsWholeToken(combined, "skill-installer")) {
-    scores.Automation += 4;
-  }
-
-  if (source === "codex/system" && (containsWholeToken(combined, "docs") || containsWholeToken(combined, "documentation"))) {
-    scores.Content += 4;
-  }
-
-  if (containsWholeToken(combined, "recommender") && containsWholeToken(combined, "automation")) {
-    scores.Automation += 3;
-  }
-
-  if (containsWholeToken(combined, "hook-development")) {
-    scores.Automation += 3;
-  }
-
-  const priority = ["Development", "Design", "Automation", "Content", "Finance"];
+  // Tie-breaking: use priority order
   let bestCategory = "Development";
   let bestScore = -1;
 
@@ -314,19 +497,47 @@ function deriveCategory(filePath, name, description) {
 function deriveSource(filePath) {
   const normalized = normalizeWindowsPath(filePath).toLowerCase();
 
+  // Codex
   if (normalized.includes("/.codex/skills/.system/")) {
     return "codex/system";
   }
-
   if (normalized.includes("/.codex/skills/")) {
     return "codex/skills";
   }
 
+  // Canonical agents location
+  if (normalized.includes("/.agents/skills/")) {
+    return "agents/skills";
+  }
+
+  // Cursor
+  if (normalized.includes("/.cursor/skills/")) {
+    return "cursor/skills";
+  }
+
+  // OpenCode
+  if (normalized.includes("/.config/opencode/skills/") || normalized.includes("/.opencode/skills/")) {
+    return "opencode/skills";
+  }
+
+  // GitHub
+  if (normalized.includes("/.github/skills/")) {
+    return "github/skills";
+  }
+
+  // Claude Code plugin cache
+  const pluginCacheMatch = normalized.match(/\/\.claude\/plugins\/cache\/[^/]+\/([^/]+)\/[^/]+\/skills\//);
+  if (pluginCacheMatch) {
+    return `claude-plugin/${pluginCacheMatch[1]}`;
+  }
+
+  // Legacy marketplace plugin path
   const marketplacePluginMatch = normalized.match(/\/\.claude\/plugins\/marketplaces\/[^/]+\/(?:plugins|external_plugins)\/([^/]+)\//);
   if (marketplacePluginMatch) {
     return `claude-marketplace/${marketplacePluginMatch[1]}`;
   }
 
+  // Claude skills
   if (normalized.includes("/.claude/skills/")) {
     return "claude/skills";
   }
@@ -552,88 +763,108 @@ async function syncAssignedIconAssets(usedIconNames, iconLibrary) {
 }
 
 function inferRelationships(skills) {
-  const conflicts = [];
-  const similarSkillIds = new Set();
-  const conflictsById = new Map(skills.map((skill) => [skill.id, new Set()]));
-  const keywordsById = new Map(skills.map((skill) => [skill.id, keywordSetForSkill(skill)]));
-  const nameTokensById = new Map(skills.map((skill) => [skill.id, nameTokenSet(skill)]));
-  const signalTokens = new Set([
-    "automation",
-    "figma",
-    "hook",
-    "hookify",
-    "installer",
-    "markdown",
-    "mcp",
-    "openai",
-    "playground",
-    "stripe",
-  ]);
-  const highSignalIgnore = new Set([
-    "agent",
-    "automation",
-    "command",
-    "create",
-    "development",
-    "docs",
-    "guide",
-    "guidance",
-    "plugin",
-    "plugins",
-    "references",
-    "settings",
-    "skill",
-    "skills",
-    "structure",
-    "write",
-  ]);
+  // Build token sets for each skill: trigger tokens and description tokens
+  // Remove stop words and generic action verbs for meaningful overlap detection
+  const triggerTokensById = new Map(
+    skills.map((skill) => [
+      skill.id,
+      new Set(
+        skill.triggers
+          .flatMap((trigger) => tokenize(trigger))
+          .filter((token) => !genericActionVerbs.has(token))
+      ),
+    ])
+  );
 
+  const descriptionTokensById = new Map(
+    skills.map((skill) => [
+      skill.id,
+      new Set(
+        tokenize(skill.description)
+          .filter((token) => !genericActionVerbs.has(token))
+      ),
+    ])
+  );
+
+  // Function to score overlap between two skills
+  function scoreOverlap(skillA, skillB) {
+    let score = 0;
+
+    // Signal 1: Slug similarity (strongest signal of duplication)
+    const slugA = slugify(skillA.name);
+    const slugB = slugify(skillB.name);
+
+    if (slugA === slugB) {
+      return 10; // Identical slug = instant flag, highest confidence
+    }
+
+    const editDistance = levenshtein(slugA, slugB);
+    if (editDistance <= 3 && Math.min(slugA.length, slugB.length) >= 8) {
+      score += 5; // Near-identical slug = likely same skill variant
+    }
+
+    // Signal 2: Shared trigger tokens (functional intent overlap)
+    const triggerA = triggerTokensById.get(skillA.id) ?? new Set();
+    const triggerB = triggerTokensById.get(skillB.id) ?? new Set();
+    const sharedTriggerTokens = intersect(triggerA, triggerB).length;
+    score += Math.min(sharedTriggerTokens * 2, 8); // +2 per token, cap at +8
+
+    // Signal 3: Shared description tokens (output/domain overlap)
+    const descA = descriptionTokensById.get(skillA.id) ?? new Set();
+    const descB = descriptionTokensById.get(skillB.id) ?? new Set();
+    const sharedDescTokens = intersect(descA, descB).length;
+    score += Math.min(sharedDescTokens, 4); // +1 per token, cap at +4
+
+    return score;
+  }
+
+  const conflicts = [];
+  const overlappingSkillIds = new Set();
+  const overlapsById = new Map(skills.map((skill) => [skill.id, new Set()]));
+
+  // Score all pairs and flag overlaps
   for (let index = 0; index < skills.length; index += 1) {
     for (let otherIndex = index + 1; otherIndex < skills.length; otherIndex += 1) {
       const skill = skills[index];
       const otherSkill = skills[otherIndex];
-      const keywordOverlap = intersect(keywordsById.get(skill.id), keywordsById.get(otherSkill.id)).filter(
-        (token) => token !== "design" && !highSignalIgnore.has(token),
-      );
-      const nameOverlap = intersect(nameTokensById.get(skill.id), nameTokensById.get(otherSkill.id)).filter(
-        (token) => !highSignalIgnore.has(token),
-      );
-      const signalOverlap = [...new Set([...nameOverlap, ...keywordOverlap])].filter((token) => signalTokens.has(token));
-      const sameCategory = skill.category === otherSkill.category;
-      const isConflict = slugify(skill.name) === slugify(otherSkill.name) || nameOverlap.length > 0 || signalOverlap.length > 0;
-      const isSimilar = sameCategory || signalOverlap.length > 0;
+      const score = scoreOverlap(skill, otherSkill);
 
-      if (isSimilar) {
-        similarSkillIds.add(skill.id);
-        similarSkillIds.add(otherSkill.id);
+      // Threshold: 6+ points = genuine overlap
+      if (score >= 6) {
+        overlappingSkillIds.add(skill.id);
+        overlappingSkillIds.add(otherSkill.id);
+
+        overlapsById.get(skill.id)?.add(otherSkill.id);
+        overlapsById.get(otherSkill.id)?.add(skill.id);
+
+        // Build a summary of why they overlap
+        const triggerA = triggerTokensById.get(skill.id) ?? new Set();
+        const triggerB = triggerTokensById.get(otherSkill.id) ?? new Set();
+        const sharedTokens = intersect(triggerA, triggerB);
+        const summary = sharedTokens.length > 0
+          ? `${skill.name} overlaps with ${otherSkill.name} around ${sharedTokens.slice(0, 2).join(" and ")}.`
+          : `${skill.name} overlaps with ${otherSkill.name}.`;
+
+        conflicts.push({
+          a: skill.id,
+          b: otherSkill.id,
+          aName: skill.name,
+          bName: otherSkill.name,
+          summary,
+        });
       }
-
-      if (!isConflict) {
-        continue;
-      }
-
-      conflicts.push({
-        a: skill.id,
-        b: otherSkill.id,
-        aName: skill.name,
-        bName: otherSkill.name,
-        summary: buildConflictSummary(skill, otherSkill, [...nameOverlap, ...signalOverlap]),
-      });
-
-      conflictsById.get(skill.id)?.add(otherSkill.id);
-      conflictsById.get(otherSkill.id)?.add(skill.id);
     }
   }
 
   const enrichedSkills = skills.map((skill) => ({
     ...skill,
-    conflictsWith: Array.from(conflictsById.get(skill.id) ?? []),
+    conflictsWith: Array.from(overlapsById.get(skill.id) ?? []),
   }));
 
   return {
     skills: enrichedSkills,
     conflicts,
-    similarCount: similarSkillIds.size,
+    similarCount: overlappingSkillIds.size, // Now represents genuine overlaps only
   };
 }
 
@@ -679,28 +910,77 @@ async function readSkill(filePath) {
   const markdown = await fs.readFile(filePath, "utf8");
   const { data, body } = parseFrontmatter(markdown);
   const name = String(data.name ?? path.basename(path.dirname(filePath)));
-  const description = extractDescription(String(data.description ?? ""), body);
-  const category = deriveCategory(filePath, name, description);
+  const fullDescription = extractDescription(String(data.description ?? ""), body);
 
-  return {
+  // Extract new fields
+  const metadata = data.metadata ?? {};
+  const tags = Array.isArray(metadata.tags) ? metadata.tags : [];
+  const shortDescription = metadata["short-description"] ?? metadata.shortDescription ?? null;
+  const license = data.license ?? null;
+  const compatibility = data.compatibility ?? null;
+  const allowedTools = data["allowed-tools"] ?? data.allowedTools ?? null;
+
+  // Use shortDescription if available, otherwise truncate fullDescription
+  const description = normalizeDisplayDescription(shortDescription, fullDescription);
+
+  const category = deriveCategory(filePath, name, description);
+  const source = firstDefinedString(data.source, deriveSource(filePath));
+  const sourceUrl = firstDefinedString(data.sourceUrl, data.source_url, data.url, data.homepage);
+
+  const skill = {
     id: `${slugify(category)}-${slugify(name)}-${slugify(path.relative(home, filePath))}`,
     name,
     category,
     description,
-    triggers: extractTriggerPhrases(description, name),
+    triggers: extractTriggerPhrases(fullDescription, name),
     path: normalizeWindowsPath(filePath),
-    source: deriveSource(filePath),
-    sourceUrl: null,
+    source,
+    sourceUrl,
     conflictsWith: [],
   };
+
+  // Add optional fields only if they have values
+  if (tags.length > 0) {
+    skill.tags = tags;
+  }
+  if (shortDescription) {
+    skill.shortDescription = shortDescription;
+  }
+  if (license) {
+    skill.license = license;
+  }
+  if (compatibility) {
+    skill.compatibility = compatibility;
+  }
+  if (allowedTools) {
+    skill.allowedTools = allowedTools;
+  }
+
+  return skill;
 }
 
 async function buildSkillData() {
+  // Dynamically add plugin cache paths
+  const pluginCachePaths = await getPluginCachePaths();
+  scanRoots = [...baseScanRoots, ...pluginCachePaths];
+
   const files = new Set();
+  const resolvedPaths = new Set(); // For deduplication by real path
 
   for (const root of scanRoots) {
     for (const file of await collectSkillFiles(root)) {
-      files.add(file);
+      try {
+        // Deduplicate by resolved real path
+        const realPath = await fs.realpath(file);
+        if (resolvedPaths.has(realPath)) {
+          continue; // Skip if we've already seen this file via a symlink
+        }
+        resolvedPaths.add(realPath);
+        files.add(file);
+      } catch {
+        // If realpath fails, add the file anyway
+        files.add(file);
+      }
     }
   }
 

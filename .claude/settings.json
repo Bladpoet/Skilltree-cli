@@ -6,7 +6,15 @@
       "mcp__figma-console__figma_get_selection",
       "mcp__figma-console__figma_capture_screenshot",
       "Bash(npm cache:*)",
-      "Bash(grep -rn \"//.*TODO\\\\|//.*FIXME\\\\|//.*HACK\\\\|//.*XXX\\\\|//.*NOTE\\\\|//.*TEMP\" \"c:/Users/USER/Documents/Explorations/Claude skill tree \\(figma make\\)/Skill tree/src\")"
+      "Bash(grep -rn \"//.*TODO\\\\|//.*FIXME\\\\|//.*HACK\\\\|//.*XXX\\\\|//.*NOTE\\\\|//.*TEMP\" \"c:/Users/USER/Documents/Explorations/Claude skill tree \\(figma make\\)/Skill tree/src\")",
+      "WebFetch(domain:skills.sh)",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:deepwiki.com)",
+      "WebFetch(domain:www.skillsdirectory.com)",
+      "WebFetch(domain:bibek-poudel.medium.com)",
+      "WebFetch(domain:zread.ai)"
     ]
   }
 }

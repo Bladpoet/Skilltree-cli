@@ -1,12 +1,12 @@
-import { SkillNode } from "./skill-node";
-import type { RelatedConflict, SkillRecord } from "../types/skills";
+import { useMemo, useState } from "react";
+
 import {
   DetailDrawerCopyIcon,
   DetailDrawerSectionHeading,
   DetailDrawerTriggerTag,
 } from "./detail-drawer-primitives";
-import { Globe } from "lucide-react";
-import { useMemo, useState } from "react";
+import { SkillNode } from "./skill-node";
+import type { RelatedConflict, SkillRecord } from "../types/skills";
 
 interface SkillDetailPanelProps {
   skill: SkillRecord;
@@ -16,16 +16,12 @@ interface SkillDetailPanelProps {
 
 const DARK = "#282521";
 
-interface SourceAffiliation {
-  label: string;
-  url: string;
-}
-
 function humanizeSegment(value: string) {
   return value
     .replace(/[-_]+/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
+
 
 function buildBreadcrumbs(skill: SkillRecord) {
   const normalizedPath = skill.path?.trim();
@@ -45,23 +41,6 @@ function buildBreadcrumbs(skill: SkillRecord) {
   return isWindowsDrive ? [normalized.slice(0, 2), ...head, "...", ...tail] : [...head, "...", ...tail];
 }
 
-function resolveSourceAffiliation(skill: SkillRecord): SourceAffiliation {
-  const haystack = `${skill.source} ${skill.sourceUrl ?? ""} ${skill.path}`.toLowerCase();
-
-  if (haystack.includes("openai")) {
-    return { label: "OpenAI", url: "https://openai.com" };
-  }
-
-  if (haystack.includes("anthropic") || haystack.includes("local/manual-install") || haystack.includes("/.claude/")) {
-    return { label: "Anthropic", url: "https://www.anthropic.com" };
-  }
-
-  if (haystack.includes("github") || skill.source.includes("/") || skill.sourceUrl) {
-    return { label: "GitHub", url: "https://github.com" };
-  }
-
-  return { label: "GitHub", url: "https://github.com" };
-}
 
 function Breadcrumbs({ skill }: { skill: SkillRecord }) {
   const [copied, setCopied] = useState(false);
@@ -139,12 +118,8 @@ function OverlapNodes({
 }
 
 export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: SkillDetailPanelProps) {
-  const dependents = skill.dependents ?? [];
-  const sourceAffiliation = resolveSourceAffiliation(skill);
-
   return (
     <div className="flex flex-col gap-6" style={{ color: DARK }}>
-      {/* Skill name + breadcrumbs */}
       <div className="flex flex-col gap-4">
         <h2
           className="break-words"
@@ -155,12 +130,10 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
         <Breadcrumbs skill={skill} />
       </div>
 
-      {/* Description */}
       <p style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 100, fontSize: "15px", lineHeight: "1.6", color: DARK }}>
         {skill.description}
       </p>
 
-      {/* Triggers */}
       <div className="flex flex-col gap-3">
         <DetailDrawerSectionHeading label="Triggers" />
         <div className="flex flex-col gap-3">
@@ -175,40 +148,15 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
         </div>
       </div>
 
-      {/* Dependents */}
-      {dependents.length > 0 && (
+      {skill.compatibility && (
         <div className="flex flex-col gap-3">
-          <DetailDrawerSectionHeading label="Dependents" />
-          <div className="flex flex-col gap-1">
-            {dependents.map((dep) => (
-              <div
-                key={dep}
-                style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", lineHeight: "1.5", color: DARK }}
-              >
-                <span style={{ color: "#7E766D", marginRight: 6 }}>↳</span>
-                {humanizeSegment(dep)}
-              </div>
-            ))}
-          </div>
+          <DetailDrawerSectionHeading label="Compatibility" />
+          <p style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", lineHeight: "1.5", color: DARK }}>
+            {skill.compatibility}
+          </p>
         </div>
       )}
 
-      {/* Source */}
-      <div className="flex flex-col gap-3">
-        <DetailDrawerSectionHeading label="Source" />
-        <a
-          href={sourceAffiliation.url}
-          target="_blank"
-          rel="noreferrer"
-          className="flex w-fit items-center gap-2 transition-opacity hover:opacity-80"
-          style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", lineHeight: "1.4", color: "#225AD6" }}
-        >
-          <Globe size={16} className="shrink-0" style={{ color: "#7E766D" }} />
-          <span className="underline underline-offset-2">{sourceAffiliation.label}</span>
-        </a>
-      </div>
-
-      {/* Overlaps */}
       {relatedConflicts.length > 0 && (
         <div className="flex flex-col gap-3">
           <DetailDrawerSectionHeading label="Overlaps" />

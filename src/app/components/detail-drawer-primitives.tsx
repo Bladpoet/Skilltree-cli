@@ -1,6 +1,7 @@
+import type { CSSProperties } from "react";
+
 import drawerEdge from "../../assets/drawer-edge-brush.svg";
 import sectionSeparator from "../../assets/drawer-section-separator.svg";
-import sourceGlyph from "../../assets/pencil-exported/9L2EO.png";
 import triggerBrush from "../../assets/drawer-trigger-brush.svg";
 
 import closeIcon from "../../assets/close-icon.svg";
@@ -10,6 +11,34 @@ import hoverDecoration from "../../assets/hover-decoration.svg";
 
 interface TextProps {
   label: string;
+}
+
+interface MaskIconProps {
+  src: string;
+  color: string;
+  className?: string;
+  style?: CSSProperties;
+}
+
+function MaskIcon({ src, color, className, style }: MaskIconProps) {
+  return (
+    <div
+      aria-hidden="true"
+      className={className}
+      style={{
+        backgroundColor: color,
+        WebkitMaskImage: `url(${src})`,
+        maskImage: `url(${src})`,
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+        WebkitMaskSize: "100% 100%",
+        maskSize: "100% 100%",
+        ...style,
+      }}
+    />
+  );
 }
 
 export function DetailDrawerDecorativeEdge() {
@@ -43,6 +72,7 @@ interface CopyIconProps {
 
 export function DetailDrawerCloseButton({ isHovered }: CloseButtonProps) {
   const iconColor = isHovered ? "#282521" : "#635949";
+
   return (
     <div className="relative h-8 w-8 shrink-0">
       <img
@@ -52,13 +82,7 @@ export function DetailDrawerCloseButton({ isHovered }: CloseButtonProps) {
         style={{ opacity: isHovered ? 1 : 0 }}
         draggable={false}
       />
-      <img
-        src={closeIcon}
-        alt=""
-        className="absolute inset-0 h-full w-full"
-        style={{ color: iconColor }}
-        draggable={false}
-      />
+      <MaskIcon src={closeIcon} color={iconColor} className="absolute inset-0 h-full w-full" />
     </div>
   );
 }
@@ -77,27 +101,22 @@ export function DetailDrawerCopyIcon({ isHovered, copied }: CopyIconProps) {
         src={hoverDecoration}
         alt=""
         className="absolute inset-0 transition-opacity duration-200"
-        style={{ 
+        style={{
           opacity: isHovered ? 1 : 0,
           width: "100%",
           height: "100%",
-          objectFit: "fill"
+          objectFit: "fill",
         }}
         draggable={false}
       />
-      <img
+      <MaskIcon
         src={copied ? checkIcon : copyIconSrc}
-        alt=""
+        color={iconColor}
         className="absolute h-4 w-4"
-        style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", color: iconColor }}
-        draggable={false}
+        style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
       />
     </div>
   );
-}
-
-export function DetailDrawerSourceIcon() {
-  return <img src={sourceGlyph} alt="" className="h-4 w-4 shrink-0" draggable={false} />;
 }
 
 export function DetailDrawerCategoryPill({ label }: TextProps) {
@@ -126,7 +145,7 @@ export function DetailDrawerCategoryPill({ label }: TextProps) {
           fontWeight: 700,
           color: "#0A0601",
           lineHeight: "1",
-          letterSpacing: "0.72px", /* 6% of 12px */
+          letterSpacing: "0.72px",
           paddingLeft: 8,
         }}
       >

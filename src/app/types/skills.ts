@@ -23,6 +23,11 @@ export interface SkillRecord {
   iconPath?: string;
   iconSource?: string;
   iconScore?: number;
+  tags?: string[];
+  shortDescription?: string;
+  license?: string;
+  compatibility?: string;
+  allowedTools?: string;
 }
 
 export interface SkillIconAssignmentMeta {
