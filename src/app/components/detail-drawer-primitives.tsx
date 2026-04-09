@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 
 import drawerEdge from "../../assets/drawer-edge-brush.svg";
+import categoryTagStroke from "../../assets/drawer-category-tag-stroke.svg";
 import sectionSeparator from "../../assets/drawer-section-separator.svg";
 import triggerBrush from "../../assets/drawer-trigger-brush.svg";
 
@@ -121,32 +122,22 @@ export function DetailDrawerCopyIcon({ isHovered, copied }: CopyIconProps) {
 
 export function DetailDrawerCategoryPill({ label }: TextProps) {
   return (
-    <div
-      className="relative isolate inline-flex items-center justify-center overflow-hidden px-3"
-      style={{ width: 92, height: 28 }}
-    >
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(90deg, rgba(130,110,34,0) 0%, rgba(102,76,1,0.2) 50%, rgba(102,76,1,0.6) 100%)",
-        }}
-      />
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "rgb(229,169,71)", opacity: 0.7 }} />
-      <div className="absolute inset-x-0 bottom-0 h-px" style={{ background: "rgb(229,169,71)", opacity: 0.7 }} />
-      <div
-        className="absolute left-1.5 top-1/2 -translate-y-1/2"
-        style={{ width: 4, height: 4, borderRadius: "50%", background: "rgb(229,169,71)" }}
+    <div className="relative isolate inline-flex max-w-full items-center justify-center px-4 py-[6px]">
+      <img
+        src={categoryTagStroke}
+        alt=""
+        className="pointer-events-none absolute inset-x-0 bottom-[-2px] h-8 w-full max-w-none object-fill"
+        draggable={false}
       />
       <span
-        className="relative z-10 truncate"
+        className="relative z-10 whitespace-nowrap"
         style={{
           fontFamily: "'Albertus Nova', serif",
           fontSize: "12px",
           fontWeight: 700,
           color: "#0A0601",
-          lineHeight: "1",
+          lineHeight: "16px",
           letterSpacing: "0.72px",
-          paddingLeft: 8,
         }}
       >
         {label}

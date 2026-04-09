@@ -743,6 +743,7 @@ function deriveTriggerCandidatesFromDescription(description) {
     /when the user (?:asks to|asks for|wants to|needs to) (.+)/i,
     /this skill should be used when (.+)/i,
     /should be used when (.+)/i,
+    /(?:use this|this skill should be used|recommended|invoke|triggered|best used)\s+when\s+(?:the user (?:asks?|wants?|needs?) to\s+)?(.+)/i,
   ];
 
   const matches = [];
@@ -750,7 +751,12 @@ function deriveTriggerCandidatesFromDescription(description) {
     for (const pattern of patterns) {
       const match = sentence.match(pattern);
       if (match?.[1]) {
-        matches.push(match[1]);
+        // Split on commas and " or " to separate verb phrases
+        const phrases = match[1]
+          .split(/\s+or\s+|,\s*/)
+          .map(p => p.trim())
+          .filter(Boolean);
+        matches.push(...phrases);
         break;
       }
     }
@@ -802,6 +808,7 @@ function labelizeTriggerCandidate(value, fallbackName) {
     .replace(/\b(?:including|such as|like)\b.*$/i, "")
     .replace(/^existing\s+/i, "")
     .replace(/^new\s+/i, "")
+    .replace(/^(?:a|an|the)\s+/i, "")
     .replace(/\s+/g, " ")
     .trim();
 
@@ -882,13 +889,29 @@ function extractRefinedTriggerPhrases(frontmatter, body, description, name) {
     addRankedTrigger(candidateMap, labelizeTriggerCandidate(trigger, name), 60);
   }
 
-  for (const example of quotedExamples.slice(0, 1)) {
+  for (const example of quotedExamples.slice(0, 3)) {
     addRankedTrigger(candidateMap, titleCase(example), 40);
   }
 
   addRankedTrigger(candidateMap, titleCase(name.replace(/[-_]/g, " ")), 10);
 
-  return Array.from(candidateMap.values())
+  // Deduplicate by stem: keep shorter/cleaner form if one is prefix of another
+  const dedupedEntries = Array.from(candidateMap.values());
+  const toRemove = new Set();
+  for (let i = 0; i < dedupedEntries.length; i++) {
+    for (let j = i + 1; j < dedupedEntries.length; j++) {
+      const a = dedupedEntries[i].label.toLowerCase();
+      const b = dedupedEntries[j].label.toLowerCase();
+      if (a.includes(b) && a !== b) {
+        toRemove.add(i);
+      } else if (b.includes(a) && a !== b) {
+        toRemove.add(j);
+      }
+    }
+  }
+
+  return dedupedEntries
+    .filter((_, idx) => !toRemove.has(idx))
     .sort((a, b) => b.priority - a.priority || a.label.localeCompare(b.label))
     .slice(0, 4)
     .map((entry) => entry.label);
@@ -1467,6 +1490,9 @@ async function readSkill(filePath) {
   // Add optional fields only if they have values
   if (tags.length > 0) {
     skill.tags = tags;
+  }
+  if (fullDescription && fullDescription !== description) {
+    skill.fullDescription = fullDescription;
   }
   if (shortDescription) {
     skill.shortDescription = shortDescription;

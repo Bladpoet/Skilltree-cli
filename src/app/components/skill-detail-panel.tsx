@@ -174,7 +174,7 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
       </div>
 
       <p style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 100, fontSize: "15px", lineHeight: "1.6", color: DARK }}>
-        {skill.description}
+        {skill.fullDescription ?? skill.description}
       </p>
 
       <div className="flex flex-col gap-3">

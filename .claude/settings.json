@@ -20,7 +20,8 @@
       "Bash(npm install:*)",
       "Bash(npx svgo:*)",
       "Read(//c/Users/USER/.claude/plans/**)",
-      "Bash(grep -l \"v0.2.0\\\\|publish\" C:\\\\Users\\\\USER\\\\.claude\\\\plans/*.md)"
+      "Bash(grep -l \"v0.2.0\\\\|publish\" C:\\\\Users\\\\USER\\\\.claude\\\\plans/*.md)",
+      "Read(//c/Users/USER/.agents/skills/critique/**)"
     ],
     "additionalDirectories": [
       "C:\\Users\\USER\\Downloads",
