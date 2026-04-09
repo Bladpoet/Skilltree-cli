@@ -18,10 +18,13 @@
       "Read(//tmp/**)",
       "Read(//c/Users/USER/Downloads/**)",
       "Bash(npm install:*)",
-      "Bash(npx svgo:*)"
+      "Bash(npx svgo:*)",
+      "Read(//c/Users/USER/.claude/plans/**)",
+      "Bash(grep -l \"v0.2.0\\\\|publish\" C:\\\\Users\\\\USER\\\\.claude\\\\plans/*.md)"
     ],
     "additionalDirectories": [
-      "C:\\Users\\USER\\Downloads"
+      "C:\\Users\\USER\\Downloads",
+      "c:\\Users\\USER\\Documents\\Explorations\\Claude skill tree (figma make)\\Skill tree\\src\\assets"
     ]
   }
 }

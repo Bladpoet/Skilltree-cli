@@ -11,17 +11,19 @@ import useSound from "use-sound";
  * No code changes needed!
  */
 export function useSoundEffects() {
-  const [playHover] = useSound("/sounds/hover.mp3");
-  const [playClick] = useSound("/sounds/click.mp3");
-  const [playDrawerOpen] = useSound("/sounds/drawer-open.mp3");
-  const [playDrawerClose] = useSound("/sounds/drawer-close.mp3");
-  const [playScroll] = useSound("/sounds/scroll.mp3");
+  const [playHoverRaw] = useSound("/sounds/hover.mp3", { volume: 0.2 });
+  const playHover = () => setTimeout(() => playHoverRaw(), 8);
+
+  const [playDrawerOpen] = useSound("/sounds/drawer-open.mp3", { volume: 0.2 });
+
+  const [playDrawerCloseRaw] = useSound("/sounds/drawer-close.mp3", { volume: 0.2 });
+  const playDrawerClose = () => setTimeout(() => playDrawerCloseRaw(), 30);
 
   return {
     playHover,
-    playClick,
+    playClick: () => {}, // disabled
     playDrawerOpen,
     playDrawerClose,
-    playScroll,
+    playScroll: () => {}, // disabled
   };
 }

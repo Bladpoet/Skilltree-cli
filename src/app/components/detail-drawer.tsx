@@ -57,7 +57,7 @@ export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: Det
         aria-label="Close drawer overlay"
         className="absolute inset-0 bg-[#191a1c]/40"
         style={{ animation: DRAWER_OVERLAY_ANIMATION }}
-        onClick={() => { playDrawerClose(); onClose?.(); }}
+        onClick={() => { playDrawerClose(); setTimeout(() => onClose?.(), 0); }}
       />
       <div className="absolute inset-y-0 right-0 flex justify-end overflow-visible">
         <div
@@ -79,7 +79,7 @@ export function DetailDrawer({ children, onClose, categoryLabel, resetKey }: Det
                 <div className="flex items-center justify-between gap-4">
                   <DetailDrawerCategoryPill label={categoryLabel ?? "Skill"} />
                   <button
-                    onClick={() => { playDrawerClose(); onClose?.(); }}
+                    onClick={() => { playDrawerClose(); setTimeout(() => onClose?.(), 0); }}
                     onMouseEnter={() => setCloseHovered(true)}
                     onMouseLeave={() => setCloseHovered(false)}
                     className="flex shrink-0 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
