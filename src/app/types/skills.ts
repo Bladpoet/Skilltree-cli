@@ -15,6 +15,7 @@ export interface SkillRecord {
   dependents?: string[];
   path: string;
   source: string;
+  installedFrom?: string;
   sourceUrl: string | null;
   conflictsWith: string[];
   icon?: string;
@@ -27,7 +28,7 @@ export interface SkillRecord {
   shortDescription?: string;
   license?: string;
   compatibility?: string;
-  allowedTools?: string;
+  allowedTools?: string[];
 }
 
 export interface SkillIconAssignmentMeta {

@@ -22,6 +22,47 @@ function humanizeSegment(value: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+function humanizeOrigin(value: string) {
+  const normalized = value.trim().toLowerCase();
+  const labels: Record<string, string> = {
+    "agents/skills": "Agents Skills",
+    "claude/skills": "Claude Skills",
+    "codex/system": "Codex System",
+    "codex/skills": "Codex Skills",
+    "cursor/skills": "Cursor Skills",
+    "github/skills": "GitHub Skills",
+    "opencode/skills": "OpenCode Skills",
+    "local": "Local",
+  };
+
+  return labels[normalized] ?? value.split("/").map(humanizeSegment).join(" / ");
+}
+
+function humanizeInstalledFrom(value: string | undefined, fallback: string) {
+  const normalized = (value || fallback).trim().toLowerCase();
+
+  if (normalized.startsWith("claude-plugin/")) {
+    return `Claude Plugin Cache (${humanizeSegment(normalized.split("/")[1] ?? "plugin")})`;
+  }
+
+  if (normalized.startsWith("claude-marketplace/")) {
+    return `Claude Marketplace (${humanizeSegment(normalized.split("/")[1] ?? "plugin")})`;
+  }
+
+  const labels: Record<string, string> = {
+    "agents/skills": "Agents Skills Directory",
+    "claude/skills": "Claude Skills Directory",
+    "codex/system": "Codex System Skills",
+    "codex/skills": "Codex Skills Directory",
+    "cursor/skills": "Cursor Skills Directory",
+    "github/skills": "Project GitHub Skills Directory",
+    "opencode/skills": "OpenCode Skills Directory",
+    "local": "Local Skill Directory",
+  };
+
+  return labels[normalized] ?? humanizeOrigin(normalized);
+}
+
 
 function buildBreadcrumbs(skill: SkillRecord) {
   const normalizedPath = skill.path?.trim();
@@ -118,6 +159,8 @@ function OverlapNodes({
 }
 
 export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: SkillDetailPanelProps) {
+  const installedFrom = humanizeInstalledFrom(skill.installedFrom, skill.source);
+
   return (
     <div className="flex flex-col gap-6" style={{ color: DARK }}>
       <div className="flex flex-col gap-4">
@@ -146,6 +189,13 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
             </span>
           )}
         </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <DetailDrawerSectionHeading label="Origin" />
+        <p style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", lineHeight: "1.5", color: DARK }}>
+          {installedFrom}
+        </p>
       </div>
 
       {skill.compatibility && (

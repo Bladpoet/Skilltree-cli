@@ -16,7 +16,9 @@
       "WebFetch(domain:bibek-poudel.medium.com)",
       "WebFetch(domain:zread.ai)",
       "Read(//tmp/**)",
-      "Read(//c/Users/USER/Downloads/**)"
+      "Read(//c/Users/USER/Downloads/**)",
+      "Bash(npm install:*)",
+      "Bash(npx svgo:*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\USER\\Downloads"

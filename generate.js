@@ -158,6 +158,75 @@ function normalizeWindowsPath(value) {
   return value.replace(/\\/g, "/");
 }
 
+function countIndentation(value) {
+  const match = value.match(/^(\s*)/);
+  return match ? match[1].length : 0;
+}
+
+function stripWrappingQuotes(value) {
+  return value.replace(/^['"]|['"]$/g, "");
+}
+
+function parseInlineList(value) {
+  const trimmed = value.trim();
+  if (!trimmed.startsWith("[") || !trimmed.endsWith("]")) {
+    return null;
+  }
+
+  return trimmed
+    .slice(1, -1)
+    .split(",")
+    .map((item) => stripWrappingQuotes(item.trim()))
+    .filter(Boolean);
+}
+
+function parseScalarValue(rawValue) {
+  const trimmed = rawValue.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  const inlineList = parseInlineList(trimmed);
+  if (inlineList) {
+    return inlineList;
+  }
+
+  return stripWrappingQuotes(trimmed);
+}
+
+function toStringArray(value) {
+  if (Array.isArray(value)) {
+    return value
+      .flatMap((item) => toStringArray(item))
+      .filter(Boolean);
+  }
+
+  if (typeof value !== "string") {
+    return [];
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return [];
+  }
+
+  if (trimmed.includes("\n")) {
+    return trimmed
+      .split(/\r?\n/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  if (trimmed.includes(",")) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [trimmed];
+}
+
 function tokenize(value) {
   return value
     .toLowerCase()
@@ -259,6 +328,125 @@ function parseFrontmatter(markdown) {
   };
 }
 
+function parseFrontmatterEnhanced(markdown) {
+  const frontmatterMatch = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  if (!frontmatterMatch) {
+    return { data: {}, body: markdown };
+  }
+
+  const lines = frontmatterMatch[1].split(/\r?\n/);
+  const isBlankLine = (line) => line.trim().length === 0;
+  const nextMeaningfulIndex = (startIndex) => {
+    let index = startIndex;
+    while (index < lines.length && isBlankLine(lines[index])) {
+      index += 1;
+    }
+    return index;
+  };
+
+  function parseList(startIndex, baseIndent) {
+    const value = [];
+    let index = startIndex;
+
+    while (index < lines.length) {
+      const line = lines[index];
+      if (isBlankLine(line)) {
+        index += 1;
+        continue;
+      }
+
+      const indent = countIndentation(line);
+      const trimmed = line.trim();
+      if (indent < baseIndent || !trimmed.startsWith("- ")) {
+        break;
+      }
+
+      value.push(parseScalarValue(trimmed.slice(2)));
+      index += 1;
+    }
+
+    return { value, index };
+  }
+
+  function parseObject(startIndex, baseIndent) {
+    const value = {};
+    let index = startIndex;
+
+    while (index < lines.length) {
+      const line = lines[index];
+      if (isBlankLine(line)) {
+        index += 1;
+        continue;
+      }
+
+      const indent = countIndentation(line);
+      if (indent < baseIndent) {
+        break;
+      }
+
+      if (indent > baseIndent) {
+        index += 1;
+        continue;
+      }
+
+      const trimmed = line.trim();
+      if (trimmed.startsWith("- ")) {
+        break;
+      }
+
+      const separatorIndex = trimmed.indexOf(":");
+      if (separatorIndex === -1) {
+        index += 1;
+        continue;
+      }
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      const rawValue = trimmed.slice(separatorIndex + 1).trim();
+
+      if (rawValue.length > 0) {
+        value[key] = parseScalarValue(rawValue);
+        index += 1;
+        continue;
+      }
+
+      const childIndex = nextMeaningfulIndex(index + 1);
+      if (childIndex >= lines.length) {
+        value[key] = "";
+        index = childIndex;
+        continue;
+      }
+
+      const childLine = lines[childIndex];
+      const childIndent = countIndentation(childLine);
+      const childTrimmed = childLine.trim();
+
+      if (childIndent <= indent) {
+        value[key] = "";
+        index = childIndex;
+        continue;
+      }
+
+      if (childTrimmed.startsWith("- ")) {
+        const parsedList = parseList(childIndex, childIndent);
+        value[key] = parsedList.value;
+        index = parsedList.index;
+        continue;
+      }
+
+      const parsedObject = parseObject(childIndex, childIndent);
+      value[key] = parsedObject.value;
+      index = parsedObject.index;
+    }
+
+    return { value, index };
+  }
+
+  return {
+    data: parseObject(0, 0).value,
+    body: markdown.slice(frontmatterMatch[0].length),
+  };
+}
+
 function firstDefinedString(...values) {
   for (const value of values) {
     if (typeof value === "string") {
@@ -286,92 +474,424 @@ function extractDescription(frontmatterDescription, body) {
   return paragraphs[0] ?? "No description available.";
 }
 
+function summarizeText(value, maxLength) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) {
+    return normalized;
+  }
+
+  const sentences = normalized.split(/(?<=[.!?])\s+/);
+  let summary = "";
+
+  for (const sentence of sentences) {
+    const candidate = summary ? `${summary} ${sentence}` : sentence;
+    if (candidate.length > maxLength) {
+      break;
+    }
+    summary = candidate;
+  }
+
+  if (summary) {
+    return summary;
+  }
+
+  const truncated = normalized.slice(0, maxLength + 1);
+  const boundary = Math.max(truncated.lastIndexOf(". "), truncated.lastIndexOf(", "), truncated.lastIndexOf(" "));
+  const safeCutoff = boundary > Math.floor(maxLength * 0.6) ? boundary : maxLength;
+  return `${normalized.slice(0, safeCutoff).trim()}...`;
+}
+
 function normalizeDisplayDescription(shortDescription, fullDescription) {
-  // Priority: use shortDescription if present, otherwise truncate full description
   if (shortDescription && shortDescription.trim().length > 0) {
     return shortDescription.trim();
   }
 
-  // Truncate full description to 300 characters
-  const maxLength = 300;
-  if (fullDescription.length > maxLength) {
-    return fullDescription.slice(0, maxLength) + "...";
-  }
-
-  return fullDescription;
+  return summarizeText(fullDescription, 300);
 }
 
-function extractTriggerPhrases(description, name) {
-  const phrases = [];
+function collectBodySectionBlocks(body, headingNames) {
+  const lines = body.split(/\r?\n/);
+  const sections = [];
+  let collecting = false;
+  let currentLevel = 0;
+  let buffer = [];
 
-  // Step 1: Look for explicit "Use when..." clauses first
-  const useWhenPatterns = [
-    /use when (.+?)(?:\.|$)/i,
-    /use this when (.+?)(?:\.|$)/i,
-    /use this skill when (.+?)(?:\.|$)/i,
-    /this skill should be used when (.+?)(?:\.|$)/i,
-    /should be used when (.+?)(?:\.|$)/i,
-  ];
-
-  for (const pattern of useWhenPatterns) {
-    const match = description.match(pattern);
-    if (match) {
-      const clause = match[1]
-        .replace(/^the user\s+/i, "")
-        .replace(/^to\s+/i, "")
-        .replace(/["']/g, "")
-        .trim();
-
-      if (clause.length >= 3) {
-        phrases.push(clause);
-        break; // Only take the first "Use when..." clause
-      }
+  const flush = () => {
+    const content = buffer.join("\n").trim();
+    if (content) {
+      sections.push(content);
     }
-  }
+    buffer = [];
+  };
 
-  // Step 2: Apply sentence-level extraction for additional triggers
-  const patterns = [
-    /trigger when (.+?)(?:\.|$)/i,
-    /when the user asks to (.+?)(?:\.|$)/i,
-    /when the user asks for (.+?)(?:\.|$)/i,
-  ];
+  for (const line of lines) {
+    const headingMatch = line.match(/^(#{1,6})\s+(.+?)\s*$/);
+    if (headingMatch) {
+      const level = headingMatch[1].length;
+      const headingText = headingMatch[2].trim().toLowerCase();
+      if (collecting && level <= currentLevel) {
+        flush();
+        collecting = false;
+      }
 
-  for (const pattern of patterns) {
-    const match = description.match(pattern);
-    if (!match) {
+      if (headingNames.has(headingText)) {
+        collecting = true;
+        currentLevel = level;
+      }
+
       continue;
     }
 
-    for (const part of match[1].split(/,| or | and /i)) {
-      const cleaned = part
-        .replace(/^the user asks to\s+/i, "")
-        .replace(/^the user asks for\s+/i, "")
-        .replace(/^the user\s+/i, "")
-        .replace(/^to\s+/i, "")
-        .replace(/["']/g, "")
-        .trim();
+    if (collecting) {
+      buffer.push(line);
+    }
+  }
 
-      if (cleaned.length >= 3 && !phrases.includes(cleaned)) {
-        phrases.push(cleaned);
+  if (collecting) {
+    flush();
+  }
+
+  return sections;
+}
+
+const triggerPolicyMarkers = /^(?:\*\*)?(?:always|recommended|optional|skip)(?:\*\*)?\s*(?::|-|for)?\s*/i;
+const leadingIntentPattern = /^(?:(?:generate|create|build|write|rewrite|improve|edit|review|critique|evaluate|find|implement|maintain|install|develop|make|check|audit|update|polish|refresh|scale|iterate|design|brainstorm|manage|configure|describe|discover|explore|give feedback on|help(?:\s+me)?(?:\s+to)?)\b(?:\s*,\s*|\s+or\s+|\s+and\s+|\s+))+?/i;
+const triggerLabelMatchers = [
+  { pattern: /\b(?:existing marketing copy|existing copy|copy feedback|proofread|content audit|copy sweep|polish this|tighten this up|refresh outdated content|make this better)\b/i, label: "Copy editing" },
+  { pattern: /\b(?:marketing copy|landing page|homepage|pricing page|feature page|product page|hero section|value proposition|tagline|cta copy|website text)\b/i, label: "Marketing copy" },
+  { pattern: /\b(?:ad creative|ad copy|rsa headlines|bulk ad copy|creative testing|ad variations)\b/i, label: "Ad creative" },
+  { pattern: /\b(?:automation recommendations?|automation recommender)\b/i, label: "Automation recommendations" },
+  { pattern: /\bclaude\.md\b|\bproject memory\b/i, label: "CLAUDE.md maintenance" },
+  { pattern: /\b(?:payment processing|billing|checkout|subscriptions?|stripe)\b/i, label: "Payment processing" },
+  { pattern: /\bcomponent librar(?:y|ies)\b/i, label: "Component libraries" },
+  { pattern: /\bdesign system\b/i, label: "Design systems" },
+  { pattern: /\b(?:web components|frontend|user interface|ui)\b/i, label: "Frontend UI" },
+  { pattern: /\b(?:brainstorm|creative work|design before implementation)\b/i, label: "Design planning" },
+  { pattern: /\b(?:find skills|looking for functionality)\b/i, label: "Skill discovery" },
+  { pattern: /\b(?:figma design|implement design|component specs|build figma)\b/i, label: "Figma implementation" },
+  { pattern: /\b(?:image generation|illustrations?|mockups?|sprites?|textures?)\b/i, label: "Image generation" },
+  { pattern: /\b(?:openai docs|official documentation|gpt-5\.4)\b/i, label: "OpenAI docs" },
+  { pattern: /\b(?:playground|explorer|interactive tool)\b/i, label: "Playgrounds" },
+  { pattern: /\bplugin settings\b/i, label: "Plugin settings" },
+  { pattern: /\b(?:plugin creator|plugin structure|plugin directories|scaffold plugin)\b/i, label: "Plugin development" },
+  { pattern: /\b(?:create or update a skill|skill creator|skill development|skill authoring)\b/i, label: "Skill authoring" },
+  { pattern: /\b(?:install curated skills|install skills|skill installer)\b/i, label: "Skill installation" },
+  { pattern: /\bmcp\b/i, label: "MCP integration" },
+  { pattern: /\bagent development\b/i, label: "Agent development" },
+  { pattern: /\bhook development\b/i, label: "Hook development" },
+  { pattern: /\bcommand development\b/i, label: "Command development" },
+  { pattern: /\b(?:review|critique|feedback)\b/i, label: "Critique" },
+];
+
+function normalizeTriggerPhrase(value) {
+  const withoutExamples = value
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\s+[—-]\s+[^—-]+?\s+[—-]\s+/g, " ")
+    .replace(/\s[-–—]\s.*$/g, "")
+    .replace(/[`"']/g, "")
+    .replace(/\b(?:also use when|use this whenever)\b.*$/i, "")
+    .replace(/\bfor any\b.*$/i, "")
+    .replace(/\bfor [^.]+ platform\b.*$/i, "")
+    .replace(/\bfor campaign strategy\b.*$/i, "")
+    .replace(/\bfor landing page copy\b.*$/i, "")
+    .replace(/^(?:use this skill|use this|use)\s+(?:when|whenever|before)\s+/i, "")
+    .replace(/^the user mentions\s+/i, "")
+    .replace(/^mentions\s+/i, "")
+    .replace(/^when the user\s+(?:asks to|asks for|wants to|needs to)\s+/i, "")
+    .replace(/^the user\s+(?:asks to|asks for|wants to|needs to)\s+/i, "")
+    .replace(/^to\s+/i, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[,:;.\-–—]+|[,:;.\-–—]+$/g, "");
+
+  if (!withoutExamples) {
+    return "";
+  }
+
+  const normalizedValue =
+    withoutExamples.includes(",") && !/\b(?:or|and)\b/i.test(withoutExamples)
+      ? withoutExamples.split(",")[0].trim()
+      : withoutExamples;
+
+  return summarizeText(normalizedValue, 48).replace(/\.\.\.$/, "").trim();
+}
+
+function deriveTriggersFromDescription(description) {
+  const sentences = description
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  const patterns = [
+    /use this before (.+)/i,
+    /use (?:this skill )?when (.+)/i,
+    /use this whenever (.+)/i,
+    /when the user (?:asks to|asks for|wants to|needs to) (.+)/i,
+    /this skill should be used when (.+)/i,
+    /should be used when (.+)/i,
+  ];
+
+  const matches = [];
+  for (const sentence of sentences) {
+    for (const pattern of patterns) {
+      const match = sentence.match(pattern);
+      if (match?.[1]) {
+        matches.push(match[1]);
+        break;
       }
     }
   }
 
-  // Step 3: Add skill name as fallback
-  const nameLabel = titleCase(name.replace(/[-_]/g, " "));
-  if (!phrases.includes(nameLabel)) {
-    phrases.push(nameLabel);
-  }
+  return matches;
+}
 
-  // Step 4: Deduplicate and cap phrase length to fit trigger chip (40 chars max)
-  const deduped = Array.from(new Set(phrases));
-  const capped = deduped.map(phrase =>
-    phrase.length > 40
-      ? phrase.slice(0, phrase.lastIndexOf(" ", 40)) || phrase.slice(0, 40)
-      : phrase
+function extractTriggerPhrases(frontmatter, body, description, name) {
+  const structuredTriggers = [
+    ...toStringArray(frontmatter.triggers),
+    ...toStringArray(frontmatter.trigger),
+    ...toStringArray(frontmatter.metadata?.triggers),
+  ];
+
+  const bodySections = collectBodySectionBlocks(
+    body,
+    new Set(["when to use", "use when", "trigger", "triggers", "best used for"])
   );
 
-  return capped.slice(0, 6);
+  const bodySectionTriggers = bodySections.flatMap((section) => {
+    const bullets = section
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith("- "))
+      .map((line) => line.slice(2).trim());
+
+    if (bullets.length > 0) {
+      return bullets;
+    }
+
+    return section
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.trim())
+      .filter(Boolean)
+      .slice(0, 2);
+  });
+
+  const candidates = [
+    ...structuredTriggers,
+    ...bodySectionTriggers,
+    ...deriveTriggersFromDescription(description),
+    titleCase(name.replace(/[-_]/g, " ")),
+  ];
+
+  const seen = new Set();
+  const normalized = [];
+
+  for (const candidate of candidates) {
+    const phrase = normalizeTriggerPhrase(candidate);
+    const compactPhrase =
+      phrase.includes(",") && !/\b(?:or|and)\b/i.test(phrase)
+        ? phrase.split(",")[0].trim()
+        : phrase;
+
+    if (compactPhrase.length < 3) {
+      continue;
+    }
+
+    const dedupeKey = normalizeSearchText(compactPhrase);
+    if (!dedupeKey || seen.has(dedupeKey)) {
+      continue;
+    }
+
+    seen.add(dedupeKey);
+    normalized.push(compactPhrase);
+  }
+
+  return normalized.slice(0, 4);
+}
+
+function extractQuotedExamples(description) {
+  const matches = Array.from(description.matchAll(/["']([^"']{3,40})["']/g));
+  return matches
+    .map((match) =>
+      (match[1] ?? "")
+        .replace(/\*\*/g, "")
+        .replace(/[`"]/g, "")
+        .replace(/[,:;.\-–—]+$/g, "")
+        .trim()
+    )
+    .filter((example) => {
+      const words = example.split(/\s+/).filter(Boolean);
+      return (
+        example.length >= 4 &&
+        example.length <= 28 &&
+        words.length >= 2 &&
+        words.length <= 4 &&
+        !/^(?:write|rewrite|edit|review|check|audit|update|improve|help|make|create|build|this|my)\b/i.test(example)
+      );
+    });
+}
+
+function deriveTriggerCandidatesFromDescription(description) {
+  const sentences = description
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  const patterns = [
+    /use this before (.+)/i,
+    /use (?:this skill )?when (.+)/i,
+    /use this whenever (.+)/i,
+    /when the user (?:asks to|asks for|wants to|needs to) (.+)/i,
+    /this skill should be used when (.+)/i,
+    /should be used when (.+)/i,
+  ];
+
+  const matches = [];
+  for (const sentence of sentences) {
+    for (const pattern of patterns) {
+      const match = sentence.match(pattern);
+      if (match?.[1]) {
+        matches.push(match[1]);
+        break;
+      }
+    }
+  }
+
+  return matches;
+}
+
+function normalizeTriggerCandidate(value) {
+  return value
+    .replace(/\*\*/g, "")
+    .replace(/[`"]/g, "")
+    .replace(triggerPolicyMarkers, "")
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\s+[â€”-]\s+[^â€”-]+?\s+[â€”-]\s+/g, " ")
+    .replace(/\s[-â€“â€”]\s.*$/g, "")
+    .replace(/\b(?:also use when|use this whenever)\b.*$/i, "")
+    .replace(/\bfor campaign strategy\b.*$/i, "")
+    .replace(/\bfor landing page copy\b.*$/i, "")
+    .replace(/\bfor email copy\b.*$/i, "")
+    .replace(/\bfor editing existing copy\b.*$/i, "")
+    .replace(/^(?:use this skill|use this|use)\s+(?:when|whenever|before)\s+/i, "")
+    .replace(/^the user says\s+/i, "")
+    .replace(/^the user mentions\s+/i, "")
+    .replace(/^mentions\s+/i, "")
+    .replace(/^when the user\s+(?:asks to|asks for|wants to|needs to)\s+/i, "")
+    .replace(/^the user\s+(?:asks to|asks for|wants to|needs to)\s+/i, "")
+    .replace(/^to\s+/i, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[,:;.\-â€“â€”]+|[,:;.\-â€“â€”]+$/g, "");
+}
+
+function labelizeTriggerCandidate(value, fallbackName) {
+  const normalized = normalizeTriggerCandidate(value);
+  if (!normalized) {
+    return null;
+  }
+
+  for (const matcher of triggerLabelMatchers) {
+    if (matcher.pattern.test(normalized)) {
+      return matcher.label;
+    }
+  }
+
+  const stripped = normalized
+    .replace(leadingIntentPattern, "")
+    .replace(/\b(?:for any|for all|whenever)\b.*$/i, "")
+    .replace(/\b(?:including|such as|like)\b.*$/i, "")
+    .replace(/^existing\s+/i, "")
+    .replace(/^new\s+/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (stripped.length >= 4) {
+    return titleCase(stripped);
+  }
+
+  return titleCase(fallbackName.replace(/[-_]/g, " "));
+}
+
+function addRankedTrigger(candidateMap, label, priority) {
+  if (!label) {
+    return;
+  }
+
+  const dedupeKey = normalizeSearchText(label);
+  if (!dedupeKey) {
+    return;
+  }
+
+  const existing = candidateMap.get(dedupeKey);
+  if (!existing || priority > existing.priority) {
+    candidateMap.set(dedupeKey, { label, priority });
+  }
+}
+
+function extractRefinedTriggerPhrases(frontmatter, body, description, name) {
+  const structuredTriggers = [
+    ...toStringArray(frontmatter.triggers),
+    ...toStringArray(frontmatter.trigger),
+    ...toStringArray(frontmatter.metadata?.triggers),
+  ];
+
+  const bodySections = collectBodySectionBlocks(
+    body,
+    new Set(["when to use", "use when", "trigger", "triggers", "best used for"])
+  );
+
+  const bodySectionTriggers = bodySections.flatMap((section) => {
+    const rawBulletLines = section
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith("- "))
+      .map((line) => line.replace(/^- /, "").trim());
+
+    const bullets = rawBulletLines
+      .filter((line) => !triggerPolicyMarkers.test(line));
+
+    if (bullets.length > 0) {
+      return bullets;
+    }
+
+    if (rawBulletLines.length > 0) {
+      return [];
+    }
+
+    return section
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.trim())
+      .filter((sentence) => !triggerPolicyMarkers.test(sentence))
+      .filter(Boolean)
+      .slice(0, 2);
+  });
+
+  const descriptionTriggers = deriveTriggerCandidatesFromDescription(description);
+  const quotedExamples = extractQuotedExamples(description);
+  const candidateMap = new Map();
+
+  for (const trigger of structuredTriggers) {
+    addRankedTrigger(candidateMap, labelizeTriggerCandidate(trigger, name), 100);
+  }
+
+  for (const trigger of bodySectionTriggers) {
+    addRankedTrigger(candidateMap, labelizeTriggerCandidate(trigger, name), 80);
+  }
+
+  for (const trigger of descriptionTriggers) {
+    addRankedTrigger(candidateMap, labelizeTriggerCandidate(trigger, name), 60);
+  }
+
+  for (const example of quotedExamples.slice(0, 1)) {
+    addRankedTrigger(candidateMap, titleCase(example), 40);
+  }
+
+  addRankedTrigger(candidateMap, titleCase(name.replace(/[-_]/g, " ")), 10);
+
+  return Array.from(candidateMap.values())
+    .sort((a, b) => b.priority - a.priority || a.label.localeCompare(b.label))
+    .slice(0, 4)
+    .map((entry) => entry.label);
 }
 
 function levenshtein(a, b) {
@@ -908,33 +1428,38 @@ async function collectSkillFiles(directory) {
 
 async function readSkill(filePath) {
   const markdown = await fs.readFile(filePath, "utf8");
-  const { data, body } = parseFrontmatter(markdown);
+  const { data, body } = parseFrontmatterEnhanced(markdown);
   const name = String(data.name ?? path.basename(path.dirname(filePath)));
   const fullDescription = extractDescription(String(data.description ?? ""), body);
 
-  // Extract new fields
   const metadata = data.metadata ?? {};
-  const tags = Array.isArray(metadata.tags) ? metadata.tags : [];
+  const tags = toStringArray(metadata.tags ?? data.tags);
   const shortDescription = metadata["short-description"] ?? metadata.shortDescription ?? null;
   const license = data.license ?? null;
   const compatibility = data.compatibility ?? null;
-  const allowedTools = data["allowed-tools"] ?? data.allowedTools ?? null;
-
-  // Use shortDescription if available, otherwise truncate fullDescription
+  const allowedTools = toStringArray(
+    data["allowed-tools"] ??
+    data.allowedTools ??
+    metadata["allowed-tools"] ??
+    metadata.allowedTools
+  );
   const description = normalizeDisplayDescription(shortDescription, fullDescription);
 
   const category = deriveCategory(filePath, name, description);
   const source = firstDefinedString(data.source, deriveSource(filePath));
+  const installedFrom = deriveSource(filePath);
   const sourceUrl = firstDefinedString(data.sourceUrl, data.source_url, data.url, data.homepage);
+  const triggers = extractRefinedTriggerPhrases(data, body, fullDescription, name);
 
   const skill = {
     id: `${slugify(category)}-${slugify(name)}-${slugify(path.relative(home, filePath))}`,
     name,
     category,
     description,
-    triggers: extractTriggerPhrases(fullDescription, name),
+    triggers,
     path: normalizeWindowsPath(filePath),
     source,
+    installedFrom,
     sourceUrl,
     conflictsWith: [],
   };
@@ -952,7 +1477,7 @@ async function readSkill(filePath) {
   if (compatibility) {
     skill.compatibility = compatibility;
   }
-  if (allowedTools) {
+  if (allowedTools.length > 0) {
     skill.allowedTools = allowedTools;
   }
 
