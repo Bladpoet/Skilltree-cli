@@ -1,5 +1,7 @@
 import splashLogo from "../../assets/splash-logo.png";
 import bgImage from "../../assets/claude-skill-tree-bg.png";
+import railDividerBrush from "../../assets/category-rail-divider-brush.svg";
+import loadingDotBrush from "../../assets/loading-dot-brush.svg";
 
 interface SplashScreenProps {
   contentVisible: boolean;
@@ -14,10 +16,8 @@ export function SplashScreen({ contentVisible }: SplashScreenProps) {
           50% { opacity: 1; }
         }
         .splash-dot {
-          width: 9px;
-          height: 7px;
-          border-radius: 50%;
-          background: linear-gradient(to bottom, rgb(255,255,255), rgb(136,73,0));
+          width: 14px;
+          height: 12px;
           animation: splashDotPulse 1.4s ease-in-out infinite;
         }
         .splash-dot:nth-child(2) { animation-delay: 0.2s; }
@@ -50,12 +50,14 @@ export function SplashScreen({ contentVisible }: SplashScreenProps) {
         <div style={{
           position: "absolute",
           top: "7.8%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "58.9%",
-          height: "1px",
-          background: "linear-gradient(to right, transparent, rgba(212,153,44,0.4) 20%, rgba(212,153,44,0.4) 80%, transparent)",
-        }} />
+          left: 48,
+          right: 48,
+          height: "6px",
+          overflow: "hidden",
+          pointerEvents: "none",
+        }}>
+          <img src={railDividerBrush} alt="" style={{ display: "block", height: "100%", width: "100%", objectFit: "fill", opacity: 0.6 }} draggable={false} />
+        </div>
 
         {/* Center content */}
         <div style={{
@@ -87,9 +89,9 @@ export function SplashScreen({ contentVisible }: SplashScreenProps) {
             Skill Tree
           </div>
           <div style={{ display: "flex", gap: 11, marginTop: 24 }}>
-            <div className="splash-dot" />
-            <div className="splash-dot" />
-            <div className="splash-dot" />
+            <img src={loadingDotBrush} alt="" className="splash-dot" draggable={false} />
+            <img src={loadingDotBrush} alt="" className="splash-dot" draggable={false} />
+            <img src={loadingDotBrush} alt="" className="splash-dot" draggable={false} />
           </div>
         </div>
 
@@ -112,12 +114,14 @@ export function SplashScreen({ contentVisible }: SplashScreenProps) {
         <div style={{
           position: "absolute",
           bottom: "7%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "93.3%",
-          height: "1px",
-          background: "linear-gradient(to right, transparent, rgba(212,153,44,0.4) 10%, rgba(212,153,44,0.4) 90%, transparent)",
-        }} />
+          left: 48,
+          right: 48,
+          height: "6px",
+          overflow: "hidden",
+          pointerEvents: "none",
+        }}>
+          <img src={railDividerBrush} alt="" style={{ display: "block", height: "100%", width: "100%", objectFit: "fill", opacity: 0.6 }} draggable={false} />
+        </div>
       </div>
     </>
   );
