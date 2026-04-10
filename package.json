@@ -6,9 +6,9 @@
   "author": "Bladpoet",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bladpoet/Skil-tree-codex.git"
+    "url": "https://github.com/Bladpoet/skilltree-cli.git"
   },
-  "homepage": "https://github.com/Bladpoet/Skil-tree-codex#readme",
+  "homepage": "https://github.com/Bladpoet/skilltree-cli#readme",
   "keywords": ["claude", "ai", "skills", "cli", "skill-tree", "claude-code", "codex", "cursor"],
   "type": "module",
   "bin": {
