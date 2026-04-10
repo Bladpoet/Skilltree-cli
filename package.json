@@ -1,6 +1,6 @@
 {
   "name": "skilltree-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Visual skill tree viewer for Claude Code and other AI tool skills installed on your machine.",
   "license": "MIT",
   "author": "Bladpoet",
@@ -9,7 +9,16 @@
     "url": "https://github.com/Bladpoet/skilltree-cli.git"
   },
   "homepage": "https://github.com/Bladpoet/skilltree-cli#readme",
-  "keywords": ["claude", "ai", "skills", "cli", "skill-tree", "claude-code", "codex", "cursor"],
+  "keywords": [
+    "claude",
+    "ai",
+    "skills",
+    "cli",
+    "skill-tree",
+    "claude-code",
+    "codex",
+    "cursor"
+  ],
   "type": "module",
   "bin": {
     "skilltree": "bin/cli.js"
