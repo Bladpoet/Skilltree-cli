@@ -134,8 +134,8 @@ export function DetailDrawerCategoryPill({ label }: TextProps) {
         style={{
           fontFamily: "'Albertus Nova', serif",
           fontSize: "12px",
-          fontWeight: 700,
-          color: "#0A0601",
+          fontWeight: 500,
+          color: "#533816",
           lineHeight: "16px",
           letterSpacing: "0.72px",
         }}

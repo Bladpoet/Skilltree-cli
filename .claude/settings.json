@@ -21,7 +21,9 @@
       "Bash(npx svgo:*)",
       "Read(//c/Users/USER/.claude/plans/**)",
       "Bash(grep -l \"v0.2.0\\\\|publish\" C:\\\\Users\\\\USER\\\\.claude\\\\plans/*.md)",
-      "Read(//c/Users/USER/.agents/skills/critique/**)"
+      "Read(//c/Users/USER/.agents/skills/critique/**)",
+      "Bash(git -C \"c:/Users/USER/Documents/Explorations/Claude skill tree \\(figma make\\)/Skill tree\" log --oneline -10)",
+      "Bash(git -C \"c:/Users/USER/Documents/Explorations/Claude skill tree \\(figma make\\)/Skill tree\" config --list --local)"
     ],
     "additionalDirectories": [
       "C:\\Users\\USER\\Downloads",

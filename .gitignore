@@ -2,3 +2,15 @@ node_modules/
 dist/
 .DS_Store
 public/skills.json
+
+# Internal planning docs
+HANDOFF.md
+PRD.md
+TECHNICAL-PRD.md
+FIGMA-MAKE-BUILD-PLAN-v2.4.md
+AGENTS.md
+agent.md
+
+# Environment files
+.env
+.env.*
