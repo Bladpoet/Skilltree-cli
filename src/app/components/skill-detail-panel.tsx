@@ -1,12 +1,12 @@
-import { SkillNode } from "./skill-node";
-import type { RelatedConflict, SkillRecord } from "../types/skills";
+import { useMemo, useState } from "react";
+
 import {
   DetailDrawerCopyIcon,
   DetailDrawerSectionHeading,
   DetailDrawerTriggerTag,
 } from "./detail-drawer-primitives";
-import { Globe } from "lucide-react";
-import { useMemo, useState } from "react";
+import { SkillNode } from "./skill-node";
+import type { RelatedConflict, SkillRecord } from "../types/skills";
 
 interface SkillDetailPanelProps {
   skill: SkillRecord;
@@ -14,18 +14,55 @@ interface SkillDetailPanelProps {
   onSelectConflict: (skillId: string) => void;
 }
 
-const DARK = "rgb(25,26,28)";
-
-interface SourceAffiliation {
-  label: string;
-  url: string;
-}
+const DARK = "#282521";
 
 function humanizeSegment(value: string) {
   return value
     .replace(/[-_]+/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
+
+function humanizeOrigin(value: string) {
+  const normalized = value.trim().toLowerCase();
+  const labels: Record<string, string> = {
+    "agents/skills": "Agents Skills",
+    "claude/skills": "Claude Skills",
+    "codex/system": "Codex System",
+    "codex/skills": "Codex Skills",
+    "cursor/skills": "Cursor Skills",
+    "github/skills": "GitHub Skills",
+    "opencode/skills": "OpenCode Skills",
+    "local": "Local",
+  };
+
+  return labels[normalized] ?? value.split("/").map(humanizeSegment).join(" / ");
+}
+
+function humanizeInstalledFrom(value: string | undefined, fallback: string) {
+  const normalized = (value || fallback).trim().toLowerCase();
+
+  if (normalized.startsWith("claude-plugin/")) {
+    return `Claude Plugin Cache (${humanizeSegment(normalized.split("/")[1] ?? "plugin")})`;
+  }
+
+  if (normalized.startsWith("claude-marketplace/")) {
+    return `Claude Marketplace (${humanizeSegment(normalized.split("/")[1] ?? "plugin")})`;
+  }
+
+  const labels: Record<string, string> = {
+    "agents/skills": "Agents Skills Directory",
+    "claude/skills": "Claude Skills Directory",
+    "codex/system": "Codex System Skills",
+    "codex/skills": "Codex Skills Directory",
+    "cursor/skills": "Cursor Skills Directory",
+    "github/skills": "Project GitHub Skills Directory",
+    "opencode/skills": "OpenCode Skills Directory",
+    "local": "Local Skill Directory",
+  };
+
+  return labels[normalized] ?? humanizeOrigin(normalized);
+}
+
 
 function buildBreadcrumbs(skill: SkillRecord) {
   const normalizedPath = skill.path?.trim();
@@ -45,26 +82,10 @@ function buildBreadcrumbs(skill: SkillRecord) {
   return isWindowsDrive ? [normalized.slice(0, 2), ...head, "...", ...tail] : [...head, "...", ...tail];
 }
 
-function resolveSourceAffiliation(skill: SkillRecord): SourceAffiliation {
-  const haystack = `${skill.source} ${skill.sourceUrl ?? ""} ${skill.path}`.toLowerCase();
-
-  if (haystack.includes("openai")) {
-    return { label: "OpenAI", url: "https://openai.com" };
-  }
-
-  if (haystack.includes("anthropic") || haystack.includes("local/manual-install") || haystack.includes("/.claude/")) {
-    return { label: "Anthropic", url: "https://www.anthropic.com" };
-  }
-
-  if (haystack.includes("github") || skill.source.includes("/") || skill.sourceUrl) {
-    return { label: "GitHub", url: "https://github.com" };
-  }
-
-  return { label: "GitHub", url: "https://github.com" };
-}
 
 function Breadcrumbs({ skill }: { skill: SkillRecord }) {
   const [copied, setCopied] = useState(false);
+  const [copyHovered, setCopyHovered] = useState(false);
   const breadcrumbs = buildBreadcrumbs(skill);
   const pathToCopy = useMemo(() => {
     const normalized = skill.path?.trim();
@@ -82,10 +103,10 @@ function Breadcrumbs({ skill }: { skill: SkillRecord }) {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-4">
       <div
         className="min-w-0 truncate"
-        style={{ fontFamily: "'Marcellus', serif", fontSize: "12px", lineHeight: "1.33", color: "rgb(109,115,126)" }}
+        style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "12px", lineHeight: "16px", color: "#7E766D" }}
         title={pathToCopy}
       >
         {breadcrumbs.join("/")}
@@ -93,11 +114,14 @@ function Breadcrumbs({ skill }: { skill: SkillRecord }) {
       <button
         type="button"
         onClick={handleCopy}
-        className="relative inline-flex h-4 w-4 shrink-0 items-center justify-center opacity-90 transition-opacity hover:opacity-100"
+        onMouseEnter={() => setCopyHovered(true)}
+        onMouseLeave={() => setCopyHovered(false)}
+        className="relative inline-flex h-4 w-4 shrink-0 items-center justify-center overflow-visible opacity-90 transition-opacity hover:opacity-100"
+        style={{ cursor: "pointer" }}
         title={copied ? "Copied" : "Copy path"}
         aria-label={copied ? "Path copied" : "Copy path"}
       >
-        <DetailDrawerCopyIcon />
+        <DetailDrawerCopyIcon isHovered={copyHovered} copied={copied} />
       </button>
     </div>
   );
@@ -135,28 +159,24 @@ function OverlapNodes({
 }
 
 export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: SkillDetailPanelProps) {
-  const dependents = skill.dependents ?? [];
-  const sourceAffiliation = resolveSourceAffiliation(skill);
+  const installedFrom = humanizeInstalledFrom(skill.installedFrom, skill.source);
 
   return (
     <div className="flex flex-col gap-6" style={{ color: DARK }}>
-      {/* Skill name + breadcrumbs */}
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-4">
         <h2
           className="break-words"
-          style={{ fontFamily: "'Marcellus SC', serif", fontSize: "28px", lineHeight: "1.1", color: DARK }}
+          style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 400, fontSize: "20px", lineHeight: "1.2", color: DARK }}
         >
           {humanizeSegment(skill.name)}
         </h2>
         <Breadcrumbs skill={skill} />
       </div>
 
-      {/* Description */}
-      <p style={{ fontFamily: "'Marcellus', serif", fontSize: "16px", lineHeight: "1.6", color: DARK }}>
-        {skill.description}
+      <p style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 100, fontSize: "15px", lineHeight: "1.6", color: DARK }}>
+        {skill.fullDescription ?? skill.description}
       </p>
 
-      {/* Triggers */}
       <div className="flex flex-col gap-3">
         <DetailDrawerSectionHeading label="Triggers" />
         <div className="flex flex-col gap-3">
@@ -164,47 +184,29 @@ export function SkillDetailPanel({ skill, relatedConflicts, onSelectConflict }: 
             <DetailDrawerTriggerTag key={trigger} label={trigger} />
           ))}
           {skill.triggers.length === 0 && (
-            <span style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", color: "rgb(109,115,126)" }}>
+            <span style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", color: "#7E766D" }}>
               None defined
             </span>
           )}
         </div>
       </div>
 
-      {/* Dependents */}
-      {dependents.length > 0 && (
+      <div className="flex flex-col gap-3">
+        <DetailDrawerSectionHeading label="Origin" />
+        <p style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", lineHeight: "1.5", color: DARK }}>
+          {installedFrom}
+        </p>
+      </div>
+
+      {skill.compatibility && (
         <div className="flex flex-col gap-3">
-          <DetailDrawerSectionHeading label="Dependents" />
-          <div className="flex flex-col gap-1">
-            {dependents.map((dep) => (
-              <div
-                key={dep}
-                style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.5", color: DARK }}
-              >
-                <span style={{ color: "rgb(109,115,126)", marginRight: 6 }}>↳</span>
-                {humanizeSegment(dep)}
-              </div>
-            ))}
-          </div>
+          <DetailDrawerSectionHeading label="Compatibility" />
+          <p style={{ fontFamily: "'Albertus Nova', serif", fontWeight: 300, fontSize: "14px", lineHeight: "1.5", color: DARK }}>
+            {skill.compatibility}
+          </p>
         </div>
       )}
 
-      {/* Source */}
-      <div className="flex flex-col gap-3">
-        <DetailDrawerSectionHeading label="Source" />
-        <a
-          href={sourceAffiliation.url}
-          target="_blank"
-          rel="noreferrer"
-          className="flex w-fit items-center gap-2 transition-opacity hover:opacity-80"
-          style={{ fontFamily: "'Marcellus', serif", fontSize: "14px", lineHeight: "1.4", color: DARK }}
-        >
-          <Globe size={16} className="shrink-0" style={{ color: "rgb(109,115,126)" }} />
-          <span className="underline underline-offset-2">{sourceAffiliation.label}</span>
-        </a>
-      </div>
-
-      {/* Overlaps */}
       {relatedConflicts.length > 0 && (
         <div className="flex flex-col gap-3">
           <DetailDrawerSectionHeading label="Overlaps" />

@@ -1,29 +1,89 @@
 import { promises as fs } from "node:fs";
 import { watch as fsWatch } from "node:fs";
+import { fileURLToPath } from "node:url";
 import os from "node:os";
 import path from "node:path";
 
+const __scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const cwd = process.cwd();
 const home = os.homedir();
-const outputPath = path.join(cwd, "public", "skills.json");
-const iconLibraryRoot = path.join(cwd, "claude-skills-icons");
+
+const outputArgIndex = process.argv.indexOf("--output");
+const outputPath = outputArgIndex !== -1
+  ? process.argv[outputArgIndex + 1]
+  : path.join(cwd, "public", "skills.json");
+
+const iconsDirArgIndex = process.argv.indexOf("--icons-dir");
+const generatedIconsDir = iconsDirArgIndex !== -1
+  ? process.argv[iconsDirArgIndex + 1]
+  : path.join(cwd, "public", "skill-icons");
+
+const iconLibraryRoot = path.join(__scriptDir, "claude-skills-icons");
 const iconLibraryIndexPath = path.join(iconLibraryRoot, "index.json");
 const iconLibraryIconsDir = path.join(iconLibraryRoot, "icons");
-const generatedIconsDir = path.join(cwd, "public", "skill-icons");
 const shouldWatch = process.argv.includes("--watch");
 
-const scanRoots = [
-  path.join(home, ".codex", "skills"),
+// Helper: Build list of plugin cache paths from installed_plugins.json
+async function getPluginCachePaths() {
+  const pluginsPaths = [];
+  const installedPluginsPath = path.join(home, ".claude", "plugins", "installed_plugins.json");
+
+  if (await pathExists(installedPluginsPath)) {
+    try {
+      const content = await fs.readFile(installedPluginsPath, "utf8");
+      const installed = JSON.parse(content);
+
+      if (installed.plugins && Array.isArray(installed.plugins)) {
+        for (const plugin of installed.plugins) {
+          if (plugin.marketplace && plugin.name && plugin.version) {
+            const cachePath = path.join(
+              home,
+              ".claude",
+              "plugins",
+              "cache",
+              plugin.marketplace,
+              plugin.name,
+              plugin.version,
+              "skills"
+            );
+            pluginsPaths.push(cachePath);
+          }
+        }
+      }
+    } catch (error) {
+      // Silently skip if file doesn't parse or doesn't exist
+    }
+  }
+
+  return pluginsPaths;
+}
+
+// Base scan roots (these are checked first; non-existent paths silently skipped)
+const baseScanRoots = [
+  // Global/user-level
+  path.join(home, ".agents", "skills"),
   path.join(home, ".claude", "skills"),
+  path.join(home, ".cursor", "skills"),
+  path.join(home, ".config", "opencode", "skills"),
+  path.join(home, ".codex", "skills"),
+  // Plugin marketplace (legacy path, still used by marketplace plugins)
   path.join(home, ".claude", "plugins", "marketplaces"),
+  // Project-level (relative to cwd)
+  path.join(cwd, ".agents", "skills"),
+  path.join(cwd, ".claude", "skills"),
+  path.join(cwd, ".cursor", "skills"),
+  path.join(cwd, ".opencode", "skills"),
+  path.join(cwd, ".github", "skills"),
 ];
+
+// Plugin cache paths are added dynamically via getPluginCachePaths()
+let scanRoots = baseScanRoots;
 
 const ignoredDirectoryNames = new Set([
   ".git",
   "node_modules",
   "dist",
   "build",
-  "cache",
   "backups",
 ]);
 
@@ -98,6 +158,75 @@ function normalizeWindowsPath(value) {
   return value.replace(/\\/g, "/");
 }
 
+function countIndentation(value) {
+  const match = value.match(/^(\s*)/);
+  return match ? match[1].length : 0;
+}
+
+function stripWrappingQuotes(value) {
+  return value.replace(/^['"]|['"]$/g, "");
+}
+
+function parseInlineList(value) {
+  const trimmed = value.trim();
+  if (!trimmed.startsWith("[") || !trimmed.endsWith("]")) {
+    return null;
+  }
+
+  return trimmed
+    .slice(1, -1)
+    .split(",")
+    .map((item) => stripWrappingQuotes(item.trim()))
+    .filter(Boolean);
+}
+
+function parseScalarValue(rawValue) {
+  const trimmed = rawValue.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  const inlineList = parseInlineList(trimmed);
+  if (inlineList) {
+    return inlineList;
+  }
+
+  return stripWrappingQuotes(trimmed);
+}
+
+function toStringArray(value) {
+  if (Array.isArray(value)) {
+    return value
+      .flatMap((item) => toStringArray(item))
+      .filter(Boolean);
+  }
+
+  if (typeof value !== "string") {
+    return [];
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return [];
+  }
+
+  if (trimmed.includes("\n")) {
+    return trimmed
+      .split(/\r?\n/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  if (trimmed.includes(",")) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [trimmed];
+}
+
 function tokenize(value) {
   return value
     .toLowerCase()
@@ -135,22 +264,200 @@ function parseFrontmatter(markdown) {
   }
 
   const data = {};
+  const lines = frontmatterMatch[1].split(/\r?\n/);
+  let i = 0;
 
-  for (const line of frontmatterMatch[1].split(/\r?\n/)) {
+  while (i < lines.length) {
+    const line = lines[i];
     const separatorIndex = line.indexOf(":");
+
     if (separatorIndex === -1) {
+      i++;
       continue;
     }
 
     const key = line.slice(0, separatorIndex).trim();
     const rawValue = line.slice(separatorIndex + 1).trim();
-    data[key] = rawValue.replace(/^['"]|['"]$/g, "");
+
+    // Check if this is a nested block (e.g., "metadata:")
+    if (rawValue === "") {
+      const nested = {};
+      i++;
+
+      // Read indented sub-keys
+      while (i < lines.length) {
+        const nextLine = lines[i];
+        // Check if line starts with whitespace (indented)
+        if (nextLine.match(/^\s+/) && nextLine.trim() !== "") {
+          const subSeparatorIndex = nextLine.indexOf(":");
+          if (subSeparatorIndex !== -1) {
+            const subKey = nextLine.slice(nextLine.search(/\S/), subSeparatorIndex).trim();
+            const subRawValue = nextLine.slice(subSeparatorIndex + 1).trim();
+            const subValue = subRawValue.replace(/^['"]|['"]$/g, "");
+
+            // Handle tags specially — split on comma and trim
+            if (subKey === "tags") {
+              nested[subKey] = subValue
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag.length > 0);
+            } else {
+              nested[subKey] = subValue;
+            }
+
+            i++;
+            continue;
+          }
+        }
+
+        // Non-indented line or end of input — exit nested block
+        break;
+      }
+
+      data[key] = nested;
+    } else {
+      // Regular flat key:value
+      data[key] = rawValue.replace(/^['"]|['"]$/g, "");
+      i++;
+    }
   }
 
   return {
     data,
     body: markdown.slice(frontmatterMatch[0].length),
   };
+}
+
+function parseFrontmatterEnhanced(markdown) {
+  const frontmatterMatch = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  if (!frontmatterMatch) {
+    return { data: {}, body: markdown };
+  }
+
+  const lines = frontmatterMatch[1].split(/\r?\n/);
+  const isBlankLine = (line) => line.trim().length === 0;
+  const nextMeaningfulIndex = (startIndex) => {
+    let index = startIndex;
+    while (index < lines.length && isBlankLine(lines[index])) {
+      index += 1;
+    }
+    return index;
+  };
+
+  function parseList(startIndex, baseIndent) {
+    const value = [];
+    let index = startIndex;
+
+    while (index < lines.length) {
+      const line = lines[index];
+      if (isBlankLine(line)) {
+        index += 1;
+        continue;
+      }
+
+      const indent = countIndentation(line);
+      const trimmed = line.trim();
+      if (indent < baseIndent || !trimmed.startsWith("- ")) {
+        break;
+      }
+
+      value.push(parseScalarValue(trimmed.slice(2)));
+      index += 1;
+    }
+
+    return { value, index };
+  }
+
+  function parseObject(startIndex, baseIndent) {
+    const value = {};
+    let index = startIndex;
+
+    while (index < lines.length) {
+      const line = lines[index];
+      if (isBlankLine(line)) {
+        index += 1;
+        continue;
+      }
+
+      const indent = countIndentation(line);
+      if (indent < baseIndent) {
+        break;
+      }
+
+      if (indent > baseIndent) {
+        index += 1;
+        continue;
+      }
+
+      const trimmed = line.trim();
+      if (trimmed.startsWith("- ")) {
+        break;
+      }
+
+      const separatorIndex = trimmed.indexOf(":");
+      if (separatorIndex === -1) {
+        index += 1;
+        continue;
+      }
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      const rawValue = trimmed.slice(separatorIndex + 1).trim();
+
+      if (rawValue.length > 0) {
+        value[key] = parseScalarValue(rawValue);
+        index += 1;
+        continue;
+      }
+
+      const childIndex = nextMeaningfulIndex(index + 1);
+      if (childIndex >= lines.length) {
+        value[key] = "";
+        index = childIndex;
+        continue;
+      }
+
+      const childLine = lines[childIndex];
+      const childIndent = countIndentation(childLine);
+      const childTrimmed = childLine.trim();
+
+      if (childIndent <= indent) {
+        value[key] = "";
+        index = childIndex;
+        continue;
+      }
+
+      if (childTrimmed.startsWith("- ")) {
+        const parsedList = parseList(childIndex, childIndent);
+        value[key] = parsedList.value;
+        index = parsedList.index;
+        continue;
+      }
+
+      const parsedObject = parseObject(childIndex, childIndent);
+      value[key] = parsedObject.value;
+      index = parsedObject.index;
+    }
+
+    return { value, index };
+  }
+
+  return {
+    data: parseObject(0, 0).value,
+    body: markdown.slice(frontmatterMatch[0].length),
+  };
+}
+
+function firstDefinedString(...values) {
+  for (const value of values) {
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (trimmed.length > 0) {
+        return trimmed;
+      }
+    }
+  }
+
+  return null;
 }
 
 function extractDescription(frontmatterDescription, body) {
@@ -167,74 +474,540 @@ function extractDescription(frontmatterDescription, body) {
   return paragraphs[0] ?? "No description available.";
 }
 
-function extractTriggerPhrases(description, name) {
-  const phrases = [];
-  const patterns = [
-    /trigger when (.+?)(?:\.|$)/i,
-    /use this skill when (.+?)(?:\.|$)/i,
-    /should be used when (.+?)(?:\.|$)/i,
-    /when the user asks to (.+?)(?:\.|$)/i,
-    /when the user asks for (.+?)(?:\.|$)/i,
-  ];
+function summarizeText(value, maxLength) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) {
+    return normalized;
+  }
 
-  for (const pattern of patterns) {
-    const match = description.match(pattern);
-    if (!match) {
+  const sentences = normalized.split(/(?<=[.!?])\s+/);
+  let summary = "";
+
+  for (const sentence of sentences) {
+    const candidate = summary ? `${summary} ${sentence}` : sentence;
+    if (candidate.length > maxLength) {
+      break;
+    }
+    summary = candidate;
+  }
+
+  if (summary) {
+    return summary;
+  }
+
+  const truncated = normalized.slice(0, maxLength + 1);
+  const boundary = Math.max(truncated.lastIndexOf(". "), truncated.lastIndexOf(", "), truncated.lastIndexOf(" "));
+  const safeCutoff = boundary > Math.floor(maxLength * 0.6) ? boundary : maxLength;
+  return `${normalized.slice(0, safeCutoff).trim()}...`;
+}
+
+function normalizeDisplayDescription(shortDescription, fullDescription) {
+  if (shortDescription && shortDescription.trim().length > 0) {
+    return shortDescription.trim();
+  }
+
+  return summarizeText(fullDescription, 300);
+}
+
+function collectBodySectionBlocks(body, headingNames) {
+  const lines = body.split(/\r?\n/);
+  const sections = [];
+  let collecting = false;
+  let currentLevel = 0;
+  let buffer = [];
+
+  const flush = () => {
+    const content = buffer.join("\n").trim();
+    if (content) {
+      sections.push(content);
+    }
+    buffer = [];
+  };
+
+  for (const line of lines) {
+    const headingMatch = line.match(/^(#{1,6})\s+(.+?)\s*$/);
+    if (headingMatch) {
+      const level = headingMatch[1].length;
+      const headingText = headingMatch[2].trim().toLowerCase();
+      if (collecting && level <= currentLevel) {
+        flush();
+        collecting = false;
+      }
+
+      if (headingNames.has(headingText)) {
+        collecting = true;
+        currentLevel = level;
+      }
+
       continue;
     }
 
-    for (const part of match[1].split(/,| or | and /i)) {
-      const cleaned = part
-        .replace(/^the user asks to\s+/i, "")
-        .replace(/^the user asks for\s+/i, "")
-        .replace(/^the user\s+/i, "")
-        .replace(/^to\s+/i, "")
-        .replace(/["']/g, "")
-        .trim();
+    if (collecting) {
+      buffer.push(line);
+    }
+  }
 
-      if (cleaned.length >= 3) {
-        phrases.push(cleaned);
+  if (collecting) {
+    flush();
+  }
+
+  return sections;
+}
+
+const triggerPolicyMarkers = /^(?:\*\*)?(?:always|recommended|optional|skip)(?:\*\*)?\s*(?::|-|for)?\s*/i;
+const leadingIntentPattern = /^(?:(?:generate|create|build|write|rewrite|improve|edit|review|critique|evaluate|find|implement|maintain|install|develop|make|check|audit|update|polish|refresh|scale|iterate|design|brainstorm|manage|configure|describe|discover|explore|give feedback on|help(?:\s+me)?(?:\s+to)?)\b(?:\s*,\s*|\s+or\s+|\s+and\s+|\s+))+?/i;
+const triggerLabelMatchers = [
+  { pattern: /\b(?:existing marketing copy|existing copy|copy feedback|proofread|content audit|copy sweep|polish this|tighten this up|refresh outdated content|make this better)\b/i, label: "Copy editing" },
+  { pattern: /\b(?:marketing copy|landing page|homepage|pricing page|feature page|product page|hero section|value proposition|tagline|cta copy|website text)\b/i, label: "Marketing copy" },
+  { pattern: /\b(?:ad creative|ad copy|rsa headlines|bulk ad copy|creative testing|ad variations)\b/i, label: "Ad creative" },
+  { pattern: /\b(?:automation recommendations?|automation recommender)\b/i, label: "Automation recommendations" },
+  { pattern: /\bclaude\.md\b|\bproject memory\b/i, label: "CLAUDE.md maintenance" },
+  { pattern: /\b(?:payment processing|billing|checkout|subscriptions?|stripe)\b/i, label: "Payment processing" },
+  { pattern: /\bcomponent librar(?:y|ies)\b/i, label: "Component libraries" },
+  { pattern: /\bdesign system\b/i, label: "Design systems" },
+  { pattern: /\b(?:web components|frontend|user interface|ui)\b/i, label: "Frontend UI" },
+  { pattern: /\b(?:brainstorm|creative work|design before implementation)\b/i, label: "Design planning" },
+  { pattern: /\b(?:find skills|looking for functionality)\b/i, label: "Skill discovery" },
+  { pattern: /\b(?:figma design|implement design|component specs|build figma)\b/i, label: "Figma implementation" },
+  { pattern: /\b(?:image generation|illustrations?|mockups?|sprites?|textures?)\b/i, label: "Image generation" },
+  { pattern: /\b(?:openai docs|official documentation|gpt-5\.4)\b/i, label: "OpenAI docs" },
+  { pattern: /\b(?:playground|explorer|interactive tool)\b/i, label: "Playgrounds" },
+  { pattern: /\bplugin settings\b/i, label: "Plugin settings" },
+  { pattern: /\b(?:plugin creator|plugin structure|plugin directories|scaffold plugin)\b/i, label: "Plugin development" },
+  { pattern: /\b(?:create or update a skill|skill creator|skill development|skill authoring)\b/i, label: "Skill authoring" },
+  { pattern: /\b(?:install curated skills|install skills|skill installer)\b/i, label: "Skill installation" },
+  { pattern: /\bmcp\b/i, label: "MCP integration" },
+  { pattern: /\bagent development\b/i, label: "Agent development" },
+  { pattern: /\bhook development\b/i, label: "Hook development" },
+  { pattern: /\bcommand development\b/i, label: "Command development" },
+  { pattern: /\b(?:review|critique|feedback)\b/i, label: "Critique" },
+];
+
+function normalizeTriggerPhrase(value) {
+  const withoutExamples = value
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\s+[—-]\s+[^—-]+?\s+[—-]\s+/g, " ")
+    .replace(/\s[-–—]\s.*$/g, "")
+    .replace(/[`"']/g, "")
+    .replace(/\b(?:also use when|use this whenever)\b.*$/i, "")
+    .replace(/\bfor any\b.*$/i, "")
+    .replace(/\bfor [^.]+ platform\b.*$/i, "")
+    .replace(/\bfor campaign strategy\b.*$/i, "")
+    .replace(/\bfor landing page copy\b.*$/i, "")
+    .replace(/^(?:use this skill|use this|use)\s+(?:when|whenever|before)\s+/i, "")
+    .replace(/^the user mentions\s+/i, "")
+    .replace(/^mentions\s+/i, "")
+    .replace(/^when the user\s+(?:asks to|asks for|wants to|needs to)\s+/i, "")
+    .replace(/^the user\s+(?:asks to|asks for|wants to|needs to)\s+/i, "")
+    .replace(/^to\s+/i, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[,:;.\-–—]+|[,:;.\-–—]+$/g, "");
+
+  if (!withoutExamples) {
+    return "";
+  }
+
+  const normalizedValue =
+    withoutExamples.includes(",") && !/\b(?:or|and)\b/i.test(withoutExamples)
+      ? withoutExamples.split(",")[0].trim()
+      : withoutExamples;
+
+  return summarizeText(normalizedValue, 48).replace(/\.\.\.$/, "").trim();
+}
+
+function deriveTriggersFromDescription(description) {
+  const sentences = description
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  const patterns = [
+    /use this before (.+)/i,
+    /use (?:this skill )?when (.+)/i,
+    /use this whenever (.+)/i,
+    /when the user (?:asks to|asks for|wants to|needs to) (.+)/i,
+    /this skill should be used when (.+)/i,
+    /should be used when (.+)/i,
+  ];
+
+  const matches = [];
+  for (const sentence of sentences) {
+    for (const pattern of patterns) {
+      const match = sentence.match(pattern);
+      if (match?.[1]) {
+        matches.push(match[1]);
+        break;
       }
     }
   }
 
-  const nameLabel = titleCase(name.replace(/[-_]/g, " "));
-  phrases.push(nameLabel);
-
-  return Array.from(new Set(phrases)).slice(0, 6);
+  return matches;
 }
+
+function extractTriggerPhrases(frontmatter, body, description, name) {
+  const structuredTriggers = [
+    ...toStringArray(frontmatter.triggers),
+    ...toStringArray(frontmatter.trigger),
+    ...toStringArray(frontmatter.metadata?.triggers),
+  ];
+
+  const bodySections = collectBodySectionBlocks(
+    body,
+    new Set(["when to use", "use when", "trigger", "triggers", "best used for"])
+  );
+
+  const bodySectionTriggers = bodySections.flatMap((section) => {
+    const bullets = section
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith("- "))
+      .map((line) => line.slice(2).trim());
+
+    if (bullets.length > 0) {
+      return bullets;
+    }
+
+    return section
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.trim())
+      .filter(Boolean)
+      .slice(0, 2);
+  });
+
+  const candidates = [
+    ...structuredTriggers,
+    ...bodySectionTriggers,
+    ...deriveTriggersFromDescription(description),
+    titleCase(name.replace(/[-_]/g, " ")),
+  ];
+
+  const seen = new Set();
+  const normalized = [];
+
+  for (const candidate of candidates) {
+    const phrase = normalizeTriggerPhrase(candidate);
+    const compactPhrase =
+      phrase.includes(",") && !/\b(?:or|and)\b/i.test(phrase)
+        ? phrase.split(",")[0].trim()
+        : phrase;
+
+    if (compactPhrase.length < 3) {
+      continue;
+    }
+
+    const dedupeKey = normalizeSearchText(compactPhrase);
+    if (!dedupeKey || seen.has(dedupeKey)) {
+      continue;
+    }
+
+    seen.add(dedupeKey);
+    normalized.push(compactPhrase);
+  }
+
+  return normalized.slice(0, 4);
+}
+
+function extractQuotedExamples(description) {
+  const matches = Array.from(description.matchAll(/["']([^"']{3,40})["']/g));
+  return matches
+    .map((match) =>
+      (match[1] ?? "")
+        .replace(/\*\*/g, "")
+        .replace(/[`"]/g, "")
+        .replace(/[,:;.\-–—]+$/g, "")
+        .trim()
+    )
+    .filter((example) => {
+      const words = example.split(/\s+/).filter(Boolean);
+      return (
+        example.length >= 4 &&
+        example.length <= 28 &&
+        words.length >= 2 &&
+        words.length <= 4 &&
+        !/^(?:write|rewrite|edit|review|check|audit|update|improve|help|make|create|build|this|my)\b/i.test(example)
+      );
+    });
+}
+
+function deriveTriggerCandidatesFromDescription(description) {
+  const sentences = description
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  const patterns = [
+    /use this before (.+)/i,
+    /use (?:this skill )?when (.+)/i,
+    /use this whenever (.+)/i,
+    /when the user (?:asks to|asks for|wants to|needs to) (.+)/i,
+    /this skill should be used when (.+)/i,
+    /should be used when (.+)/i,
+    /(?:use this|this skill should be used|recommended|invoke|triggered|best used)\s+when\s+(?:the user (?:asks?|wants?|needs?) to\s+)?(.+)/i,
+  ];
+
+  const matches = [];
+  for (const sentence of sentences) {
+    for (const pattern of patterns) {
+      const match = sentence.match(pattern);
+      if (match?.[1]) {
+        // Split on commas and " or " to separate verb phrases
+        const phrases = match[1]
+          .split(/\s+or\s+|,\s*/)
+          .map(p => p.trim())
+          .filter(Boolean);
+        matches.push(...phrases);
+        break;
+      }
+    }
+  }
+
+  return matches;
+}
+
+function normalizeTriggerCandidate(value) {
+  return value
+    .replace(/\*\*/g, "")
+    .replace(/[`"]/g, "")
+    .replace(triggerPolicyMarkers, "")
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\s+[â€”-]\s+[^â€”-]+?\s+[â€”-]\s+/g, " ")
+    .replace(/\s[-â€“â€”]\s.*$/g, "")
+    .replace(/\b(?:also use when|use this whenever)\b.*$/i, "")
+    .replace(/\bfor campaign strategy\b.*$/i, "")
+    .replace(/\bfor landing page copy\b.*$/i, "")
+    .replace(/\bfor email copy\b.*$/i, "")
+    .replace(/\bfor editing existing copy\b.*$/i, "")
+    .replace(/^(?:use this skill|use this|use)\s+(?:when|whenever|before)\s+/i, "")
+    .replace(/^the user says\s+/i, "")
+    .replace(/^the user mentions\s+/i, "")
+    .replace(/^mentions\s+/i, "")
+    .replace(/^when the user\s+(?:asks to|asks for|wants to|needs to)\s+/i, "")
+    .replace(/^the user\s+(?:asks to|asks for|wants to|needs to)\s+/i, "")
+    .replace(/^to\s+/i, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[,:;.\-â€“â€”]+|[,:;.\-â€“â€”]+$/g, "");
+}
+
+function labelizeTriggerCandidate(value, fallbackName) {
+  const normalized = normalizeTriggerCandidate(value);
+  if (!normalized) {
+    return null;
+  }
+
+  for (const matcher of triggerLabelMatchers) {
+    if (matcher.pattern.test(normalized)) {
+      return matcher.label;
+    }
+  }
+
+  const stripped = normalized
+    .replace(leadingIntentPattern, "")
+    .replace(/\b(?:for any|for all|whenever)\b.*$/i, "")
+    .replace(/\b(?:including|such as|like)\b.*$/i, "")
+    .replace(/^existing\s+/i, "")
+    .replace(/^new\s+/i, "")
+    .replace(/^(?:a|an|the)\s+/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (stripped.length >= 4) {
+    return titleCase(stripped);
+  }
+
+  return titleCase(fallbackName.replace(/[-_]/g, " "));
+}
+
+function addRankedTrigger(candidateMap, label, priority) {
+  if (!label) {
+    return;
+  }
+
+  const dedupeKey = normalizeSearchText(label);
+  if (!dedupeKey) {
+    return;
+  }
+
+  const existing = candidateMap.get(dedupeKey);
+  if (!existing || priority > existing.priority) {
+    candidateMap.set(dedupeKey, { label, priority });
+  }
+}
+
+function extractRefinedTriggerPhrases(frontmatter, body, description, name) {
+  const structuredTriggers = [
+    ...toStringArray(frontmatter.triggers),
+    ...toStringArray(frontmatter.trigger),
+    ...toStringArray(frontmatter.metadata?.triggers),
+  ];
+
+  const bodySections = collectBodySectionBlocks(
+    body,
+    new Set(["when to use", "use when", "trigger", "triggers", "best used for"])
+  );
+
+  const bodySectionTriggers = bodySections.flatMap((section) => {
+    const rawBulletLines = section
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith("- "))
+      .map((line) => line.replace(/^- /, "").trim());
+
+    const bullets = rawBulletLines
+      .filter((line) => !triggerPolicyMarkers.test(line));
+
+    if (bullets.length > 0) {
+      return bullets;
+    }
+
+    if (rawBulletLines.length > 0) {
+      return [];
+    }
+
+    return section
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.trim())
+      .filter((sentence) => !triggerPolicyMarkers.test(sentence))
+      .filter(Boolean)
+      .slice(0, 2);
+  });
+
+  const descriptionTriggers = deriveTriggerCandidatesFromDescription(description);
+  const quotedExamples = extractQuotedExamples(description);
+  const candidateMap = new Map();
+
+  for (const trigger of structuredTriggers) {
+    addRankedTrigger(candidateMap, labelizeTriggerCandidate(trigger, name), 100);
+  }
+
+  for (const trigger of bodySectionTriggers) {
+    addRankedTrigger(candidateMap, labelizeTriggerCandidate(trigger, name), 80);
+  }
+
+  for (const trigger of descriptionTriggers) {
+    addRankedTrigger(candidateMap, labelizeTriggerCandidate(trigger, name), 60);
+  }
+
+  for (const example of quotedExamples.slice(0, 3)) {
+    addRankedTrigger(candidateMap, titleCase(example), 40);
+  }
+
+  addRankedTrigger(candidateMap, titleCase(name.replace(/[-_]/g, " ")), 10);
+
+  // Deduplicate by stem: keep shorter/cleaner form if one is prefix of another
+  const dedupedEntries = Array.from(candidateMap.values());
+  const toRemove = new Set();
+  for (let i = 0; i < dedupedEntries.length; i++) {
+    for (let j = i + 1; j < dedupedEntries.length; j++) {
+      const a = dedupedEntries[i].label.toLowerCase();
+      const b = dedupedEntries[j].label.toLowerCase();
+      if (a.includes(b) && a !== b) {
+        toRemove.add(i);
+      } else if (b.includes(a) && a !== b) {
+        toRemove.add(j);
+      }
+    }
+  }
+
+  return dedupedEntries
+    .filter((_, idx) => !toRemove.has(idx))
+    .sort((a, b) => b.priority - a.priority || a.label.localeCompare(b.label))
+    .slice(0, 4)
+    .map((entry) => entry.label);
+}
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, (_, i) =>
+    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
+const genericActionVerbs = new Set([
+  "create", "build", "generate", "make", "write", "add", "update", "edit",
+  "modify", "change", "manage", "handle", "process", "use", "help", "provide",
+  "enable", "support", "allow", "run", "execute", "perform", "set", "get",
+  "fetch", "load", "show", "display", "render", "list", "find", "search",
+  "check", "review", "analyze", "read", "open", "close", "start", "stop",
+  "move", "copy", "delete", "remove", "send", "receive", "save", "store",
+  "apply", "implement", "define", "configure", "setup", "install", "convert",
+  "format", "parse", "extract", "import", "export", "integrate", "connect",
+  "publish", "deploy",
+]);
 
 function deriveCategory(filePath, name, description) {
   const normalizedPath = normalizeWindowsPath(filePath).toLowerCase();
   const normalizedName = name.toLowerCase();
   const normalizedDescription = description.toLowerCase();
   const combined = `${normalizedPath} ${normalizedName} ${normalizedDescription}`;
-  const source = deriveSource(filePath);
 
+  // 10-category system with equal weights (2 for all)
   const categorySignals = {
-    Finance: ["stripe", "payment", "billing", "invoice", "checkout", "subscription"],
-    Design: ["figma", "frontend", "design", "ui", "ux", "layout", "visual", "component"],
-    Automation: ["automation", "hook", "workflow", "install", "installer", "trigger", "event", "pipeline"],
-    Content: ["markdown", "docs", "documentation", "playground", "prompt", "content", "brief", "guide"],
-    Development: ["agent", "command", "plugin", "creator", "structure", "settings", "mcp", "scaffold"],
+    Development: [
+      "typescript", "javascript", "python", "git", "api", "debug", "refactor", "test", "build",
+      "deploy", "database", "backend", "server", "node", "react", "code", "script", "terminal",
+      "sdk", "library", "mcp", "plugin", "agent",
+    ],
+    DevOps: [
+      "docker", "kubernetes", "ci", "cd", "pipeline", "infrastructure", "monitoring", "nginx",
+      "cloud", "aws", "heroku", "vercel", "ansible", "terraform", "container", "helm",
+    ],
+    Design: [
+      "figma", "frontend", "design", "ui", "ux", "layout", "visual", "component", "css",
+      "styling", "wireframe", "prototype", "typography", "colour", "color",
+    ],
+    Automation: [
+      "automation", "hook", "workflow", "webhook", "cron", "scheduler", "trigger", "event",
+      "installer", "recurring", "batch", "headless",
+    ],
+    Content: [
+      "markdown", "docs", "documentation", "writing", "blog", "readme", "guide", "brief",
+      "copywriting", "article", "draft", "editorial",
+    ],
+    Data: [
+      "analytics", "sql", "database", "spreadsheet", "csv", "chart", "visualisation", "visualization",
+      "dataset", "pandas", "etl", "dashboard", "metrics", "query",
+    ],
+    Research: [
+      "search", "summarise", "summarize", "research", "synthesis", "fact", "crawl", "scrape",
+      "survey", "analysis", "compare", "report",
+    ],
+    Communication: [
+      "email", "slack", "pr", "pull request", "changelog", "meeting", "notes", "message",
+      "notification", "announce", "newsletter",
+    ],
+    Security: [
+      "auth", "authentication", "permission", "secret", "vulnerability", "encrypt", "token",
+      "oauth", "firewall", "audit", "compliance", "pentest",
+    ],
+    Finance: [
+      "stripe", "payment", "billing", "invoice", "checkout", "subscription", "expense",
+      "budget", "accounting", "tax", "revenue",
+    ],
   };
 
-  const scores = {
-    Development: 0,
-    Design: 0,
-    Automation: 0,
-    Content: 0,
-    Finance: 0,
-  };
+  const scores = {};
+  const priority = [
+    "Development", "DevOps", "Design", "Automation", "Content",
+    "Data", "Research", "Communication", "Security", "Finance",
+  ];
 
-  const weightedHits = {
-    Finance: 3,
-    Design: 2,
-    Automation: 2,
-    Content: 2,
-    Development: 1,
-  };
+  // Initialize scores
+  for (const category of priority) {
+    scores[category] = 0;
+  }
 
+  // Score all categories equally (weight = 2)
+  const weight = 2;
   for (const [category, signals] of Object.entries(categorySignals)) {
     const seen = new Set();
     for (const signal of signals) {
@@ -243,49 +1016,13 @@ function deriveCategory(filePath, name, description) {
       }
 
       if (containsWholeToken(combined, signal)) {
-        scores[category] += weightedHits[category];
+        scores[category] += weight;
         seen.add(signal);
       }
     }
   }
 
-  if (normalizedName.endsWith("docs")) {
-    scores.Content += 2;
-  }
-
-  if (containsWholeToken(combined, "claude.md")) {
-    scores.Content += 3;
-  }
-
-  if (containsWholeToken(combined, "model context protocol")) {
-    scores.Development += 2;
-  }
-
-  if (source === "claude-marketplace/stripe") {
-    scores.Finance += 6;
-  }
-
-  if (source === "claude-marketplace/frontend-design" || containsWholeToken(combined, "figma")) {
-    scores.Design += 4;
-  }
-
-  if (source === "claude-marketplace/hookify" || containsWholeToken(combined, "skill-installer")) {
-    scores.Automation += 4;
-  }
-
-  if (source === "codex/system" && (containsWholeToken(combined, "docs") || containsWholeToken(combined, "documentation"))) {
-    scores.Content += 4;
-  }
-
-  if (containsWholeToken(combined, "recommender") && containsWholeToken(combined, "automation")) {
-    scores.Automation += 3;
-  }
-
-  if (containsWholeToken(combined, "hook-development")) {
-    scores.Automation += 3;
-  }
-
-  const priority = ["Development", "Design", "Automation", "Content", "Finance"];
+  // Tie-breaking: use priority order
   let bestCategory = "Development";
   let bestScore = -1;
 
@@ -303,19 +1040,47 @@ function deriveCategory(filePath, name, description) {
 function deriveSource(filePath) {
   const normalized = normalizeWindowsPath(filePath).toLowerCase();
 
+  // Codex
   if (normalized.includes("/.codex/skills/.system/")) {
     return "codex/system";
   }
-
   if (normalized.includes("/.codex/skills/")) {
     return "codex/skills";
   }
 
+  // Canonical agents location
+  if (normalized.includes("/.agents/skills/")) {
+    return "agents/skills";
+  }
+
+  // Cursor
+  if (normalized.includes("/.cursor/skills/")) {
+    return "cursor/skills";
+  }
+
+  // OpenCode
+  if (normalized.includes("/.config/opencode/skills/") || normalized.includes("/.opencode/skills/")) {
+    return "opencode/skills";
+  }
+
+  // GitHub
+  if (normalized.includes("/.github/skills/")) {
+    return "github/skills";
+  }
+
+  // Claude Code plugin cache
+  const pluginCacheMatch = normalized.match(/\/\.claude\/plugins\/cache\/[^/]+\/([^/]+)\/[^/]+\/skills\//);
+  if (pluginCacheMatch) {
+    return `claude-plugin/${pluginCacheMatch[1]}`;
+  }
+
+  // Legacy marketplace plugin path
   const marketplacePluginMatch = normalized.match(/\/\.claude\/plugins\/marketplaces\/[^/]+\/(?:plugins|external_plugins)\/([^/]+)\//);
   if (marketplacePluginMatch) {
     return `claude-marketplace/${marketplacePluginMatch[1]}`;
   }
 
+  // Claude skills
   if (normalized.includes("/.claude/skills/")) {
     return "claude/skills";
   }
@@ -541,88 +1306,108 @@ async function syncAssignedIconAssets(usedIconNames, iconLibrary) {
 }
 
 function inferRelationships(skills) {
-  const conflicts = [];
-  const similarSkillIds = new Set();
-  const conflictsById = new Map(skills.map((skill) => [skill.id, new Set()]));
-  const keywordsById = new Map(skills.map((skill) => [skill.id, keywordSetForSkill(skill)]));
-  const nameTokensById = new Map(skills.map((skill) => [skill.id, nameTokenSet(skill)]));
-  const signalTokens = new Set([
-    "automation",
-    "figma",
-    "hook",
-    "hookify",
-    "installer",
-    "markdown",
-    "mcp",
-    "openai",
-    "playground",
-    "stripe",
-  ]);
-  const highSignalIgnore = new Set([
-    "agent",
-    "automation",
-    "command",
-    "create",
-    "development",
-    "docs",
-    "guide",
-    "guidance",
-    "plugin",
-    "plugins",
-    "references",
-    "settings",
-    "skill",
-    "skills",
-    "structure",
-    "write",
-  ]);
+  // Build token sets for each skill: trigger tokens and description tokens
+  // Remove stop words and generic action verbs for meaningful overlap detection
+  const triggerTokensById = new Map(
+    skills.map((skill) => [
+      skill.id,
+      new Set(
+        skill.triggers
+          .flatMap((trigger) => tokenize(trigger))
+          .filter((token) => !genericActionVerbs.has(token))
+      ),
+    ])
+  );
 
+  const descriptionTokensById = new Map(
+    skills.map((skill) => [
+      skill.id,
+      new Set(
+        tokenize(skill.description)
+          .filter((token) => !genericActionVerbs.has(token))
+      ),
+    ])
+  );
+
+  // Function to score overlap between two skills
+  function scoreOverlap(skillA, skillB) {
+    let score = 0;
+
+    // Signal 1: Slug similarity (strongest signal of duplication)
+    const slugA = slugify(skillA.name);
+    const slugB = slugify(skillB.name);
+
+    if (slugA === slugB) {
+      return 10; // Identical slug = instant flag, highest confidence
+    }
+
+    const editDistance = levenshtein(slugA, slugB);
+    if (editDistance <= 3 && Math.min(slugA.length, slugB.length) >= 8) {
+      score += 5; // Near-identical slug = likely same skill variant
+    }
+
+    // Signal 2: Shared trigger tokens (functional intent overlap)
+    const triggerA = triggerTokensById.get(skillA.id) ?? new Set();
+    const triggerB = triggerTokensById.get(skillB.id) ?? new Set();
+    const sharedTriggerTokens = intersect(triggerA, triggerB).length;
+    score += Math.min(sharedTriggerTokens * 2, 8); // +2 per token, cap at +8
+
+    // Signal 3: Shared description tokens (output/domain overlap)
+    const descA = descriptionTokensById.get(skillA.id) ?? new Set();
+    const descB = descriptionTokensById.get(skillB.id) ?? new Set();
+    const sharedDescTokens = intersect(descA, descB).length;
+    score += Math.min(sharedDescTokens, 4); // +1 per token, cap at +4
+
+    return score;
+  }
+
+  const conflicts = [];
+  const overlappingSkillIds = new Set();
+  const overlapsById = new Map(skills.map((skill) => [skill.id, new Set()]));
+
+  // Score all pairs and flag overlaps
   for (let index = 0; index < skills.length; index += 1) {
     for (let otherIndex = index + 1; otherIndex < skills.length; otherIndex += 1) {
       const skill = skills[index];
       const otherSkill = skills[otherIndex];
-      const keywordOverlap = intersect(keywordsById.get(skill.id), keywordsById.get(otherSkill.id)).filter(
-        (token) => token !== "design" && !highSignalIgnore.has(token),
-      );
-      const nameOverlap = intersect(nameTokensById.get(skill.id), nameTokensById.get(otherSkill.id)).filter(
-        (token) => !highSignalIgnore.has(token),
-      );
-      const signalOverlap = [...new Set([...nameOverlap, ...keywordOverlap])].filter((token) => signalTokens.has(token));
-      const sameCategory = skill.category === otherSkill.category;
-      const isConflict = slugify(skill.name) === slugify(otherSkill.name) || nameOverlap.length > 0 || signalOverlap.length > 0;
-      const isSimilar = sameCategory || signalOverlap.length > 0;
+      const score = scoreOverlap(skill, otherSkill);
 
-      if (isSimilar) {
-        similarSkillIds.add(skill.id);
-        similarSkillIds.add(otherSkill.id);
+      // Threshold: 6+ points = genuine overlap
+      if (score >= 6) {
+        overlappingSkillIds.add(skill.id);
+        overlappingSkillIds.add(otherSkill.id);
+
+        overlapsById.get(skill.id)?.add(otherSkill.id);
+        overlapsById.get(otherSkill.id)?.add(skill.id);
+
+        // Build a summary of why they overlap
+        const triggerA = triggerTokensById.get(skill.id) ?? new Set();
+        const triggerB = triggerTokensById.get(otherSkill.id) ?? new Set();
+        const sharedTokens = intersect(triggerA, triggerB);
+        const summary = sharedTokens.length > 0
+          ? `${skill.name} overlaps with ${otherSkill.name} around ${sharedTokens.slice(0, 2).join(" and ")}.`
+          : `${skill.name} overlaps with ${otherSkill.name}.`;
+
+        conflicts.push({
+          a: skill.id,
+          b: otherSkill.id,
+          aName: skill.name,
+          bName: otherSkill.name,
+          summary,
+        });
       }
-
-      if (!isConflict) {
-        continue;
-      }
-
-      conflicts.push({
-        a: skill.id,
-        b: otherSkill.id,
-        aName: skill.name,
-        bName: otherSkill.name,
-        summary: buildConflictSummary(skill, otherSkill, [...nameOverlap, ...signalOverlap]),
-      });
-
-      conflictsById.get(skill.id)?.add(otherSkill.id);
-      conflictsById.get(otherSkill.id)?.add(skill.id);
     }
   }
 
   const enrichedSkills = skills.map((skill) => ({
     ...skill,
-    conflictsWith: Array.from(conflictsById.get(skill.id) ?? []),
+    conflictsWith: Array.from(overlapsById.get(skill.id) ?? []),
   }));
 
   return {
     skills: enrichedSkills,
     conflicts,
-    similarCount: similarSkillIds.size,
+    similarCount: overlappingSkillIds.size, // Now represents genuine overlaps only
   };
 }
 
@@ -666,30 +1451,87 @@ async function collectSkillFiles(directory) {
 
 async function readSkill(filePath) {
   const markdown = await fs.readFile(filePath, "utf8");
-  const { data, body } = parseFrontmatter(markdown);
+  const { data, body } = parseFrontmatterEnhanced(markdown);
   const name = String(data.name ?? path.basename(path.dirname(filePath)));
-  const description = extractDescription(String(data.description ?? ""), body);
-  const category = deriveCategory(filePath, name, description);
+  const fullDescription = extractDescription(String(data.description ?? ""), body);
 
-  return {
+  const metadata = data.metadata ?? {};
+  const tags = toStringArray(metadata.tags ?? data.tags);
+  const shortDescription = metadata["short-description"] ?? metadata.shortDescription ?? null;
+  const license = data.license ?? null;
+  const compatibility = data.compatibility ?? null;
+  const allowedTools = toStringArray(
+    data["allowed-tools"] ??
+    data.allowedTools ??
+    metadata["allowed-tools"] ??
+    metadata.allowedTools
+  );
+  const description = normalizeDisplayDescription(shortDescription, fullDescription);
+
+  const category = deriveCategory(filePath, name, description);
+  const source = firstDefinedString(data.source, deriveSource(filePath));
+  const installedFrom = deriveSource(filePath);
+  const sourceUrl = firstDefinedString(data.sourceUrl, data.source_url, data.url, data.homepage);
+  const triggers = extractRefinedTriggerPhrases(data, body, fullDescription, name);
+
+  const skill = {
     id: `${slugify(category)}-${slugify(name)}-${slugify(path.relative(home, filePath))}`,
     name,
     category,
     description,
-    triggers: extractTriggerPhrases(description, name),
+    triggers,
     path: normalizeWindowsPath(filePath),
-    source: deriveSource(filePath),
-    sourceUrl: null,
+    source,
+    installedFrom,
+    sourceUrl,
     conflictsWith: [],
   };
+
+  // Add optional fields only if they have values
+  if (tags.length > 0) {
+    skill.tags = tags;
+  }
+  if (fullDescription && fullDescription !== description) {
+    skill.fullDescription = fullDescription;
+  }
+  if (shortDescription) {
+    skill.shortDescription = shortDescription;
+  }
+  if (license) {
+    skill.license = license;
+  }
+  if (compatibility) {
+    skill.compatibility = compatibility;
+  }
+  if (allowedTools.length > 0) {
+    skill.allowedTools = allowedTools;
+  }
+
+  return skill;
 }
 
 async function buildSkillData() {
+  // Dynamically add plugin cache paths
+  const pluginCachePaths = await getPluginCachePaths();
+  scanRoots = [...baseScanRoots, ...pluginCachePaths];
+
   const files = new Set();
+  const resolvedPaths = new Set(); // For deduplication by real path
 
   for (const root of scanRoots) {
     for (const file of await collectSkillFiles(root)) {
-      files.add(file);
+      try {
+        // Deduplicate by resolved real path
+        const realPath = await fs.realpath(file);
+        if (resolvedPaths.has(realPath)) {
+          continue; // Skip if we've already seen this file via a symlink
+        }
+        resolvedPaths.add(realPath);
+        files.add(file);
+      } catch {
+        // If realpath fails, add the file anyway
+        files.add(file);
+      }
     }
   }
 

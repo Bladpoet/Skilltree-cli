@@ -17,11 +17,11 @@ export function CategoryHeader({ name, variant = "indented" }: CategoryHeaderPro
         <span
           className="block w-full whitespace-nowrap text-center"
           style={{
-            fontFamily: "'Rajdhani', sans-serif",
-            fontWeight: 600,
-            fontSize: "16px",
-            lineHeight: "1.25",
-            color: "rgb(255,255,255)",
+            fontFamily: "'Albertus Nova', serif",
+            fontWeight: 700,
+            fontSize: "13px",
+            lineHeight: "1.5",
+            color: "rgb(255, 245, 234)",
             textTransform: "uppercase",
             letterSpacing: "0.96px",
             textShadow: "0 1px 2px rgba(0,0,0,0.5)",

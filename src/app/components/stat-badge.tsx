@@ -44,7 +44,7 @@ export function StatBadge({ value, label }: StatBadgeProps) {
       >
         <span
           className="text-center text-white"
-          style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "32px", fontWeight: 600, lineHeight: 1 }}
+          style={{ fontFamily: "'Albertus Nova', serif", fontSize: "32px", fontWeight: 700, lineHeight: 1 }}
         >
           {value}
         </span>
@@ -54,9 +54,9 @@ export function StatBadge({ value, label }: StatBadgeProps) {
         <p
           className="absolute inset-0 flex items-center justify-center whitespace-nowrap text-center"
           style={{
-            fontFamily: "'Rajdhani', sans-serif",
+            fontFamily: "'Albertus Nova', serif",
             fontSize: "13px",
-            fontWeight: 600,
+            fontWeight: 700,
             lineHeight: "1.5",
             color: "#ffefbe",
           }}

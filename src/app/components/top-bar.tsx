@@ -16,20 +16,25 @@ const STAT_LABELS: { key: keyof TopBarProps["stats"]; label: string }[] = [
 
 export function TopBar({ stats }: TopBarProps) {
   return (
-    <div className="flex shrink-0 items-start justify-between px-12 pt-10 pb-6">
+    <div className="flex shrink-0 items-center justify-between px-12 pt-10 pb-6">
       <h1
         className="whitespace-nowrap"
         style={{
-          fontFamily: "'Rajdhani', sans-serif",
-          fontWeight: 600,
-          fontSize: "40px",
+          fontFamily: "'Albertus Nova', serif",
+          fontWeight: 700,
+          fontSize: "28px",
           lineHeight: "normal",
-          letterSpacing: "-1.2px",
+          letterSpacing: "-0.5px",
           textTransform: "uppercase",
-          color: "#d4992c",
+          background: "linear-gradient(180deg, #D49A2C 0%, #B67600 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          filter: "drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.25))",
+          textShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.3)",
         }}
       >
-        Claude Skills
+        Skill Tree
       </h1>
       <StatBadgeGroup
         items={STAT_LABELS.map(({ key, label }) => ({

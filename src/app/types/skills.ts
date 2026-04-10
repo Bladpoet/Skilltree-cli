@@ -11,10 +11,12 @@ export interface SkillRecord {
   name: string;
   category: string;
   description: string;
+  fullDescription?: string;
   triggers: string[];
   dependents?: string[];
   path: string;
   source: string;
+  installedFrom?: string;
   sourceUrl: string | null;
   conflictsWith: string[];
   icon?: string;
@@ -23,6 +25,11 @@ export interface SkillRecord {
   iconPath?: string;
   iconSource?: string;
   iconScore?: number;
+  tags?: string[];
+  shortDescription?: string;
+  license?: string;
+  compatibility?: string;
+  allowedTools?: string[];
 }
 
 export interface SkillIconAssignmentMeta {

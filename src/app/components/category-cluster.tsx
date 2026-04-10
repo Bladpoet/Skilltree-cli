@@ -1,12 +1,11 @@
 import { useMemo } from "react";
 import { CategoryHeader } from "./category-header";
 import { SkillNode, type SkillNodeState } from "./skill-node";
-import { getCategoryTemplate } from "../lib/category-cluster-templates";
+import { getCategoryTemplate, type TemplateLine } from "../lib/category-cluster-templates";
 import type { SkillRecord } from "../types/skills";
+import verticalConnectorSrc from "../../assets/connector-vertical.svg";
+import horizontalConnectorSrc from "../../assets/connector-horizontal.svg";
 
-// Node container dimensions from skill-node.tsx
-const NODE_W = 89;
-const NODE_H = 87;
 
 interface CategoryClusterProps {
   categoryName: string;
@@ -15,22 +14,23 @@ interface CategoryClusterProps {
   onSelectSkill?: (skillId: string) => void;
 }
 
-function DecorativeConnector({ from, to }: { from: [number, number]; to: [number, number] }) {
+function DecorativeConnector({ x, y, length, orientation }: TemplateLine) {
+  const isVertical = orientation === "vertical";
+  const src = isVertical ? verticalConnectorSrc : horizontalConnectorSrc;
+
   return (
-    <>
-      <line
-        x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]}
-        stroke="rgba(194,174,135,0.15)"
-        strokeLinecap="round"
-        strokeWidth={5}
-      />
-      <line
-        x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]}
-        stroke="rgba(194,174,135,0.5)"
-        strokeLinecap="round"
-        strokeWidth={1}
-      />
-    </>
+    <img
+      src={src}
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        width: isVertical ? 1 : length,
+        height: isVertical ? length : 1,
+        pointerEvents: "none",
+      }}
+      alt=""
+    />
   );
 }
 
@@ -63,12 +63,12 @@ export function CategoryCluster({
     [skills, template]
   );
 
-  const assignedSlotIds = new Set(slotAssignments.map((a) => a.slot.id));
-  const slotLookup = new Map(template.slots.map((s) => [s.id, s]));
-
-  const visibleConnectors = template.connectors.filter(
-    (c) => assignedSlotIds.has(c.fromSlot) && assignedSlotIds.has(c.toSlot)
-  );
+  // Note: visibleConnectors filtering kept for backwards compatibility but not used
+  // const assignedSlotIds = new Set(slotAssignments.map((a) => a.slot.id));
+  // const slotLookup = new Map(template.slots.map((s) => [s.id, s]));
+  // const visibleConnectors = template.connectors.filter(
+  //   (c) => assignedSlotIds.has(c.fromSlot) && assignedSlotIds.has(c.toSlot)
+  // );
 
   return (
     <section
@@ -79,24 +79,11 @@ export function CategoryCluster({
       <CategoryHeader name={categoryName} />
       <div className="relative overflow-visible" style={{ width: template.width, height: template.height }}>
         {/* Connector lines behind nodes */}
-        <svg
-          className="pointer-events-none absolute inset-0 overflow-visible"
-          width={template.width}
-          height={template.height}
-          fill="none"
-        >
-          {visibleConnectors.map((connector) => {
-            const from = slotLookup.get(connector.fromSlot)!;
-            const to = slotLookup.get(connector.toSlot)!;
-            return (
-              <DecorativeConnector
-                key={connector.id}
-                from={[from.x + NODE_W / 2, from.y + NODE_H / 2]}
-                to={[to.x + NODE_W / 2, to.y + NODE_H / 2]}
-              />
-            );
-          })}
-        </svg>
+        <div className="pointer-events-none absolute inset-0 overflow-visible">
+          {template.lines.map((line) => (
+            <DecorativeConnector key={line.id} {...line} />
+          ))}
+        </div>
 
         {slotAssignments.map(({ slot, skill }) => (
           <div key={skill.id} className="absolute" style={{ left: slot.x, top: slot.y }}>

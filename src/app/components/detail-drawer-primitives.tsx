@@ -1,12 +1,45 @@
-import closeBrush from "../../assets/drawer-close-brush.svg";
-import copyIcon from "../../assets/drawer-copy-icon.svg";
+import type { CSSProperties } from "react";
+
 import drawerEdge from "../../assets/drawer-edge-brush.svg";
+import categoryTagStroke from "../../assets/drawer-category-tag-stroke.svg";
 import sectionSeparator from "../../assets/drawer-section-separator.svg";
-import sourceGlyph from "../../assets/pencil-exported/9L2EO.png";
 import triggerBrush from "../../assets/drawer-trigger-brush.svg";
+
+import closeIcon from "../../assets/close-icon.svg";
+import copyIconSrc from "../../assets/copy-icon.svg";
+import checkIcon from "../../assets/check-icon.svg";
+import hoverDecoration from "../../assets/hover-decoration.svg";
 
 interface TextProps {
   label: string;
+}
+
+interface MaskIconProps {
+  src: string;
+  color: string;
+  className?: string;
+  style?: CSSProperties;
+}
+
+function MaskIcon({ src, color, className, style }: MaskIconProps) {
+  return (
+    <div
+      aria-hidden="true"
+      className={className}
+      style={{
+        backgroundColor: color,
+        WebkitMaskImage: `url(${src})`,
+        maskImage: `url(${src})`,
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+        WebkitMaskSize: "100% 100%",
+        maskSize: "100% 100%",
+        ...style,
+      }}
+    />
+  );
 }
 
 export function DetailDrawerDecorativeEdge() {
@@ -29,45 +62,82 @@ export function DetailDrawerDecorativeEdge() {
   );
 }
 
-export function DetailDrawerCloseButton() {
-  return <img src={closeBrush} alt="" className="h-8 w-8 shrink-0" draggable={false} />;
+interface CloseButtonProps {
+  isHovered: boolean;
 }
 
-export function DetailDrawerCopyIcon() {
-  return <img src={copyIcon} alt="" className="h-4 w-4 shrink-0" draggable={false} />;
+interface CopyIconProps {
+  isHovered: boolean;
+  copied: boolean;
 }
 
-export function DetailDrawerSourceIcon() {
-  return <img src={sourceGlyph} alt="" className="h-4 w-4 shrink-0" draggable={false} />;
+export function DetailDrawerCloseButton({ isHovered }: CloseButtonProps) {
+  const iconColor = isHovered ? "#282521" : "#635949";
+
+  return (
+    <div className="relative h-8 w-8 shrink-0">
+      <img
+        src={hoverDecoration}
+        alt=""
+        className="absolute inset-1 transition-opacity duration-200"
+        style={{ opacity: isHovered ? 1 : 0 }}
+        draggable={false}
+      />
+      <MaskIcon src={closeIcon} color={iconColor} className="absolute inset-0 h-full w-full" />
+    </div>
+  );
+}
+
+export function DetailDrawerCopyIcon({ isHovered, copied }: CopyIconProps) {
+  let iconColor = "#7E766D";
+  if (copied) {
+    iconColor = "#494542";
+  } else if (isHovered) {
+    iconColor = "#282521";
+  }
+
+  return (
+    <div className="relative h-8 w-8 shrink-0">
+      <img
+        src={hoverDecoration}
+        alt=""
+        className="absolute inset-0 transition-opacity duration-200"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "fill",
+        }}
+        draggable={false}
+      />
+      <MaskIcon
+        src={copied ? checkIcon : copyIconSrc}
+        color={iconColor}
+        className="absolute h-4 w-4"
+        style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+      />
+    </div>
+  );
 }
 
 export function DetailDrawerCategoryPill({ label }: TextProps) {
   return (
-    <div
-      className="relative isolate inline-flex items-center justify-center overflow-hidden px-3"
-      style={{ width: 92, height: 28 }}
-    >
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(90deg, rgba(130,110,34,0) 0%, rgba(102,76,1,0.2) 50%, rgba(102,76,1,0.6) 100%)",
-        }}
-      />
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "rgb(229,169,71)", opacity: 0.7 }} />
-      <div className="absolute inset-x-0 bottom-0 h-px" style={{ background: "rgb(229,169,71)", opacity: 0.7 }} />
-      <div
-        className="absolute left-1.5 top-1/2 -translate-y-1/2"
-        style={{ width: 4, height: 4, borderRadius: "50%", background: "rgb(229,169,71)" }}
+    <div className="relative isolate inline-flex max-w-full items-center justify-center px-4 py-[6px]">
+      <img
+        src={categoryTagStroke}
+        alt=""
+        className="pointer-events-none absolute inset-x-0 bottom-[-2px] h-8 w-full max-w-none object-fill"
+        draggable={false}
       />
       <span
-        className="relative z-10 truncate"
+        className="relative z-10 whitespace-nowrap"
         style={{
-          fontFamily: "'Rajdhani', sans-serif",
+          fontFamily: "'Albertus Nova', serif",
           fontSize: "12px",
-          fontWeight: 600,
-          color: "rgb(10,6,1)",
-          lineHeight: "1",
-          paddingLeft: 8,
+          fontWeight: 700,
+          color: "#0A0601",
+          lineHeight: "16px",
+          letterSpacing: "0.72px",
         }}
       >
         {label}
@@ -82,10 +152,11 @@ export function DetailDrawerSectionHeading({ label }: TextProps) {
       <h3
         className="w-full text-left"
         style={{
-          fontFamily: "'Marcellus SC', serif",
+          fontFamily: "'Albertus Nova', serif",
           fontSize: "14px",
+          fontWeight: 400,
           lineHeight: "1.2",
-          color: "rgb(109,115,126)",
+          color: "#7E766D",
         }}
       >
         {label}
@@ -118,11 +189,12 @@ export function DetailDrawerTriggerTag({ label }: TextProps) {
       <span
         className="relative z-10 max-w-[calc(100%-24px)] truncate whitespace-nowrap text-[14px] text-white"
         style={{
-          fontFamily: "'Marcellus', serif",
+          fontFamily: "'Albertus Nova', serif",
+          fontWeight: 300,
           lineHeight: "normal",
           marginLeft: 16,
           marginRight: 16,
-          textShadow: "0px 0px 2px rgba(0,0,0,0.8)",
+          filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.5))",
         }}
       >
         {label}

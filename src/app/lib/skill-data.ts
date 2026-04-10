@@ -19,6 +19,7 @@ interface RawSkillLike {
   path?: unknown;
   filePath?: unknown;
   source?: unknown;
+  installedFrom?: unknown;
   sourceUrl?: unknown;
   url?: unknown;
   conflictsWith?: unknown;
@@ -28,6 +29,12 @@ interface RawSkillLike {
   iconPath?: unknown;
   iconSource?: unknown;
   iconScore?: unknown;
+  tags?: unknown;
+  shortDescription?: unknown;
+  license?: unknown;
+  compatibility?: unknown;
+  allowedTools?: unknown;
+  "allowed-tools"?: unknown;
 }
 
 interface RawConflictLike {
@@ -127,6 +134,7 @@ function normalizeSkill(rawSkill: RawSkillLike, index: number, schemaDifferences
     : asStringArray(rawSkill.dependent);
   const path = asString(rawSkill.path) || asString(rawSkill.filePath) || "Path unavailable";
   const source = asString(rawSkill.source, "Unknown source");
+  const installedFrom = asString(rawSkill.installedFrom) || undefined;
   const sourceUrl = asString(rawSkill.sourceUrl) || asString(rawSkill.url) || null;
   const conflictsWith = asStringArray(rawSkill.conflictsWith);
   const icon = asString(rawSkill.icon) || undefined;
@@ -135,6 +143,11 @@ function normalizeSkill(rawSkill: RawSkillLike, index: number, schemaDifferences
   const iconPath = asString(rawSkill.iconPath) || undefined;
   const iconSource = asString(rawSkill.iconSource) || undefined;
   const iconScore = asNumber(rawSkill.iconScore);
+  const tags = asStringArray(rawSkill.tags);
+  const shortDescription = asString(rawSkill.shortDescription) || undefined;
+  const license = asString(rawSkill.license) || undefined;
+  const compatibility = asString(rawSkill.compatibility) || undefined;
+  const allowedTools = asStringArray(rawSkill.allowedTools ?? rawSkill["allowed-tools"]);
 
   if (!asString(rawSkill.name) && asString(rawSkill.title)) {
     noteDifference(schemaDifferences, "Used `title` as the skill name when `name` was missing.");
@@ -165,6 +178,7 @@ function normalizeSkill(rawSkill: RawSkillLike, index: number, schemaDifferences
     dependents: dependents.length > 0 ? dependents : undefined,
     path,
     source,
+    installedFrom,
     sourceUrl,
     conflictsWith,
     icon,
@@ -173,6 +187,11 @@ function normalizeSkill(rawSkill: RawSkillLike, index: number, schemaDifferences
     iconPath,
     iconSource,
     iconScore,
+    tags: tags.length > 0 ? tags : undefined,
+    shortDescription,
+    license,
+    compatibility,
+    allowedTools: allowedTools.length > 0 ? allowedTools : undefined,
   };
 }
 

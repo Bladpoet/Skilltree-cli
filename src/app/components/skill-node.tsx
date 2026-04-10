@@ -1,5 +1,10 @@
 import { useState, useCallback } from "react";
 import imgEffect from "../../assets/node-effect.png";
+import overlapIconBg from "../../assets/overlap-icon-bg.svg";
+import overlapIconBrush from "../../assets/overlap-icon-brush.svg";
+import nodeDecorationDefault from "../../assets/node-decoration-default.svg";
+import nodeDecorationPressed from "../../assets/node-decoration-pressed.svg";
+import { useSoundEffects } from "../hooks/use-sound-effects";
 
 export type SkillNodeState = "default" | "hover" | "selected" | "conflict";
 
@@ -112,18 +117,13 @@ function toStateKey(state: SkillNodeState): StateKey {
   return state as StateKey;
 }
 
-const FIGMA_DECORATION_SRC: Record<StateKey, string> = {
-  default: "https://www.figma.com/api/mcp/asset/80bcbfbf-037d-4ade-8279-25a98dd63207",
-  hover: "https://www.figma.com/api/mcp/asset/02821831-739a-4659-b732-835405d52699",
-  pressed: "https://www.figma.com/api/mcp/asset/8f1d14bb-0bde-402b-9935-15f78458328b",
-  overlap: "https://www.figma.com/api/mcp/asset/78881cf2-f6ed-4b74-adcf-9d596561ad36",
+const DECORATION_SRC: Record<StateKey, string> = {
+  default: nodeDecorationDefault,
+  hover: nodeDecorationDefault,
+  pressed: nodeDecorationPressed,
+  overlap: nodeDecorationDefault,
 };
 
-const OVERLAP_VECTOR = "https://www.figma.com/api/mcp/asset/a805a779-6ed0-468f-a900-388fb62586c2";
-const OVERLAP_VECTOR_STROKE_A = "https://www.figma.com/api/mcp/asset/8dd16920-2c4c-4415-9e58-33cd3c79c952";
-const OVERLAP_VECTOR_STROKE_B = "https://www.figma.com/api/mcp/asset/cfe3bdb8-0e9b-4502-bee5-0f108b1d0c63";
-const OVERLAP_VECTOR_STROKE_C = "https://www.figma.com/api/mcp/asset/91d9d264-b46c-4476-9a60-21178d3881c9";
-const OVERLAP_ELLIPSE_STROKE = "https://www.figma.com/api/mcp/asset/14abefaf-aaf3-40cd-b11a-bc78f73a2f97";
 
 const DEFAULT_ICON_PATH = "/skill-icons/default.svg";
 
@@ -149,44 +149,34 @@ function IconGlyph({
   iconName?: string;
 }) {
   const resolvedIconSrc = iconPath && iconPath.trim().length > 0 ? iconPath : DEFAULT_ICON_PATH;
-
-  if (stateKey === "hover") {
-    return (
-      <div
-        className="flex items-center justify-center"
-        style={{ width: 32.16, height: 32.16, marginLeft: -0.08, marginTop: -0.08 }}
-      >
-        <div style={{ transform: "rotate(-15deg)", flex: "none" }}>
-          <div className="relative" style={{ width: 32, height: 32 }}>
-            <img
-              src={resolvedIconSrc}
-              alt={iconName ? `${iconName} icon` : ""}
-              className="absolute block max-w-none size-full"
-              style={{ filter: iconFilterForState(stateKey) }}
-              draggable={false}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  const rotation = stateKey === "hover" ? -15 : 0;
+  const scale = stateKey === "pressed" ? 0.96 : 1;
   return (
-    <img
-      src={resolvedIconSrc}
-      alt={iconName ? `${iconName} icon` : ""}
-      className="absolute block max-w-none size-full"
-      style={{ filter: iconFilterForState(stateKey) }}
-      draggable={false}
-    />
+    <div
+      className="absolute inset-0 flex items-center justify-center"
+      style={{
+        transform: `rotate(${rotation}deg)`,
+        transition: "transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
+    >
+      <img
+        src={resolvedIconSrc}
+        alt={iconName ? `${iconName} icon` : ""}
+        className="block max-w-none size-full"
+        style={{
+          filter: iconFilterForState(stateKey),
+          transform: `scale(${scale})`,
+          transition:
+            "filter 220ms cubic-bezier(0.22, 1, 0.36, 1), transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+        draggable={false}
+      />
+    </div>
   );
 }
 
 function IconHighlight({ stateKey }: { stateKey: StateKey }) {
   const token = HIGHLIGHT_TOKENS[stateKey];
-  if (!token.visible) {
-    return null;
-  }
 
   return (
     <div
@@ -198,8 +188,10 @@ function IconHighlight({ stateKey }: { stateKey: StateKey }) {
         width: token.size,
         height: token.size,
         background: token.color,
-        opacity: token.opacity,
+        opacity: token.visible ? token.opacity : 0,
         filter: `blur(${token.blur}px)`,
+        transition:
+          "opacity 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1), height 220ms cubic-bezier(0.22, 1, 0.36, 1), left 220ms cubic-bezier(0.22, 1, 0.36, 1), top 220ms cubic-bezier(0.22, 1, 0.36, 1), filter 220ms cubic-bezier(0.22, 1, 0.36, 1)",
       }}
     />
   );
@@ -218,7 +210,7 @@ function DiamondNode({
 }) {
   const colors = COLORS[stateKey];
   const isActiveState = stateKey === "hover" || stateKey === "pressed";
-  const decorationSrc = FIGMA_DECORATION_SRC[stateKey];
+  const decorationSrc = DECORATION_SRC[stateKey];
 
   // Sun icon position: centered at (50%-0.1px, 50%+0.01px) size 26.259
   const sunSize = 32;
@@ -230,37 +222,21 @@ function DiamondNode({
       className="relative shrink-0"
       style={{ width: W, height: H }}
     >
-      {/* Overlap badge — centered at top, sticking out above diamond */}
+      {/* Overlap badge — two stacked SVGs (brown bg + golden caution) centered at top */}
       {showOverlapBadge && (
         <div
           className="absolute z-10"
           style={{
-            width: 17.478,
-            left: "calc(50% + 0.28px)",
+            width: 22,
+            height: 19,
+            left: "50%",
             transform: "translateX(-50%)",
-            top: "-5.75%",
-            bottom: "85.65%",
-            overflow: "clip",
+            top: "-10px",
           }}
         >
-          <div className="absolute" style={{ inset: "11.12% 8.34% 16.68% 8.34%" }}>
-            <img alt="" src={OVERLAP_VECTOR} className="absolute block max-w-none size-full" draggable={false} />
-          </div>
-          <div className="absolute" style={{ inset: "8.15% 4.2% 12.58% 4.48%" }}>
-            <img alt="" src={OVERLAP_VECTOR_STROKE_A} className="absolute block max-w-none size-full" draggable={false} />
-          </div>
-          <div className="absolute flex items-center justify-center" style={{ inset: "8.15% 4.49% 12.58% 4.2%" }}>
-            <div style={{ width: 15.96, height: 13.855, transform: "rotate(180deg) scaleY(-1)", flex: "none" }}>
-              <div className="relative size-full">
-                <img alt="" src={OVERLAP_VECTOR_STROKE_B} className="absolute block max-w-none size-full" draggable={false} />
-              </div>
-            </div>
-          </div>
-          <div className="absolute" style={{ inset: "37.5% 45.83% 45.83% 45.83%" }}>
-            <img alt="" src={OVERLAP_VECTOR_STROKE_C} className="absolute block max-w-none size-full" draggable={false} />
-          </div>
-          <div className="absolute" style={{ inset: "59% 43.23% 29.71% 45.2%" }}>
-            <img alt="" src={OVERLAP_ELLIPSE_STROKE} className="absolute block max-w-none size-full" draggable={false} />
+          <div className="relative w-full h-full">
+            <img src={overlapIconBg} alt="" className="absolute inset-0 w-full h-full" draggable={false} />
+            <img src={overlapIconBrush} alt="overlapping skill" className="absolute inset-0 w-full h-full" draggable={false} />
           </div>
         </div>
       )}
@@ -283,6 +259,8 @@ function DiamondNode({
                 boxShadow: isActiveState ? colors.boxShadow : undefined,
                 position: "relative",
                 backgroundColor: "#2f281d",
+                transition:
+                  "border-color 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms cubic-bezier(0.22, 1, 0.36, 1)",
               }}
             >
               {/* Effect texture overlay - must be INSIDE the base diamond for blend mode to work */}
@@ -311,15 +289,17 @@ function DiamondNode({
         >
           <div style={{ transform: "rotate(45deg)", flex: "none" }}>
             <div
-              style={{
-                width: OUTLINE_SIZE,
-                height: OUTLINE_SIZE,
-                border: `0.493px solid ${colors.outlineStroke}`,
-                opacity: 0.8,
-                boxSizing: "border-box",
-              }}
-            />
-          </div>
+                style={{
+                  width: OUTLINE_SIZE,
+                  height: OUTLINE_SIZE,
+                  border: `0.493px solid ${colors.outlineStroke}`,
+                  opacity: 0.8,
+                  boxSizing: "border-box",
+                  transition:
+                    "border-color 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+              />
+            </div>
         </div>
 
         {/* Decoration image — rotated 90deg, inset ~15-17% */}
@@ -333,8 +313,15 @@ function DiamondNode({
                   width: 59.29,
                   height: 59.29,
                   transform: "translate(calc(-50% - 0.1px), calc(-50% - 0.83px))",
+                  transition: "all 220ms cubic-bezier(0.22, 1, 0.36, 1)",
                 }
-              : { left: DECORATION_L, top: DECORATION_T, width: DECORATION_SIZE, height: DECORATION_SIZE }
+              : {
+                  left: DECORATION_L,
+                  top: DECORATION_T,
+                  width: DECORATION_SIZE,
+                  height: DECORATION_SIZE,
+                  transition: "all 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+                }
           }
         >
           <div style={{ transform: "rotate(90deg)", flex: "none", width: "100%", height: "100%" }}>
@@ -366,24 +353,26 @@ function NodeLabel({ label }: { label: string }) {
     <div
       className="relative z-10 flex items-center justify-center overflow-hidden shrink-0"
       style={{
-        width: "100%",
+        width: "150%",
         height: 20,
         marginTop: -20,
         background:
-          "linear-gradient(90deg, rgba(53,54,56,0) 0%, #5e5f62 50.5%, rgba(53,54,56,0) 100%)",
+          "linear-gradient(90deg, transparent 0%, #28160A 50.5%, transparent 100%)",
         paddingLeft: 4.626,
         paddingRight: 4.626,
         boxSizing: "border-box",
       }}
     >
       <span
-        className="block truncate text-center text-white whitespace-nowrap"
+        className="block truncate text-center whitespace-nowrap"
         style={{
-          fontFamily: "'Rajdhani', sans-serif",
-          fontSize: "13px",
-          fontWeight: 600,
-          lineHeight: "20px",
-          maxWidth: 88,
+          fontFamily: "'Albertus Nova', serif",
+          fontSize: "12px",
+          fontWeight: 300,
+          lineHeight: "150%",
+          maxWidth: 110,
+          color: "#F1E7DC",
+          letterSpacing: "0.72px",
         }}
         title={label}
       >
@@ -404,6 +393,7 @@ export function SkillNode({
   interactive = true,
 }: SkillNodeProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const { playHover, playClick } = useSoundEffects();
 
   const showOverlapBadge = forceOverlapBadge ?? controlledState === "conflict";
   
@@ -416,7 +406,7 @@ export function SkillNode({
   }
 
   const stateKey = toStateKey(effectiveState);
-  const handleClick = useCallback(() => { onClick?.(); }, [onClick]);
+  const handleClick = useCallback(() => { playClick(); onClick?.(); }, [onClick, playClick]);
 
   const commonProps = {
     "data-skill-id": id,
@@ -440,9 +430,9 @@ export function SkillNode({
     <button
       {...commonProps}
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => { setIsHovered(true); playHover(); }}
       onMouseLeave={() => setIsHovered(false)}
-      className={`${commonProps.className} cursor-pointer transition-transform duration-150 hover:scale-[1.03] active:scale-100 focus-visible:outline-2 focus-visible:outline-[#DCB773] focus-visible:outline-offset-4`}
+      className={`${commonProps.className} cursor-pointer transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03] active:scale-[0.99] focus-visible:outline-2 focus-visible:outline-[#DCB773] focus-visible:outline-offset-4`}
       title={label}
     >
       {content}

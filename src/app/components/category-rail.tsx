@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import railDividerBrush from "../../assets/category-rail-divider-brush.svg";
+import { useSoundEffects } from "../hooks/use-sound-effects";
 
 interface CategoryRailProps {
   children?: ReactNode;
@@ -28,6 +29,7 @@ export function CategoryRail({ children }: CategoryRailProps) {
   const railRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const { playScroll } = useSoundEffects();
 
   useEffect(() => {
     const node = railRef.current;
@@ -74,7 +76,7 @@ export function CategoryRail({ children }: CategoryRailProps) {
 
       <button
         type="button"
-        onClick={() => scrollByAmount("left")}
+        onClick={() => { playScroll(); scrollByAmount("left"); }}
         disabled={!canScrollLeft}
         className={`absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#4c3b20] bg-[#120b04]/88 text-[#efe0bc] backdrop-blur transition-all duration-200 ${canScrollLeft ? "opacity-100 hover:border-[#d4a24f] hover:text-white" : "pointer-events-none opacity-0"}`}
         aria-label="Scroll categories left"
@@ -84,7 +86,7 @@ export function CategoryRail({ children }: CategoryRailProps) {
 
       <button
         type="button"
-        onClick={() => scrollByAmount("right")}
+        onClick={() => { playScroll(); scrollByAmount("right"); }}
         disabled={!canScrollRight}
         className={`absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#4c3b20] bg-[#120b04]/88 text-[#efe0bc] backdrop-blur transition-all duration-200 ${canScrollRight ? "opacity-100 hover:border-[#d4a24f] hover:text-white" : "pointer-events-none opacity-0"}`}
         aria-label="Scroll categories right"
